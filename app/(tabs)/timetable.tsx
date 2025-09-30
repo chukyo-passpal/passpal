@@ -3,7 +3,7 @@ import { Typography, Card, useTheme } from "@/design-system";
 
 export default function Timetable() {
     const theme = useTheme();
-    
+
     // サンプルの時間割データ
     const timetableData = {
         Monday: [
@@ -32,47 +32,49 @@ export default function Timetable() {
             { time: "13:15-14:45", subject: "ホームルーム", room: "A-101" },
         ],
     };
-    
+
     const days = Object.keys(timetableData) as (keyof typeof timetableData)[];
     const dayLabels = {
         Monday: "月曜日",
-        Tuesday: "火曜日", 
+        Tuesday: "火曜日",
         Wednesday: "水曜日",
         Thursday: "木曜日",
-        Friday: "金曜日"
+        Friday: "金曜日",
     };
-    
+
     return (
-        <View style={{ 
-            flex: 1, 
-            backgroundColor: theme.colors.background.primary,
-            padding: theme.spacing.md
-        }}>
-            <Typography 
-                variant="h2" 
-                style={{ 
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: theme.colors.background.primary,
+                padding: theme.spacing.md,
+            }}
+        >
+            <Typography
+                variant="h2"
+                style={{
                     color: theme.colors.text.primary,
-                    marginBottom: theme.spacing.lg
+                    marginBottom: theme.spacing.lg,
                 }}
             >
                 時間割
             </Typography>
-            
+
             <ScrollView showsVerticalScrollIndicator={false}>
                 {days.map((day) => (
                     <Card key={day} style={{ marginBottom: theme.spacing.md }}>
-                        <Typography 
-                            variant="h3" 
-                            style={{ 
+                        <Typography
+                            variant="h3"
+                            style={{
                                 color: theme.colors.primary.main,
-                                marginBottom: theme.spacing.md
+                                marginBottom: theme.spacing.md,
                             }}
                         >
                             {dayLabels[day]}
                         </Typography>
-                        
+
                         {timetableData[day].map((lesson, index) => (
-                            <View 
+                            <View
                                 key={index}
                                 style={{
                                     flexDirection: "row",
@@ -84,28 +86,25 @@ export default function Timetable() {
                                 }}
                             >
                                 <View style={{ flex: 1 }}>
-                                    <Typography 
-                                        variant="body" 
-                                        style={{ color: theme.colors.text.primary }}
-                                    >
+                                    <Typography variant="body" style={{ color: theme.colors.text.primary }}>
                                         {lesson.subject}
                                     </Typography>
-                                    <Typography 
-                                        variant="caption" 
-                                        style={{ 
+                                    <Typography
+                                        variant="caption"
+                                        style={{
                                             color: theme.colors.text.secondary,
-                                            marginTop: theme.spacing.xs
+                                            marginTop: theme.spacing.xs,
                                         }}
                                     >
                                         {lesson.room}
                                     </Typography>
                                 </View>
-                                
-                                <Typography 
-                                    variant="bodySmall" 
-                                    style={{ 
+
+                                <Typography
+                                    variant="bodySmall"
+                                    style={{
                                         color: theme.colors.text.secondary,
-                                        textAlign: "right"
+                                        textAlign: "right",
                                     }}
                                 >
                                     {lesson.time}

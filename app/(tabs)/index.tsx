@@ -3,7 +3,7 @@ import { Typography, useTheme } from "@/design-system";
 
 export default function Index() {
     const theme = useTheme();
-    
+
     return (
         <View
             style={{
@@ -17,12 +17,12 @@ export default function Index() {
             <Typography variant="h1" style={{ color: theme.colors.primary.main, textAlign: "center" }}>
                 PassPalへようこそ
             </Typography>
-            <Typography 
-                variant="body" 
-                style={{ 
-                    color: theme.colors.text.secondary, 
+            <Typography
+                variant="body"
+                style={{
+                    color: theme.colors.text.secondary,
                     textAlign: "center",
-                    marginTop: theme.spacing.md
+                    marginTop: theme.spacing.md,
                 }}
             >
                 あなたの学習をサポートします

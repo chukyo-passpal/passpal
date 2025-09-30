@@ -48,8 +48,8 @@ function RootLayoutNav() {
     }
 
     return (
-        <Stack 
-            screenOptions={{ 
+        <Stack
+            screenOptions={{
                 headerShown: false,
                 headerStyle: {
                     backgroundColor: theme.colors.background.surface,
@@ -63,23 +63,23 @@ function RootLayoutNav() {
         >
             {/* 認証が必要な画面 */}
             <Stack.Screen name="(tabs)" />
-            <Stack.Screen 
-                name="settings" 
-                options={{ 
+            <Stack.Screen
+                name="settings"
+                options={{
                     headerShown: true,
                     title: "設定",
-                    presentation: "modal"
-                }} 
+                    presentation: "modal",
+                }}
             />
             <Stack.Screen name="course" />
 
             {/* セットアップ画面 */}
-            <Stack.Screen 
-                name="setup" 
-                options={{ 
+            <Stack.Screen
+                name="setup"
+                options={{
                     headerShown: true,
-                    title: "セットアップ"
-                }} 
+                    title: "セットアップ",
+                }}
             />
 
             {/* 認証画面 */}

@@ -3,7 +3,7 @@ import { Typography, Card, Icon, useTheme } from "@/design-system";
 
 export default function Settings() {
     const theme = useTheme();
-    
+
     const settingsItems = [
         {
             id: 1,
@@ -12,7 +12,7 @@ export default function Settings() {
             icon: "user" as const,
             onPress: () => {
                 // TODO: プロフィール設定画面への遷移
-            }
+            },
         },
         {
             id: 2,
@@ -21,7 +21,7 @@ export default function Settings() {
             icon: "bell" as const,
             onPress: () => {
                 // TODO: 通知設定画面への遷移
-            }
+            },
         },
         {
             id: 3,
@@ -30,7 +30,7 @@ export default function Settings() {
             icon: "palette" as const,
             onPress: () => {
                 // TODO: テーマ設定画面への遷移
-            }
+            },
         },
         {
             id: 4,
@@ -39,7 +39,7 @@ export default function Settings() {
             icon: "cloud-upload" as const,
             onPress: () => {
                 // TODO: バックアップ画面への遷移
-            }
+            },
         },
         {
             id: 5,
@@ -48,7 +48,7 @@ export default function Settings() {
             icon: "info" as const,
             onPress: () => {
                 // TODO: アプリ情報画面への遷移
-            }
+            },
         },
         {
             id: 6,
@@ -58,102 +58,90 @@ export default function Settings() {
             isDestructive: true,
             onPress: () => {
                 // TODO: ログアウト処理
-            }
-        }
+            },
+        },
     ];
-    
+
     return (
-        <View style={{ 
-            flex: 1, 
-            backgroundColor: theme.colors.background.primary,
-            padding: theme.spacing.md
-        }}>
-            <Typography 
-                variant="h2" 
-                style={{ 
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: theme.colors.background.primary,
+                padding: theme.spacing.md,
+            }}
+        >
+            <Typography
+                variant="h2"
+                style={{
                     color: theme.colors.text.primary,
-                    marginBottom: theme.spacing.lg
+                    marginBottom: theme.spacing.lg,
                 }}
             >
                 設定
             </Typography>
-            
+
             <ScrollView showsVerticalScrollIndicator={false}>
                 {settingsItems.map((item) => (
-                    <TouchableOpacity
-                        key={item.id}
-                        onPress={item.onPress}
-                        activeOpacity={0.7}
-                    >
-                        <Card style={{ 
-                            marginBottom: theme.spacing.md,
-                            borderLeftWidth: 4,
-                            borderLeftColor: item.isDestructive 
-                                ? theme.colors.status.error 
-                                : theme.colors.primary.main
-                        }}>
-                            <View style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                            }}>
-                                <View style={{
-                                    width: 40,
-                                    height: 40,
-                                    borderRadius: 20,
-                                    backgroundColor: item.isDestructive 
-                                        ? theme.colors.status.error + '20'
-                                        : theme.colors.primary.main + '20',
-                                    justifyContent: "center",
+                    <TouchableOpacity key={item.id} onPress={item.onPress} activeOpacity={0.7}>
+                        <Card
+                            style={{
+                                marginBottom: theme.spacing.md,
+                                borderLeftWidth: 4,
+                                borderLeftColor: item.isDestructive ? theme.colors.status.error : theme.colors.primary.main,
+                            }}
+                        >
+                            <View
+                                style={{
+                                    flexDirection: "row",
                                     alignItems: "center",
-                                    marginRight: theme.spacing.md
-                                }}>
-                                    <Icon 
-                                        name={item.icon}
-                                        size={20}
-                                        color={item.isDestructive 
-                                            ? theme.colors.status.error 
-                                            : theme.colors.primary.main}
-                                    />
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        width: 40,
+                                        height: 40,
+                                        borderRadius: 20,
+                                        backgroundColor: item.isDestructive ? theme.colors.status.error + "20" : theme.colors.primary.main + "20",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        marginRight: theme.spacing.md,
+                                    }}
+                                >
+                                    <Icon name={item.icon} size={20} color={item.isDestructive ? theme.colors.status.error : theme.colors.primary.main} />
                                 </View>
-                                
+
                                 <View style={{ flex: 1 }}>
-                                    <Typography 
-                                        variant="body" 
-                                        style={{ 
-                                            color: item.isDestructive 
-                                                ? theme.colors.status.error 
-                                                : theme.colors.text.primary 
+                                    <Typography
+                                        variant="body"
+                                        style={{
+                                            color: item.isDestructive ? theme.colors.status.error : theme.colors.text.primary,
                                         }}
                                     >
                                         {item.title}
                                     </Typography>
-                                    <Typography 
-                                        variant="caption" 
-                                        style={{ 
+                                    <Typography
+                                        variant="caption"
+                                        style={{
                                             color: theme.colors.text.secondary,
-                                            marginTop: theme.spacing.xs
+                                            marginTop: theme.spacing.xs,
                                         }}
                                     >
                                         {item.description}
                                     </Typography>
                                 </View>
-                                
-                                <Icon 
-                                    name="chevron-right"
-                                    size={16}
-                                    color={theme.colors.text.secondary}
-                                />
+
+                                <Icon name="chevron-right" size={16} color={theme.colors.text.secondary} />
                             </View>
                         </Card>
                     </TouchableOpacity>
                 ))}
-                
+
                 <View style={{ marginTop: theme.spacing.xl }}>
-                    <Typography 
-                        variant="caption" 
-                        style={{ 
+                    <Typography
+                        variant="caption"
+                        style={{
                             color: theme.colors.text.secondary,
-                            textAlign: "center"
+                            textAlign: "center",
                         }}
                     >
                         PassPal v1.0.0

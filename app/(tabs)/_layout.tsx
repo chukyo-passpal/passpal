@@ -3,7 +3,7 @@ import { useTheme, Icon } from "@/design-system";
 
 export default function TabLayout() {
     const theme = useTheme();
-    
+
     return (
         <Tabs
             screenOptions={{
@@ -19,48 +19,40 @@ export default function TabLayout() {
                 headerTintColor: theme.colors.text.primary,
             }}
         >
-            <Tabs.Screen 
-                name="index" 
-                options={{ 
+            <Tabs.Screen
+                name="index"
+                options={{
                     title: "ホーム",
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name="home" size={size as any} color={color} />
-                    )
-                }} 
+                    tabBarIcon: ({ color, size }) => <Icon name="home" size={size as any} color={color} />,
+                }}
             />
-            <Tabs.Screen 
-                name="assignments" 
-                options={{ 
+            <Tabs.Screen
+                name="assignments"
+                options={{
                     title: "課題",
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name="clipboard-list" size={size as any} color={color} />
-                    )
-                }} 
+                    tabBarIcon: ({ color, size }) => <Icon name="clipboard-list" size={size as any} color={color} />,
+                }}
             />
-            <Tabs.Screen 
-                name="timetable" 
-                options={{ 
+            <Tabs.Screen
+                name="timetable"
+                options={{
                     title: "時間割",
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name="calendar" size={size as any} color={color} />
-                    )
-                }} 
+                    tabBarIcon: ({ color, size }) => <Icon name="calendar" size={size as any} color={color} />,
+                }}
             />
-            <Tabs.Screen 
-                name="transport" 
-                options={{ 
+            <Tabs.Screen
+                name="transport"
+                options={{
                     title: "交通",
-                    tabBarIcon: ({ color, size }) => (
-                        <Icon name="bus" size={size as any} color={color} />
-                    )
-                }} 
+                    tabBarIcon: ({ color, size }) => <Icon name="bus" size={size as any} color={color} />,
+                }}
             />
-            <Tabs.Screen 
-                name="course" 
-                options={{ 
+            <Tabs.Screen
+                name="course"
+                options={{
                     headerShown: false,
-                    href: null // Hide from tab bar
-                }} 
+                    href: null, // Hide from tab bar
+                }}
             />
         </Tabs>
     );
