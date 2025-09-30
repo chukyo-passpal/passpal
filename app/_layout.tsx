@@ -1,12 +1,15 @@
 import { Stack, useRouter, usePathname } from "expo-router";
 import { useEffect } from "react";
 import { SessionProvider, useAuth } from "@/context/authContext";
+import { ThemeProvider, useTheme } from "@/design-system";
 
 export default function RootLayout() {
     return (
-        <SessionProvider>
-            <RootLayoutNav />
-        </SessionProvider>
+        <ThemeProvider>
+            <SessionProvider>
+                <RootLayoutNav />
+            </SessionProvider>
+        </ThemeProvider>
     );
 }
 
@@ -14,6 +17,7 @@ function RootLayoutNav() {
     const { isLoading, isAuthenticated } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
+    const theme = useTheme();
 
     useEffect(() => {
         if (isLoading) return;
@@ -44,14 +48,39 @@ function RootLayoutNav() {
     }
 
     return (
-        <Stack screenOptions={{ headerShown: false }}>
+        <Stack 
+            screenOptions={{ 
+                headerShown: false,
+                headerStyle: {
+                    backgroundColor: theme.colors.background.surface,
+                },
+                headerTintColor: theme.colors.text.primary,
+                headerTitleStyle: {
+                    fontFamily: "Inter",
+                    fontWeight: "600",
+                },
+            }}
+        >
             {/* 認証が必要な画面 */}
             <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="settings" />
+            <Stack.Screen 
+                name="settings" 
+                options={{ 
+                    headerShown: true,
+                    title: "設定",
+                    presentation: "modal"
+                }} 
+            />
             <Stack.Screen name="course" />
 
             {/* セットアップ画面 */}
-            <Stack.Screen name="setup" />
+            <Stack.Screen 
+                name="setup" 
+                options={{ 
+                    headerShown: true,
+                    title: "セットアップ"
+                }} 
+            />
 
             {/* 認証画面 */}
             <Stack.Screen name="login" />
