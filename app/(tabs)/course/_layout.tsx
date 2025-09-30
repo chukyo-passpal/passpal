@@ -1,5 +1,9 @@
-import { Stack } from "expo-router";
+import { Tabs } from "expo-router";
 
 export default function RootLayout() {
-  return <Stack />;
+    return (
+        <Tabs>
+            <Tabs.Screen name="[courseId]" options={{ title: "[授業名]" }} />
+        </Tabs>
+    );
 }
