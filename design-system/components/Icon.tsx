@@ -24,6 +24,7 @@ import {
     Lock,
     Eye,
     EyeOff,
+    Clock,
     LucideProps,
 } from "lucide-react-native";
 import { useTheme } from "../tokens/ThemeProvider";
@@ -47,7 +48,8 @@ export type IconName =
     | "map-pin"
     | "lock"
     | "eye"
-    | "eye-off";
+    | "eye-off"
+    | "clock";
 
 interface IconProps {
     name: IconName;
@@ -76,6 +78,7 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     lock: Lock,
     eye: Eye,
     "eye-off": EyeOff,
+    clock: Clock,
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 24, color, containerStyle }) => {
@@ -145,3 +148,4 @@ export const BellIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name
 export const BusIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="bus" {...props} />;
 
 export const ClipboardIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="clipboard-list" {...props} />;
+export const ClockIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="clock" {...props} />;

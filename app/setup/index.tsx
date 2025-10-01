@@ -1,8 +1,13 @@
 import { View } from "react-native";
 import { Heading1, BodyText, PrimaryButton, Card } from "../../design-system";
-import { Car, Check, GraduationCap, Icon } from "lucide-react-native";
+import { Car, Check, GraduationCap } from "lucide-react-native";
+import { router } from "expo-router";
 
 export default function Index() {
+    const handleNext = () => {
+        router.push("/setup/step2");
+    };
+
     return (
         <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 80, alignItems: "center" }}>
             {/* Progress Bar Section */}
@@ -100,6 +105,7 @@ export default function Index() {
                         alignItems: "center",
                         backgroundColor: "#b19cd9",
                     }}
+                    onPress={handleNext}
                 >
                     <BodyText style={{ color: "#fff", fontWeight: "600", fontSize: 16 }}>次へ</BodyText>
                 </PrimaryButton>
