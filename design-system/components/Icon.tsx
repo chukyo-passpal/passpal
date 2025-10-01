@@ -25,11 +25,12 @@ import {
     Eye,
     EyeOff,
     Clock,
+    Check,
     LucideProps,
 } from "lucide-react-native";
 import { useTheme } from "../tokens/ThemeProvider";
 
-export type IconSize = 16 | 20 | 24 | 32;
+export type IconSize = 12 | 16 | 20 | 24 | 32;
 export type IconName =
     | "home"
     | "calendar"
@@ -49,7 +50,8 @@ export type IconName =
     | "lock"
     | "eye"
     | "eye-off"
-    | "clock";
+    | "clock"
+    | "check";
 
 interface IconProps {
     name: IconName;
@@ -79,6 +81,7 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     eye: Eye,
     "eye-off": EyeOff,
     clock: Clock,
+    check: Check,
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 24, color, containerStyle }) => {
@@ -149,3 +152,5 @@ export const BusIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name=
 
 export const ClipboardIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="clipboard-list" {...props} />;
 export const ClockIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="clock" {...props} />;
+
+export const CheckIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="check" {...props} />;

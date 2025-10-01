@@ -15,7 +15,7 @@ export { Typography, Heading1, Heading2, Heading3, BodyText, BodySmall, Caption,
 export { Button, PrimaryButton, SecondaryButton, TextButton } from "./components/Button";
 export { Input } from "./components/Input";
 export { Card, CardHeader, CardContent, CardDivider, FeatureCard, InfoCard } from "./components/Card";
-export { Icon, IconContainer, HomeIcon, CalendarIcon, UserIcon, SettingsIcon, BellIcon, BusIcon, ClipboardIcon, ClockIcon } from "./components/Icon";
+export { Icon, IconContainer, HomeIcon, CalendarIcon, UserIcon, SettingsIcon, BellIcon, BusIcon, ClipboardIcon, ClockIcon, CheckIcon } from "./components/Icon";
 export { TabNavigation, BottomNavigation, NavigationHeader } from "./components/Navigation";
 
 // Types
