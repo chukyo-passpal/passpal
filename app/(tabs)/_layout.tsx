@@ -13,6 +13,8 @@ export default function TabLayout() {
                     backgroundColor: theme.colors.background.surface,
                     borderTopColor: theme.colors.background.secondary,
                 },
+
+                headerShown: false,
                 headerStyle: {
                     backgroundColor: theme.colors.background.surface,
                 },

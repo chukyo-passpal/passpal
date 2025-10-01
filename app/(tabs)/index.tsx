@@ -7,23 +7,6 @@ export default function HomeScreen() {
     const theme = useTheme();
     const router = useRouter();
 
-    const handleNavigation = (itemId: string) => {
-        switch (itemId) {
-            case "home":
-                // Already on home
-                break;
-            case "timetable":
-                router.push("/(tabs)/timetable");
-                break;
-            case "assignments":
-                router.push("/(tabs)/assignments");
-                break;
-            case "transport":
-                router.push("/(tabs)/transport");
-                break;
-        }
-    };
-
     const handleOpenALBO = () => {
         Linking.openURL("https://albo.aitech.ac.jp/");
     };
@@ -326,17 +309,6 @@ export default function HomeScreen() {
                     </View>
                 </View>
             </ScrollView>
-
-            {/* Bottom Navigation */}
-            <BottomNavigation
-                items={[
-                    { id: "home", label: "ホーム", icon: "home", active: true },
-                    { id: "timetable", label: "時間割", icon: "calendar", active: false },
-                    { id: "assignments", label: "課題", icon: "clipboard-list", active: false },
-                    { id: "transport", label: "時刻表", icon: "bus", active: false },
-                ]}
-                onItemPress={handleNavigation}
-            />
         </View>
     );
 }
