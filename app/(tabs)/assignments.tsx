@@ -1,133 +1,248 @@
-import { View, ScrollView } from "react-native";
-import { Typography, Card, Button, useTheme } from "@/design-system";
+import React from "react";
+import { View, ScrollView, Pressable } from "react-native";
+import { Heading2, Heading3, BodyText, BodySmall, Caption, Card, Icon } from "@/design-system";
 
 export default function Assignments() {
-    const theme = useTheme();
-
-    // サンプルの課題データ
-    const assignments = [
-        {
-            id: 1,
-            title: "数学の宿題",
-            dueDate: "2024年1月15日",
-            subject: "数学",
-            status: "pending",
-        },
-        {
-            id: 2,
-            title: "英語のレポート",
-            dueDate: "2024年1月20日",
-            subject: "英語",
-            status: "in-progress",
-        },
-        {
-            id: 3,
-            title: "理科の実験レポート",
-            dueDate: "2024年1月25日",
-            subject: "理科",
-            status: "completed",
-        },
-    ];
-
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case "completed":
-                return theme.colors.status.success;
-            case "in-progress":
-                return theme.colors.status.warning;
-            default:
-                return theme.colors.status.error;
-        }
-    };
-
-    const getStatusText = (status: string) => {
-        switch (status) {
-            case "completed":
-                return "完了";
-            case "in-progress":
-                return "進行中";
-            default:
-                return "未着手";
-        }
-    };
-
     return (
         <View
             style={{
                 flex: 1,
-                backgroundColor: theme.colors.background.primary,
-                padding: theme.spacing.md,
+                backgroundColor: "#FFFFFF",
+                paddingTop: 48,
             }}
         >
-            <Typography
-                variant="h2"
+            {/* Header */}
+            <View
                 style={{
-                    color: theme.colors.text.primary,
-                    marginBottom: theme.spacing.lg,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    paddingHorizontal: 20,
+                    paddingBottom: 16,
                 }}
             >
-                課題一覧
-            </Typography>
+                <Heading2 color="#B19CD9">課題一覧</Heading2>
+                <Pressable
+                    style={{
+                        width: 40,
+                        height: 40,
+                        backgroundColor: "#F8F9FA",
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        borderColor: "#E8E8E8",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    <Icon name="refresh-cw" size={20} color="#8B8B8B" />
+                </Pressable>
+            </View>
 
-            <ScrollView showsVerticalScrollIndicator={false}>
-                {assignments.map((assignment) => (
-                    <Card key={assignment.id} style={{ marginBottom: theme.spacing.md }}>
-                        <View style={{ marginBottom: theme.spacing.sm }}>
-                            <Typography variant="h3" style={{ color: theme.colors.text.primary }}>
-                                {assignment.title}
-                            </Typography>
-                            <Typography
-                                variant="bodySmall"
-                                style={{
-                                    color: theme.colors.text.secondary,
-                                    marginTop: theme.spacing.xs,
-                                }}
-                            >
-                                科目: {assignment.subject}
-                            </Typography>
-                            <Typography
-                                variant="bodySmall"
-                                style={{
-                                    color: theme.colors.text.secondary,
-                                    marginTop: theme.spacing.xs,
-                                }}
-                            >
-                                提出期限: {assignment.dueDate}
-                            </Typography>
-                        </View>
-
+            {/* Content */}
+            <ScrollView
+                style={{
+                    flex: 1,
+                    paddingHorizontal: 20,
+                }}
+                contentContainerStyle={{
+                    gap: 16,
+                    paddingBottom: 24,
+                }}
+            >
+                {/* Assignment Card 1 - 進行中 */}
+                <Pressable>
+                    <Card style={{ gap: 16, padding: 20 }}>
+                        {/* Header Row */}
                         <View
                             style={{
                                 flexDirection: "row",
-                                justifyContent: "space-between",
                                 alignItems: "center",
+                                justifyContent: "space-between",
                             }}
                         >
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Heading3>アルゴリズムとデータ構造</Heading3>
+                                <BodySmall color="#8B8B8B">B+木インデックスを実装しよう</BodySmall>
+                            </View>
                             <View
                                 style={{
-                                    backgroundColor: getStatusColor(assignment.status),
-                                    paddingHorizontal: theme.spacing.sm,
-                                    paddingVertical: theme.spacing.xs,
-                                    borderRadius: 12,
+                                    backgroundColor: "#F0EBFF",
+                                    paddingHorizontal: 12,
+                                    paddingVertical: 6,
+                                    borderRadius: 16,
                                 }}
                             >
-                                <Typography variant="caption" style={{ color: theme.colors.text.inverse }}>
-                                    {getStatusText(assignment.status)}
-                                </Typography>
+                                <Caption color="#B19CD9">進行中</Caption>
                             </View>
+                        </View>
 
-                            <Button
-                                variant="secondary"
-                                size="small"
-                                onPress={() => {
-                                    // TODO: 課題詳細画面への遷移
-                                }}
-                            >
-                                詳細
-                            </Button>
+                        {/* Divider */}
+                        <View style={{ height: 1, backgroundColor: "#E8E8E8" }} />
+
+                        {/* Time Info */}
+                        <View style={{ flexDirection: "row", gap: 24 }}>
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Caption color="#8B8B8B">開始日時</Caption>
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                    <Icon name="calendar" size={16} color="#8B8B8B" />
+                                    <BodyText style={{ fontSize: 16 }}>7月4日(金) 12:00</BodyText>
+                                </View>
+                            </View>
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Caption color="#8B8B8B">締切日時</Caption>
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                    <Icon name="clock" size={16} color="#8B8B8B" />
+                                    <BodyText style={{ fontSize: 16 }}>12月12日(金) 12:00</BodyText>
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* Action Row */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                <Icon name="flag" size={16} color="#F5C842" />
+                                <BodySmall color="#F5C842">高優先度</BodySmall>
+                            </View>
+                            <Icon name="chevron-right" size={20} color="#8B8B8B" />
                         </View>
                     </Card>
-                ))}
+                </Pressable>
+
+                {/* Assignment Card 2 - 完了 */}
+                <Pressable>
+                    <Card style={{ gap: 16, padding: 20 }}>
+                        {/* Header Row */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Heading3>データベース設計</Heading3>
+                                <BodySmall color="#8B8B8B">正規化とER図の作成</BodySmall>
+                            </View>
+                            <View
+                                style={{
+                                    backgroundColor: "#F0F9F1",
+                                    paddingHorizontal: 12,
+                                    paddingVertical: 6,
+                                    borderRadius: 16,
+                                }}
+                            >
+                                <Caption color="#90C695">完了</Caption>
+                            </View>
+                        </View>
+
+                        {/* Divider */}
+                        <View style={{ height: 1, backgroundColor: "#E8E8E8" }} />
+
+                        {/* Time Info */}
+                        <View style={{ flexDirection: "row", gap: 24 }}>
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Caption color="#8B8B8B">開始日時</Caption>
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                    <Icon name="calendar" size={16} color="#8B8B8B" />
+                                    <BodyText style={{ fontSize: 16 }}>6月15日(月) 09:00</BodyText>
+                                </View>
+                            </View>
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Caption color="#8B8B8B">締切日時</Caption>
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                    <Icon name="clock" size={16} color="#8B8B8B" />
+                                    <BodyText style={{ fontSize: 16 }}>7月1日(月) 23:59</BodyText>
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* Action Row */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                <Icon name="check-circle" size={16} color="#90C695" />
+                                <BodySmall color="#90C695">提出済み</BodySmall>
+                            </View>
+                            <Icon name="chevron-right" size={20} color="#8B8B8B" />
+                        </View>
+                    </Card>
+                </Pressable>
+
+                {/* Assignment Card 3 - 期限近 */}
+                <Pressable>
+                    <Card style={{ gap: 16, padding: 20 }}>
+                        {/* Header Row */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Heading3>ソフトウェア工学</Heading3>
+                                <BodySmall color="#8B8B8B">アジャイル開発手法のレポート</BodySmall>
+                            </View>
+                            <View
+                                style={{
+                                    backgroundColor: "#FFFBF0",
+                                    paddingHorizontal: 12,
+                                    paddingVertical: 6,
+                                    borderRadius: 16,
+                                }}
+                            >
+                                <Caption color="#F5C842">期限近</Caption>
+                            </View>
+                        </View>
+
+                        {/* Divider */}
+                        <View style={{ height: 1, backgroundColor: "#E8E8E8" }} />
+
+                        {/* Time Info */}
+                        <View style={{ flexDirection: "row", gap: 24 }}>
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Caption color="#8B8B8B">開始日時</Caption>
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                    <Icon name="calendar" size={16} color="#8B8B8B" />
+                                    <BodyText style={{ fontSize: 16 }}>7月10日(水) 14:00</BodyText>
+                                </View>
+                            </View>
+                            <View style={{ flex: 1, gap: 4 }}>
+                                <Caption color="#8B8B8B">締切日時</Caption>
+                                <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                    <Icon name="clock" size={16} color="#8B8B8B" />
+                                    <BodyText style={{ fontSize: 16 }}>7月20日(土) 23:59</BodyText>
+                                </View>
+                            </View>
+                        </View>
+
+                        {/* Action Row */}
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                <Icon name="alert-triangle" size={16} color="#F5C842" />
+                                <BodySmall color="#F5C842">中優先度</BodySmall>
+                            </View>
+                            <Icon name="chevron-right" size={20} color="#8B8B8B" />
+                        </View>
+                    </Card>
+                </Pressable>
             </ScrollView>
         </View>
     );

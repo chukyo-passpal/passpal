@@ -26,6 +26,10 @@ import {
     EyeOff,
     Clock,
     Check,
+    RefreshCw,
+    Flag,
+    CheckCircle,
+    AlertTriangle,
     LucideProps,
 } from "lucide-react-native";
 import { useTheme } from "../tokens/ThemeProvider";
@@ -51,7 +55,11 @@ export type IconName =
     | "eye"
     | "eye-off"
     | "clock"
-    | "check";
+    | "check"
+    | "refresh-cw"
+    | "flag"
+    | "check-circle"
+    | "alert-triangle";
 
 interface IconProps {
     name: IconName;
@@ -82,6 +90,10 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     "eye-off": EyeOff,
     clock: Clock,
     check: Check,
+    "refresh-cw": RefreshCw,
+    flag: Flag,
+    "check-circle": CheckCircle,
+    "alert-triangle": AlertTriangle,
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 24, color, containerStyle }) => {
