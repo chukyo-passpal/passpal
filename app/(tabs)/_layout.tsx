@@ -29,13 +29,6 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="assignments"
-                options={{
-                    title: "課題",
-                    tabBarIcon: ({ color, size }) => <Icon name="clipboard-list" size={size as any} color={color} />,
-                }}
-            />
-            <Tabs.Screen
                 name="timetable"
                 options={{
                     title: "時間割",
@@ -43,16 +36,22 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
+                name="assignments"
+                options={{
+                    title: "課題",
+                    tabBarIcon: ({ color, size }) => <Icon name="clipboard-list" size={size as any} color={color} />,
+                }}
+            />
+            <Tabs.Screen
                 name="transport"
                 options={{
-                    title: "交通",
+                    title: "時刻表",
                     tabBarIcon: ({ color, size }) => <Icon name="bus" size={size as any} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="course"
                 options={{
-                    headerShown: false,
                     href: null, // Hide from tab bar
                 }}
             />

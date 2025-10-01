@@ -54,7 +54,6 @@ function RootLayoutNav() {
             <Stack.Protected guard={isAuthenticated && isTermsAccepted}>
                 <Stack.Screen name="(tabs)" />
                 <Stack.Screen name="settings" />
-                <Stack.Screen name="course" />
             </Stack.Protected>
 
             {/* Storybook画面（デバッグモード時のみ） */}
