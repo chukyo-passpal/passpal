@@ -1,6 +1,6 @@
-import React from 'react';
-import StorybookMain from '../StorybookMain';
+import React from "react";
+import StorybookMain from "../StorybookMain";
 
 export default function StorybookPage() {
-  return <StorybookMain />;
+    return <StorybookMain />;
 }
