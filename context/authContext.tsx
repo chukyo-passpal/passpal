@@ -56,12 +56,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
                     setIsTermsAccepted(null);
                 },
                 acceptTerms: () => {
-                    setIsTermsAccepted('accepted');
+                    setIsTermsAccepted("accepted");
                 },
                 user,
                 isLoading,
                 isAuthenticated,
-                isTermsAccepted: isTermsAccepted === 'accepted',
+                isTermsAccepted: isTermsAccepted === "accepted",
             }}
         >
             {children}

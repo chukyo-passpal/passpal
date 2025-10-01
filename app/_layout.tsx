@@ -1,4 +1,4 @@
-import { Stack, useRouter, usePathname } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import { AuthProvider, useAuth } from "@/context/authContext";
 import { ThemeProvider, useTheme } from "@/design-system";
 
@@ -13,44 +13,13 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-    const { isLoading, isAuthenticated } = useAuth();
-    const router = useRouter();
+    const { isLoading, isAuthenticated, isTermsAccepted } = useAuth();
     const pathname = usePathname();
     const theme = useTheme();
 
-    if (isLoading) {
-        // ローディング画面を表示
-        return (
-            <Stack>
-                <Stack.Screen name="loading" options={{ headerShown: false }} />
-            </Stack>
-        );
-    }
+    const isDebugMode = __DEV__; // デバッグ時のみ有効化
 
-    const isLoginRoute = pathname.startsWith("/login");
-    const isSetupRoute = pathname.startsWith("/setup");
-
-    // TODO: デバッグ時にのみ有効化するようにする
-    const isStoryBookRoute = pathname.startsWith("/storybook");
-    if (isStoryBookRoute) {
-        return (
-            <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="storybook" />
-            </Stack>
-        );
-    }
-
-    // 未認証かつログイン・セットアップページでない場合はログインページへリダイレクト
-    if (!isAuthenticated && !isLoginRoute && !isSetupRoute) {
-        router.replace("/login");
-        return;
-    }
-
-    // 認証済みかつログインページの場合はダッシュボードへリダイレクト
-    if (isAuthenticated && isLoginRoute) {
-        router.replace("/");
-        return;
-    }
+    const isStorybookPath = pathname.startsWith("/storybook");
 
     return (
         <Stack
@@ -66,29 +35,45 @@ function RootLayoutNav() {
                 },
             }}
         >
-            {/* 認証が必要な画面 */}
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen
-                name="settings"
-                options={{
-                    headerShown: true,
-                    title: "設定",
-                    presentation: "modal",
-                }}
-            />
-            <Stack.Screen name="course" />
-
-            {/* セットアップ画面 */}
-            <Stack.Screen
-                name="setup"
-                options={{
-                    headerShown: true,
-                    title: "セットアップ",
-                }}
-            />
+            {/* ローディング画面 */}
+            <Stack.Protected guard={isLoading}>
+                <Stack.Screen name="loading" options={{ headerShown: false }} />
+            </Stack.Protected>
 
             {/* 認証画面 */}
-            <Stack.Screen name="login" />
+            <Stack.Protected guard={!isAuthenticated}>
+                <Stack.Screen name="login" />
+            </Stack.Protected>
+
+            {/* セットアップ画面 */}
+            <Stack.Protected guard={isAuthenticated && !isTermsAccepted}>
+                <Stack.Screen
+                    name="setup"
+                    options={{
+                        headerShown: true,
+                        title: "セットアップ",
+                    }}
+                />
+            </Stack.Protected>
+
+            {/* 認証が必要な画面 */}
+            <Stack.Protected guard={isAuthenticated && isTermsAccepted}>
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen
+                    name="settings"
+                    options={{
+                        headerShown: true,
+                        title: "設定",
+                        presentation: "modal",
+                    }}
+                />
+                <Stack.Screen name="course" />
+            </Stack.Protected>
+
+            {/* Storybook画面（デバッグモード時のみ） */}
+            <Stack.Protected guard={isDebugMode && isStorybookPath}>
+                <Stack.Screen name="storybook" options={{ headerShown: false }} />
+            </Stack.Protected>
         </Stack>
     );
 }
