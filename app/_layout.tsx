@@ -37,7 +37,7 @@ function RootLayoutNav() {
         >
             {/* ローディング画面 */}
             <Stack.Protected guard={isLoading}>
-                <Stack.Screen name="loading" options={{ headerShown: false }} />
+                <Stack.Screen name="loading" />
             </Stack.Protected>
 
             {/* 認証画面 */}
@@ -47,32 +47,19 @@ function RootLayoutNav() {
 
             {/* セットアップ画面 */}
             <Stack.Protected guard={isAuthenticated && !isTermsAccepted}>
-                <Stack.Screen
-                    name="setup"
-                    options={{
-                        headerShown: true,
-                        title: "セットアップ",
-                    }}
-                />
+                <Stack.Screen name="setup" />
             </Stack.Protected>
 
             {/* 認証が必要な画面 */}
             <Stack.Protected guard={isAuthenticated && isTermsAccepted}>
                 <Stack.Screen name="(tabs)" />
-                <Stack.Screen
-                    name="settings"
-                    options={{
-                        headerShown: true,
-                        title: "設定",
-                        presentation: "modal",
-                    }}
-                />
+                <Stack.Screen name="settings" />
                 <Stack.Screen name="course" />
             </Stack.Protected>
 
             {/* Storybook画面（デバッグモード時のみ） */}
             <Stack.Protected guard={isDebugMode && isStorybookPath}>
-                <Stack.Screen name="storybook" options={{ headerShown: false }} />
+                <Stack.Screen name="storybook" />
             </Stack.Protected>
         </Stack>
     );

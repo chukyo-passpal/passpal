@@ -1,18 +1,20 @@
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { ThemeProvider, Icon, Heading2, BodyText, Input, PrimaryButton, TextButton } from "../../design-system";
+import { router } from "expo-router";
+import { useAuth } from "@/context/authContext";
 
 export default function Index() {
+    const { signIn } = useAuth();
     const [password, setPassword] = useState("");
 
     const handleLogin = () => {
         // ログイン処理を実装
-        console.log("Login with password:", password);
+        signIn();
     };
 
     const handleBackToStudentId = () => {
-        // 学籍番号入力画面に戻る
-        console.log("Back to student ID input");
+        router.back();
     };
 
     return (
@@ -67,8 +69,6 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         paddingVertical: 48,
         justifyContent: "center",
-        alignItems: "center",
-        maxWidth: 412,
         alignSelf: "center",
     },
     headerSection: {
@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
         color: "#8B8B8B",
     },
     formSection: {
-        width: "100%",
         marginBottom: 24,
     },
     passwordInput: {

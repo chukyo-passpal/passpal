@@ -9,7 +9,7 @@ export default function Index() {
         router.replace("/login/step3");
     };
     const handleBack = () => {
-        router.replace("/login");
+        router.back();
     };
 
     return (
