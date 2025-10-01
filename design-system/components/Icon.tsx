@@ -21,6 +21,9 @@ import {
     Train,
     Footprints,
     MapPin,
+    Lock,
+    Eye,
+    EyeOff,
     LucideProps,
 } from "lucide-react-native";
 import { useTheme } from "../tokens/ThemeProvider";
@@ -41,7 +44,10 @@ export type IconName =
     | "chevron-right"
     | "train"
     | "footprints"
-    | "map-pin";
+    | "map-pin"
+    | "lock"
+    | "eye"
+    | "eye-off";
 
 interface IconProps {
     name: IconName;
@@ -67,6 +73,9 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     train: Train,
     footprints: Footprints,
     "map-pin": MapPin,
+    lock: Lock,
+    eye: Eye,
+    "eye-off": EyeOff,
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 24, color, containerStyle }) => {
