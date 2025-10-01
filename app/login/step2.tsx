@@ -2,8 +2,16 @@ import { View } from "react-native";
 import { Button } from "../../design-system/components/Button";
 import { UserIcon } from "../../design-system/components/Icon";
 import { Typography } from "../../design-system/components/Typography";
+import { router } from "expo-router";
 
 export default function Index() {
+    const handleNext = () => {
+        router.replace("/login/step3");
+    };
+    const handleBack = () => {
+        router.replace("/login");
+    };
+
     return (
         <View
             style={{
@@ -110,10 +118,7 @@ export default function Index() {
                             height: 56,
                             borderRadius: 28,
                         }}
-                        onPress={() => {
-                            // Handle Google sign-in
-                            console.log("Google sign-in pressed");
-                        }}
+                        onPress={handleNext}
                     >
                         <Typography
                             variant="button"
@@ -128,13 +133,7 @@ export default function Index() {
                     </Button>
 
                     {/* Back to Student ID Button */}
-                    <Button
-                        variant="text"
-                        onPress={() => {
-                            // Handle navigation back
-                            console.log("Back to student ID pressed");
-                        }}
-                    >
+                    <Button variant="text" onPress={handleBack}>
                         <Typography
                             variant="button"
                             color="#B19CD9"
