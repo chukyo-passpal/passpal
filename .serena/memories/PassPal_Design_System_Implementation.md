@@ -1,0 +1,1 @@
+Implement components from the design system in the index.tsx file based on the Figma design provided. Use the design tokens and components such as Typography, Button, and Card to create a welcoming interface for the PassPal application.
