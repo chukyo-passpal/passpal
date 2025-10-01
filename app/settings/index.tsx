@@ -2,12 +2,18 @@ import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Typography, Card, Icon, useTheme } from "@/design-system";
 import { Building, ChevronDown, Moon, Trash2 } from "lucide-react-native";
 import { router } from "expo-router";
+import { useAuth } from "@/context/authContext";
 
 export default function Settings() {
     const theme = useTheme();
+    const { signOut } = useAuth();
 
     const handleBack = () => {
         router.back();
+    };
+
+    const handleLogout = () => {
+        signOut();
     };
 
     return (
@@ -120,12 +126,7 @@ export default function Settings() {
                         </Card>
 
                         {/* Logout Item */}
-                        <TouchableOpacity
-                            onPress={() => {
-                                // TODO: Logout functionality
-                            }}
-                            activeOpacity={0.7}
-                        >
+                        <TouchableOpacity onPress={handleLogout} activeOpacity={0.7}>
                             <Card
                                 style={{
                                     flexDirection: "row",
