@@ -1,22 +1,19 @@
 import { View, ScrollView } from "react-native";
-import { Typography, Card, Button, Input, useTheme } from "@/design-system";
+import { Typography, Button, Input, useTheme, UserIcon } from "@/design-system";
 import { useState } from "react";
 import { useRouter } from "expo-router";
 
 export default function Login() {
     const theme = useTheme();
     const router = useRouter();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [studentId, setStudentId] = useState("");
 
-    const handleLogin = () => {
-        // TODO: ログイン処理
+    const handleNext = () => {
+        // TODO: 学籍番号バリデーション
         router.push("/login/step2");
     };
 
-    const handleSignUp = () => {
-        router.push("/setup");
-    };
+    const isNextEnabled = studentId.trim().length > 0;
 
     return (
         <View
@@ -28,6 +25,7 @@ export default function Login() {
             }}
         >
             <ScrollView contentContainerStyle={{ justifyContent: "center", flex: 1 }} showsVerticalScrollIndicator={false}>
+                {/* ウェルカムセクション */}
                 <View style={{ marginBottom: theme.spacing.xl }}>
                     <Typography
                         variant="h1"
@@ -37,7 +35,7 @@ export default function Login() {
                             marginBottom: theme.spacing.md,
                         }}
                     >
-                        PassPal
+                        ようこそ PassPalへ！
                     </Typography>
                     <Typography
                         variant="body"
@@ -46,77 +44,46 @@ export default function Login() {
                             textAlign: "center",
                         }}
                     >
-                        あなたの学習をサポートします
+                        新しいキャンパスライフ・アシスタント
                     </Typography>
                 </View>
 
-                <Card style={{ marginBottom: theme.spacing.lg }}>
-                    <Typography
-                        variant="h3"
-                        style={{
-                            color: theme.colors.text.primary,
-                            marginBottom: theme.spacing.lg,
-                        }}
-                    >
-                        ログイン
-                    </Typography>
-
-                    <View style={{ marginBottom: theme.spacing.md }}>
-                        <Typography
-                            variant="label"
-                            style={{
-                                color: theme.colors.text.primary,
-                                marginBottom: theme.spacing.sm,
-                            }}
-                        >
-                            メールアドレス
-                        </Typography>
-                        <Input placeholder="メールアドレスを入力" value={email} onChangeText={setEmail} keyboardType="email-address" autoCapitalize="none" />
-                    </View>
-
+                {/* フォームセクション */}
+                <View style={{ marginBottom: theme.spacing.lg }}>
                     <View style={{ marginBottom: theme.spacing.lg }}>
                         <Typography
-                            variant="label"
+                            variant="h3"
                             style={{
                                 color: theme.colors.text.primary,
-                                marginBottom: theme.spacing.sm,
+                                textAlign: "center",
+                                marginBottom: theme.spacing.md,
                             }}
                         >
-                            パスワード
+                            学籍番号を入力して下さい
                         </Typography>
-                        <Input placeholder="パスワードを入力" value={password} onChangeText={setPassword} secureTextEntry />
+                        <Typography
+                            variant="bodySmall"
+                            style={{
+                                color: theme.colors.text.secondary,
+                                textAlign: "center",
+                                marginBottom: theme.spacing.lg,
+                            }}
+                        >
+                            例: t324076
+                        </Typography>
+
+                        <Input
+                            placeholder="学生番号"
+                            value={studentId}
+                            onChangeText={setStudentId}
+                            leftIcon={<UserIcon size={20} color={theme.colors.text.secondary} />}
+                            autoCapitalize="none"
+                            autoCorrect={false}
+                        />
                     </View>
 
-                    <Button variant="primary" onPress={handleLogin} style={{ marginBottom: theme.spacing.md }}>
-                        ログイン
-                    </Button>
-
-                    <Typography
-                        variant="bodySmall"
-                        style={{
-                            color: theme.colors.text.secondary,
-                            textAlign: "center",
-                        }}
-                    >
-                        パスワードを忘れた方は
-                        <Typography variant="bodySmall" style={{ color: theme.colors.primary.main }}>
-                            こちら
-                        </Typography>
-                    </Typography>
-                </Card>
-
-                <View style={{ alignItems: "center" }}>
-                    <Typography
-                        variant="body"
-                        style={{
-                            color: theme.colors.text.secondary,
-                            marginBottom: theme.spacing.md,
-                        }}
-                    >
-                        アカウントをお持ちでない方
-                    </Typography>
-                    <Button variant="secondary" onPress={handleSignUp}>
-                        新規登録
+                    <Button variant={isNextEnabled ? "primary" : "secondary"} disabled={!isNextEnabled} onPress={handleNext} fullWidth>
+                        次へ
                     </Button>
                 </View>
             </ScrollView>
