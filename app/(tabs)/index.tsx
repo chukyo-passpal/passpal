@@ -1,7 +1,7 @@
 import React from "react";
 import { View, ScrollView, TouchableOpacity, Linking } from "react-native";
 import { useRouter } from "expo-router";
-import { Typography, Card, CardHeader, CardDivider, Button, Icon, IconContainer, BottomNavigation, useTheme } from "@/design-system";
+import { Typography, Card, CardHeader, CardDivider, Button, Icon, IconContainer, useTheme } from "@/design-system";
 
 export default function HomeScreen() {
     const theme = useTheme();
