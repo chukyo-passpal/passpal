@@ -6,7 +6,7 @@
 export const typography = {
     // Font Families
     fontFamily: {
-        primary: "Inter", // React Native will use platform-specific fallbacks
+        primary: "system-ui",
     },
 
     // Font Weights
@@ -46,19 +46,16 @@ export const typography = {
             fontSize: 32,
             lineHeight: 38.4,
             fontWeight: "700" as const,
-            fontFamily: "Inter",
         },
         h2: {
             fontSize: 24,
             lineHeight: 28.8,
             fontWeight: "700" as const,
-            fontFamily: "Inter",
         },
         h3: {
             fontSize: 20,
             lineHeight: 24,
             fontWeight: "700" as const,
-            fontFamily: "Inter",
         },
 
         // Body Text
@@ -66,13 +63,11 @@ export const typography = {
             fontSize: 16,
             lineHeight: 19.2,
             fontWeight: "400" as const,
-            fontFamily: "Inter",
         },
         bodySmall: {
             fontSize: 14,
             lineHeight: 16.8,
             fontWeight: "400" as const,
-            fontFamily: "Inter",
         },
 
         // Component Text
@@ -80,25 +75,21 @@ export const typography = {
             fontSize: 16,
             lineHeight: 19.2,
             fontWeight: "600" as const,
-            fontFamily: "Inter",
         },
         buttonSmall: {
             fontSize: 14,
             lineHeight: 16.8,
             fontWeight: "500" as const,
-            fontFamily: "Inter",
         },
         label: {
             fontSize: 14,
             lineHeight: 16.8,
             fontWeight: "500" as const,
-            fontFamily: "Inter",
         },
         caption: {
             fontSize: 12,
             lineHeight: 14.4,
             fontWeight: "400" as const,
-            fontFamily: "Inter",
         },
     },
 } as const;

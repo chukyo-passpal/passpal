@@ -23,6 +23,7 @@ export const Typography: React.FC<TypographyProps> = ({ variant = "body", color,
         variantStyle,
         {
             color: color || theme.colors.text.primary,
+            fontFamily: theme.typography.fontFamily.primary,
         },
         style,
     ];
