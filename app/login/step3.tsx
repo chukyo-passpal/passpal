@@ -1,11 +1,12 @@
 import { View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { ThemeProvider, Icon, Heading2, BodyText, Input, PrimaryButton, TextButton } from "../../design-system";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useAuth } from "@/context/authContext";
 
 export default function Index() {
     const { signIn } = useAuth();
+    const { studentId } = useLocalSearchParams<{ studentId: string }>();
     const [password, setPassword] = useState("");
 
     const handleLogin = () => {
@@ -31,7 +32,7 @@ export default function Index() {
                         {/* Text Section */}
                         <View style={styles.textSection}>
                             <Heading2 style={styles.title}>パスワードを入力</Heading2>
-                            <BodyText style={styles.description}>CU_ID (t324076) のパスワードを入力してください。</BodyText>
+                            <BodyText style={styles.description}>CU_ID ({studentId}) のパスワードを入力してください。</BodyText>
                         </View>
                     </View>
 

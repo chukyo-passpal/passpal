@@ -10,7 +10,10 @@ export default function Login() {
 
     const handleNext = () => {
         // TODO: 学籍番号バリデーション
-        router.push("/login/step2");
+        router.push({
+            pathname: "/login/step2",
+            params: { studentId: studentId },
+        });
     };
 
     const isNextEnabled = studentId.trim().length > 0;

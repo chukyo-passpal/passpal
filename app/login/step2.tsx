@@ -2,11 +2,16 @@ import { View } from "react-native";
 import { Button } from "../../design-system/components/Button";
 import { UserIcon } from "../../design-system/components/Icon";
 import { Typography } from "../../design-system/components/Typography";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 export default function Index() {
+    const { studentId } = useLocalSearchParams<{ studentId: string }>();
+
     const handleNext = () => {
-        router.replace("/login/step3");
+        router.replace({
+            pathname: "/login/step3",
+            params: { studentId: studentId },
+        });
     };
     const handleBack = () => {
         router.back();
@@ -96,7 +101,7 @@ export default function Index() {
                                 textAlign: "center",
                             }}
                         >
-                            t324076@m.chukyo-u.ac.jp
+                            {studentId}@m.chukyo-u.ac.jp
                         </Typography>
                     </View>
                 </View>
