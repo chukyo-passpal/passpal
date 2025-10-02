@@ -3,6 +3,7 @@ import { Typography, Card, Icon, useTheme } from "@/design-system";
 import { Building, Moon, Trash2 } from "lucide-react-native";
 import { useAuth } from "@/context/authContext";
 import Header from "@/components/Header";
+import { Select } from "@/design-system/components/Select";
 
 export default function Settings() {
     const theme = useTheme();
@@ -129,21 +130,16 @@ export default function Settings() {
                         アプリ設定
                     </Typography>
 
-                    <TouchableOpacity
-                        onPress={() => {
-                            // TODO: Campus selection functionality
+                    <Card
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            padding: theme.spacing.md,
+                            height: 64,
                         }}
-                        activeOpacity={0.7}
                     >
-                        <Card
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                padding: theme.spacing.md,
-                                height: 64,
-                            }}
-                        >
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <Building size={24} color={theme.colors.text.primary} />
                                 <Typography
@@ -158,8 +154,15 @@ export default function Settings() {
                                     キャンパス選択
                                 </Typography>
                             </View>
-                        </Card>
-                    </TouchableOpacity>
+                            <Select
+                                items={[
+                                    { label: "名古屋キャンパス", value: "nagoya" },
+                                    { label: "豊田キャンパス", value: "toyota" },
+                                ]}
+                                maxWidth={160}
+                            />
+                        </View>
+                    </Card>
                 </View>
 
                 {/* Data Management Section */}

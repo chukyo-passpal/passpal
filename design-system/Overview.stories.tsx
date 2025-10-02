@@ -17,15 +17,33 @@ import {
     TextButton,
     FeatureCard,
     InfoCard,
+    Select,
+    SelectItem,
 } from "./index";
 
 const DesignSystemOverviewComponent = () => {
     const [activeTab, setActiveTab] = useState("overview");
+    const [selectedLanguage, setSelectedLanguage] = useState("en");
+    const [selectedCountry, setSelectedCountry] = useState("");
 
     const tabs = [
         { id: "overview", label: "Overview", active: activeTab === "overview" },
         { id: "components", label: "Components", active: activeTab === "components" },
         { id: "patterns", label: "Patterns", active: activeTab === "patterns" },
+    ];
+
+    const languageItems: SelectItem[] = [
+        { label: "日本語", value: "ja" },
+        { label: "English", value: "en" },
+        { label: "Español", value: "es" },
+        { label: "Français", value: "fr" },
+    ];
+
+    const countryItems: SelectItem[] = [
+        { label: "Japan", value: "jp" },
+        { label: "United States", value: "us" },
+        { label: "United Kingdom", value: "uk" },
+        { label: "Canada", value: "ca" },
     ];
 
     return (
@@ -125,6 +143,48 @@ const DesignSystemOverviewComponent = () => {
                         <Input label="Password" placeholder="Enter your password" isPassword={true} />
 
                         <Input label="Location" placeholder="Search location" rightIcon={<Icon name="map-pin" size={20} />} />
+                    </View>
+                </CardContent>
+            </Card>
+
+            {/* Select Section */}
+            <Card style={{ marginBottom: 24 }}>
+                <CardHeader title="Select" subtitle="Dropdown selection controls" />
+                <CardContent>
+                    <View style={{ gap: 16 }}>
+                        <View>
+                            <Typography variant="label" style={{ marginBottom: 8 }}>
+                                Language Selection
+                            </Typography>
+                            <Select
+                                items={languageItems}
+                                value={selectedLanguage}
+                                onValueChange={setSelectedLanguage}
+                                placeholder="Select a language"
+                                groupLabel="Languages"
+                            />
+                        </View>
+
+                        <View>
+                            <Typography variant="label" style={{ marginBottom: 8 }}>
+                                Country Selection
+                            </Typography>
+                            <Select
+                                items={countryItems}
+                                value={selectedCountry}
+                                onValueChange={setSelectedCountry}
+                                placeholder="Select a country"
+                                groupLabel="Countries"
+                                maxWidth={300}
+                            />
+                        </View>
+
+                        <View>
+                            <Typography variant="label" style={{ marginBottom: 8 }}>
+                                Native Select (Mobile Optimized)
+                            </Typography>
+                            <Select items={languageItems} value={selectedLanguage} onValueChange={setSelectedLanguage} placeholder="Select a language" native />
+                        </View>
                     </View>
                 </CardContent>
             </Card>

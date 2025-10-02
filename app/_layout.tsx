@@ -1,14 +1,19 @@
 import { Stack, usePathname } from "expo-router";
 import { AuthProvider, useAuth } from "@/context/authContext";
 import { ThemeProvider, useTheme } from "@/design-system";
+import { TamaguiProvider } from "tamagui";
+
+import { tamaguiConfig } from "../tamagui.config";
 
 export default function RootLayout() {
     return (
-        <ThemeProvider>
-            <AuthProvider>
-                <RootLayoutNav />
-            </AuthProvider>
-        </ThemeProvider>
+        <TamaguiProvider config={tamaguiConfig}>
+            <ThemeProvider>
+                <AuthProvider>
+                    <RootLayoutNav />
+                </AuthProvider>
+            </ThemeProvider>
+        </TamaguiProvider>
     );
 }
 

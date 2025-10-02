@@ -16,15 +16,31 @@ import {
     TextButton,
     FeatureCard,
     InfoCard,
+    Select,
+    SelectItem,
 } from "./design-system";
 
 const StorybookMain = () => {
     const [activeTab, setActiveTab] = useState("overview");
+    const [selectedLanguage, setSelectedLanguage] = useState("ja");
+    const [selectedTheme, setSelectedTheme] = useState("");
 
     const tabs = [
         { id: "overview", label: "Overview", active: activeTab === "overview" },
         { id: "components", label: "Components", active: activeTab === "components" },
         { id: "tokens", label: "Design Tokens", active: activeTab === "tokens" },
+    ];
+
+    const languageItems: SelectItem[] = [
+        { label: "日本語", value: "ja" },
+        { label: "English", value: "en" },
+        { label: "Español", value: "es" },
+    ];
+
+    const themeItems: SelectItem[] = [
+        { label: "Light Mode", value: "light" },
+        { label: "Dark Mode", value: "dark" },
+        { label: "Auto", value: "auto" },
     ];
 
     return (
@@ -118,6 +134,40 @@ const StorybookMain = () => {
                                     <Input label="Password" placeholder="Enter your password" isPassword={true} />
 
                                     <Input label="Location" placeholder="Search location" rightIcon={<Icon name="map-pin" size={20} />} />
+                                </View>
+                            </CardContent>
+                        </Card>
+
+                        {/* Select Section */}
+                        <Card>
+                            <CardHeader title="Select" subtitle="Dropdown selection controls" />
+                            <CardContent>
+                                <View style={{ gap: 16 }}>
+                                    <View>
+                                        <Typography variant="label" style={{ marginBottom: 8 }}>
+                                            Language
+                                        </Typography>
+                                        <Select
+                                            items={languageItems}
+                                            value={selectedLanguage}
+                                            onValueChange={setSelectedLanguage}
+                                            placeholder="Select language"
+                                            groupLabel="Languages"
+                                        />
+                                    </View>
+
+                                    <View>
+                                        <Typography variant="label" style={{ marginBottom: 8 }}>
+                                            Theme Preference
+                                        </Typography>
+                                        <Select
+                                            items={themeItems}
+                                            value={selectedTheme}
+                                            onValueChange={setSelectedTheme}
+                                            placeholder="Select theme"
+                                            groupLabel="Theme"
+                                        />
+                                    </View>
                                 </View>
                             </CardContent>
                         </Card>

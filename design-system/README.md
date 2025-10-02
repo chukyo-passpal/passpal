@@ -150,6 +150,54 @@ Inter フォントファミリーを使用：
 />
 ```
 
+### Select
+
+```tsx
+import { Select, SelectItem } from './design-system';
+
+// 選択肢を定義
+const languageItems: SelectItem[] = [
+  { label: '日本語', value: 'ja' },
+  { label: 'English', value: 'en' },
+  { label: 'Español', value: 'es' },
+];
+
+// Basic Select
+<Select
+  items={languageItems}
+  value={selectedLanguage}
+  onValueChange={setSelectedLanguage}
+  placeholder="言語を選択"
+  groupLabel="言語"
+/>
+
+// Native Select (モバイル最適化)
+<Select
+  items={languageItems}
+  value={selectedLanguage}
+  onValueChange={setSelectedLanguage}
+  placeholder="言語を選択"
+  native={true}
+/>
+
+// カスタム幅
+<Select
+  items={items}
+  value={value}
+  onValueChange={setValue}
+  maxWidth={300}
+  placeholder="選択してください"
+/>
+
+// 無効化状態
+<Select
+  items={items}
+  value={value}
+  onValueChange={setValue}
+  disabled={true}
+/>
+```
+
 ### Card
 
 ```tsx

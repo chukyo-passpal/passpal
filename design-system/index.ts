@@ -19,6 +19,8 @@ export { Card, CardHeader, CardContent, CardDivider, FeatureCard, InfoCard } fro
 export { Icon, IconContainer, HomeIcon, CalendarIcon, UserIcon, SettingsIcon, BellIcon, BusIcon, ClipboardIcon, ClockIcon, CheckIcon } from "./components/Icon";
 export { TabNavigation, BottomNavigation, NavigationHeader } from "./components/Navigation";
 export { StatCard } from "./components/StatCard";
+export { Select } from "./components/Select";
 
 // Types
 export type { IconName } from "./components/Icon";
+export type { SelectItem, SelectProps } from "./components/Select";
