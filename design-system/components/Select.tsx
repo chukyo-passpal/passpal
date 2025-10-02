@@ -8,7 +8,6 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
 import type { SelectProps as TamaguiSelectProps } from "tamagui";
 import { Adapt, Select as TamaguiSelect, Sheet, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
-import { Typography } from "./Typography";
 
 export interface SelectItem {
     label: string;
