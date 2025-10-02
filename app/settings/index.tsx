@@ -1,6 +1,6 @@
 import { View, ScrollView, TouchableOpacity, Switch } from "react-native";
 import { Typography, Card, Icon, useTheme } from "@/design-system";
-import { Building, ChevronDown, Moon, Trash2 } from "lucide-react-native";
+import { Building, Moon, Trash2 } from "lucide-react-native";
 import { useAuth } from "@/context/authContext";
 import Header from "@/components/Header";
 
@@ -157,30 +157,6 @@ export default function Settings() {
                                 >
                                     キャンパス選択
                                 </Typography>
-                            </View>
-                            <View
-                                style={{
-                                    backgroundColor: theme.colors.background.secondary,
-                                    paddingHorizontal: theme.spacing.sm,
-                                    paddingVertical: theme.spacing.xs,
-                                    borderRadius: 16,
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    width: 140,
-                                    justifyContent: "space-between",
-                                }}
-                            >
-                                <Typography
-                                    variant="caption"
-                                    style={{
-                                        color: theme.colors.text.primary,
-                                        fontSize: 14,
-                                        fontWeight: "500",
-                                    }}
-                                >
-                                    豊田キャンパス
-                                </Typography>
-                                <ChevronDown size={16} color={theme.colors.text.secondary} />
                             </View>
                         </Card>
                     </TouchableOpacity>
