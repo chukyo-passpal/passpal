@@ -18,6 +18,7 @@ export { Input } from "./components/Input";
 export { Card, CardHeader, CardContent, CardDivider, FeatureCard, InfoCard } from "./components/Card";
 export { Icon, IconContainer, HomeIcon, CalendarIcon, UserIcon, SettingsIcon, BellIcon, BusIcon, ClipboardIcon, ClockIcon, CheckIcon } from "./components/Icon";
 export { TabNavigation, BottomNavigation, NavigationHeader } from "./components/Navigation";
+export { StatCard } from "./components/StatCard";
 
 // Types
 export type { IconName } from "./components/Icon";

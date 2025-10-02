@@ -16,10 +16,30 @@ interface InputProps extends Omit<TextInputProps, "style"> {
     isPassword?: boolean;
     containerStyle?: ViewStyle;
     inputStyle?: TextStyle;
+    onSubmit?: () => void;
+    disabled?: boolean;
 }
 
 export const Input = forwardRef<TextInput, InputProps>(
-    ({ label, error, leftIcon, rightIcon, isPassword = false, containerStyle, inputStyle, value, placeholder, onFocus, onBlur, ...props }, ref) => {
+    (
+        {
+            label,
+            error,
+            leftIcon,
+            rightIcon,
+            isPassword = false,
+            containerStyle,
+            inputStyle,
+            value,
+            placeholder,
+            onFocus,
+            onBlur,
+            onSubmit,
+            disabled = false,
+            ...props
+        },
+        ref
+    ) => {
         const theme = useTheme();
         const [isFocused, setIsFocused] = useState(false);
         const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -38,8 +58,15 @@ export const Input = forwardRef<TextInput, InputProps>(
             setIsPasswordVisible(!isPasswordVisible);
         };
 
+        const handleSubmitEditing = () => {
+            if (onSubmit) {
+                onSubmit();
+            }
+        };
+
         // Get border color based on state
         const getBorderColor = () => {
+            if (disabled) return theme.colors.border.disabled;
             if (error) return theme.colors.border.error;
             if (isFocused) return theme.colors.border.focused;
             return theme.colors.border.default;
@@ -47,6 +74,7 @@ export const Input = forwardRef<TextInput, InputProps>(
 
         // Get text color based on state
         const getTextColor = () => {
+            if (disabled) return theme.colors.text.disabled;
             if (value) return theme.colors.text.primary;
             return theme.colors.text.placeholder;
         };
@@ -56,21 +84,17 @@ export const Input = forwardRef<TextInput, InputProps>(
                 width: "100%",
             },
             inputContainer: {
+                ...theme.components.input,
                 flexDirection: "row",
                 alignItems: "center",
-                height: theme.components.input.height,
                 borderWidth: isFocused ? 2 : 1,
                 borderColor: getBorderColor(),
-                borderRadius: theme.components.input.borderRadius,
-                backgroundColor: theme.colors.background.primary,
-                paddingHorizontal: theme.components.input.paddingHorizontal,
+                backgroundColor: disabled ? theme.colors.background.disabled : theme.colors.background.primary,
+                opacity: disabled ? 0.6 : 1,
             },
             input: {
+                ...theme.typography.variants.body,
                 flex: 1,
-                fontSize: theme.typography.variants.body.fontSize,
-                lineHeight: theme.typography.variants.body.lineHeight,
-                fontFamily: theme.typography.variants.body.fontFamily,
-                fontWeight: theme.typography.variants.body.fontWeight,
                 color: getTextColor(),
                 paddingVertical: 0, // Remove default padding
                 marginLeft: leftIcon ? theme.spacing.sm : 0,
@@ -102,6 +126,8 @@ export const Input = forwardRef<TextInput, InputProps>(
                         secureTextEntry={isPassword && !isPasswordVisible}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
+                        onSubmitEditing={handleSubmitEditing}
+                        editable={!disabled}
                         {...props}
                     />
 
@@ -110,11 +136,12 @@ export const Input = forwardRef<TextInput, InputProps>(
                             style={[styles.iconContainer, styles.rightIcon]}
                             onPress={togglePasswordVisibility}
                             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                            disabled={disabled}
                         >
                             {isPasswordVisible ? (
-                                <EyeOff size={20} color={theme.colors.text.secondary} />
+                                <EyeOff size={20} color={disabled ? theme.colors.text.disabled : theme.colors.text.secondary} />
                             ) : (
-                                <Eye size={20} color={theme.colors.text.secondary} />
+                                <Eye size={20} color={disabled ? theme.colors.text.disabled : theme.colors.text.secondary} />
                             )}
                         </TouchableOpacity>
                     ) : rightIcon ? (

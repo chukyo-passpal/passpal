@@ -76,7 +76,6 @@ export const CardHeader: React.FC<CardHeaderProps> = ({ title, subtitle, icon, c
             style={{
                 flexDirection: "row",
                 alignItems: "center",
-                marginBottom: theme.spacing.md,
             }}
         >
             {icon && <View style={{ marginRight: theme.spacing.sm }}>{icon}</View>}
@@ -107,14 +106,14 @@ export const CardContent: React.FC<CardContentProps> = ({ children }) => {
 };
 
 // Card Divider Component
-export const CardDivider: React.FC = () => {
+export const CardDivider: React.FC<{ color?: string }> = ({ color }) => {
     const theme = useTheme();
 
     return (
         <View
             style={{
                 height: 1,
-                backgroundColor: theme.colors.border.default,
+                backgroundColor: color || theme.colors.border.default,
                 marginVertical: theme.spacing.md,
             }}
         />

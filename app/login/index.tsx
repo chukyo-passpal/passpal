@@ -82,6 +82,7 @@ export default function Login() {
                             leftIcon={<UserIcon size={20} color={theme.colors.text.secondary} />}
                             autoCapitalize="none"
                             autoCorrect={false}
+                            onSubmit={handleNext}
                         />
                     </View>
 

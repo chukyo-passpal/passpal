@@ -170,16 +170,31 @@ export default function TimetableScreen() {
     };
 
     const renderWeekView = () => {
+        // 土曜日の授業が全てnullかチェック
+        const hasSaturdayClasses = PERIODS.some((period) => {
+            const classKey = `土-${period.period}`;
+            return SAMPLE_TIMETABLE[classKey] !== null;
+        });
+
+        // 表示する曜日を決定
+        const displayWeekdays = hasSaturdayClasses ? WEEKDAYS : WEEKDAYS.filter((day) => day !== "土");
+
         return (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
-                <View style={{ borderWidth: 1, borderColor: "#E8E8E8", borderRadius: 8, backgroundColor: "#FFFFFF", minHeight: 450 }}>
+            <View style={{ flex: 1 }}>
+                <View style={{ borderWidth: 1, borderColor: "#E8E8E8", borderRadius: 8, backgroundColor: "#FFFFFF", minHeight: 450, width: "100%" }}>
                     {/* ヘッダー行 */}
                     <View style={{ flexDirection: "row", backgroundColor: "#F9FAFB", borderBottomWidth: 1, borderBottomColor: "#E8E8E8", height: 35 }}>
-                        <View style={{ width: 24, borderRightWidth: 1, borderRightColor: "#E8E8E8" }} />
-                        {WEEKDAYS.map((day) => (
+                        <View style={{ flex: 1, minWidth: 24, maxWidth: 50, borderRightWidth: 1, borderRightColor: "#E8E8E8" }} />
+                        {displayWeekdays.map((day) => (
                             <View
                                 key={day}
-                                style={{ width: 80, justifyContent: "center", alignItems: "center", borderRightWidth: 1, borderRightColor: "#E8E8E8" }}
+                                style={{
+                                    flex: 1,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    borderRightWidth: 1,
+                                    borderRightColor: "#E8E8E8",
+                                }}
                             >
                                 <Typography variant="body" color={theme.colors.text.primary}>
                                     {day}
@@ -189,83 +204,89 @@ export default function TimetableScreen() {
                     </View>
 
                     {/* 時間割グリッド */}
-                    {PERIODS.map((period) => (
-                        <View key={period.period} style={{ flexDirection: "row", height: 105, borderBottomWidth: 1, borderBottomColor: "#E8E8E8" }}>
-                            {/* 時間列 */}
-                            <View
-                                style={{
-                                    width: 24,
-                                    paddingVertical: 8,
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    borderRightWidth: 1,
-                                    borderRightColor: "#E8E8E8",
-                                }}
-                            >
-                                <Typography variant="h3" color={theme.colors.text.primary}>
-                                    {period.period}
-                                </Typography>
-                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
-                                    {period.startTime}
-                                </Typography>
-                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
-                                    ~
-                                </Typography>
-                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
-                                    {period.endTime}
-                                </Typography>
-                            </View>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        {PERIODS.map((period) => (
+                            <View key={period.period} style={{ flexDirection: "row", height: 105, borderBottomWidth: 1, borderBottomColor: "#E8E8E8" }}>
+                                {/* 時間列 */}
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        minWidth: 24,
+                                        maxWidth: 50,
+                                        paddingVertical: 8,
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        borderRightWidth: 1,
+                                        borderRightColor: "#E8E8E8",
+                                    }}
+                                >
+                                    <Typography variant="h3" color={theme.colors.text.primary}>
+                                        {period.period}
+                                    </Typography>
+                                    <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
+                                        {period.startTime}
+                                    </Typography>
+                                    <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
+                                        ~
+                                    </Typography>
+                                    <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
+                                        {period.endTime}
+                                    </Typography>
+                                </View>
 
-                            {/* 各曜日のセル */}
-                            {WEEKDAYS.map((day) => {
-                                const classKey = `${day}-${period.period}`;
-                                const classInfo = SAMPLE_TIMETABLE[classKey];
+                                {/* 各曜日のセル */}
+                                {displayWeekdays.map((day) => {
+                                    const classKey = `${day}-${period.period}`;
+                                    const classInfo = SAMPLE_TIMETABLE[classKey];
 
-                                return (
-                                    <View key={`${day}-${period.period}`} style={{ width: 80, padding: 3, borderRightWidth: 1, borderRightColor: "#E8E8E8" }}>
-                                        {classInfo ? (
-                                            <View
-                                                style={{
-                                                    flex: 1,
-                                                    borderRadius: 6,
-                                                    padding: 2,
-                                                    gap: 4,
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    backgroundColor: classInfo.color,
-                                                }}
-                                            >
-                                                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", overflow: "hidden" }}>
-                                                    <Typography
-                                                        variant="caption"
-                                                        color={theme.colors.text.inverse}
-                                                        style={{ fontSize: 10, lineHeight: 12, textAlign: "center" }}
-                                                    >
-                                                        {classInfo.name}
-                                                    </Typography>
-                                                </View>
+                                    return (
+                                        <View key={`${day}-${period.period}`} style={{ flex: 1, padding: 3, borderRightWidth: 1, borderRightColor: "#E8E8E8" }}>
+                                            {classInfo ? (
                                                 <View
                                                     style={{
-                                                        backgroundColor: "#FFFFFF",
-                                                        paddingHorizontal: 6,
-                                                        paddingVertical: 2,
-                                                        borderRadius: 4,
+                                                        flex: 1,
+                                                        borderRadius: 6,
+                                                        padding: 2,
+                                                        gap: 4,
+                                                        justifyContent: "center",
                                                         alignItems: "center",
+                                                        backgroundColor: classInfo.color,
                                                     }}
                                                 >
-                                                    <Typography variant="caption" color={theme.colors.text.primary}>
-                                                        {classInfo.room}
-                                                    </Typography>
+                                                    <View
+                                                        style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", overflow: "hidden" }}
+                                                    >
+                                                        <Typography
+                                                            variant="caption"
+                                                            color={theme.colors.text.inverse}
+                                                            style={{ fontSize: 10, lineHeight: 12, textAlign: "center" }}
+                                                        >
+                                                            {classInfo.name}
+                                                        </Typography>
+                                                    </View>
+                                                    <View
+                                                        style={{
+                                                            backgroundColor: "#FFFFFF",
+                                                            paddingHorizontal: 6,
+                                                            paddingVertical: 2,
+                                                            borderRadius: 4,
+                                                            alignItems: "center",
+                                                        }}
+                                                    >
+                                                        <Typography variant="caption" color={theme.colors.text.primary}>
+                                                            {classInfo.room}
+                                                        </Typography>
+                                                    </View>
                                                 </View>
-                                            </View>
-                                        ) : null}
-                                    </View>
-                                );
-                            })}
-                        </View>
-                    ))}
+                                            ) : null}
+                                        </View>
+                                    );
+                                })}
+                            </View>
+                        ))}
+                    </ScrollView>
                 </View>
-            </ScrollView>
+            </View>
         );
     };
 

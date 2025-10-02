@@ -33,6 +33,7 @@ export const colors = {
         primary: "#FFFFFF",
         secondary: "#F0EBFF",
         surface: "#E8E8E8",
+        disabled: "#F5F5F5",
     },
 
     text: {
@@ -40,12 +41,14 @@ export const colors = {
         secondary: "#8B8B8B",
         placeholder: "#B8B8B8",
         inverse: "#FFFFFF",
+        disabled: "#B8B8B8",
     },
 
     border: {
         default: "#E8E8E8",
         focused: "#B19CD9",
         error: "#E57373",
+        disabled: "#E8E8E8",
     },
 } as const;
 

@@ -45,6 +45,7 @@ export default function Index() {
                             isPassword={true}
                             leftIcon={<Icon name="lock" size={20} color="#8B8B8B" />}
                             containerStyle={styles.passwordInput}
+                            onSubmit={handleLogin}
                         />
 
                         <PrimaryButton fullWidth onPress={handleLogin} style={styles.loginButton}>

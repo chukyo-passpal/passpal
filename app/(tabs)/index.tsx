@@ -1,7 +1,7 @@
 import React from "react";
 import { View, ScrollView, Linking } from "react-native";
 import { useRouter } from "expo-router";
-import { Typography, Card, CardHeader, CardDivider, Button, Icon, IconContainer, useTheme } from "@/design-system";
+import { Typography, Card, CardHeader, CardDivider, Button, Icon, useTheme, StatCard } from "@/design-system";
 import Header from "@/components/Header";
 
 export default function HomeScreen() {
@@ -19,6 +19,63 @@ export default function HomeScreen() {
     const handleOpenSettings = () => {
         router.push("/settings");
     };
+
+    const AlboNewsComponent = () => (
+        <View style={{ flexDirection: "row", gap: theme.spacing.md }}>
+            <View style={{ flex: 1, gap: 8 }}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 8,
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: "#FEF5F5",
+                            paddingHorizontal: 8,
+                            paddingVertical: 4,
+                            borderRadius: 4,
+                            height: 24,
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Typography variant="caption" color="#E57373" style={{ fontWeight: "600" }}>
+                            重要
+                        </Typography>
+                    </View>
+                    <Typography variant="body" color={theme.colors.text.primary} style={{ flex: 1, fontWeight: "500" }}>
+                        未来の選択肢を...
+                    </Typography>
+                </View>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                    }}
+                >
+                    <View
+                        style={{
+                            backgroundColor: theme.colors.primary.light,
+                            paddingHorizontal: 8,
+                            paddingVertical: 4,
+                            borderRadius: 4,
+                            height: 20,
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Typography variant="caption" color={theme.colors.primary.main}>
+                            kyoumu
+                        </Typography>
+                    </View>
+                    <Typography variant="caption" color={theme.colors.text.secondary}>
+                        1/5
+                    </Typography>
+                </View>
+            </View>
+        </View>
+    );
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
@@ -47,63 +104,12 @@ export default function HomeScreen() {
                 >
                     {/* Next Class Card */}
                     <View style={{ flex: 1 }}>
-                        <Card
-                            variant="feature"
-                            style={{
-                                height: 170,
-                                gap: theme.spacing.md,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: 12,
-                                }}
-                            >
-                                <Icon name="calendar" size={20} color={theme.colors.text.primary} />
-                                <Typography variant="h3" color={theme.colors.text.primary}>
-                                    次の授業
-                                </Typography>
-                            </View>
-                            <CardDivider />
-                            <Typography variant="h3" color={theme.colors.text.primary} style={{ textAlign: "center", flex: 1 }}>
-                                アルゴリズムとデータ構造
-                            </Typography>
-                            <Typography variant="body" color={theme.colors.text.primary} style={{ textAlign: "center", fontWeight: "500" }}>
-                                1273
-                            </Typography>
-                        </Card>
+                        <StatCard iconName="calendar" title="次の授業" content="アルゴリズムとデータ構造" subtitle="1273" />
                     </View>
 
                     {/* Assignment Count Card */}
                     <View style={{ flex: 1 }}>
-                        <Card
-                            variant="feature"
-                            style={{
-                                height: 170,
-                                gap: theme.spacing.md,
-                            }}
-                        >
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: 12,
-                                }}
-                            >
-                                <Icon name="clipboard-list" size={20} color={theme.colors.text.primary} />
-                                <Typography variant="h3" color={theme.colors.text.primary}>
-                                    残り課題数
-                                </Typography>
-                            </View>
-                            <CardDivider />
-                            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                                <Typography variant="h1" color={theme.colors.primary.main} style={{ fontSize: 48, lineHeight: 57.6 }}>
-                                    12
-                                </Typography>
-                            </View>
-                        </Card>
+                        <StatCard iconName="clipboard-list" title="残り課題数" content={12} largeContent />
                     </View>
                 </View>
 
@@ -118,118 +124,10 @@ export default function HomeScreen() {
                     <CardDivider />
                     <View style={{ gap: theme.spacing.md }}>
                         {/* Bulletin Item 1 */}
-                        <View style={{ flexDirection: "row", gap: theme.spacing.md }}>
-                            <IconContainer name="user" size={20} variant="primary" containerStyle={{ width: 40, height: 40 }} />
-                            <View style={{ flex: 1, gap: 8 }}>
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        gap: 8,
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            backgroundColor: "#FEF5F5",
-                                            paddingHorizontal: 8,
-                                            paddingVertical: 4,
-                                            borderRadius: 4,
-                                            height: 24,
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <Typography variant="caption" color="#E57373" style={{ fontWeight: "600" }}>
-                                            重要
-                                        </Typography>
-                                    </View>
-                                    <Typography variant="body" color={theme.colors.text.primary} style={{ flex: 1, fontWeight: "500" }}>
-                                        未来の選択肢を...
-                                    </Typography>
-                                </View>
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            backgroundColor: theme.colors.primary.light,
-                                            paddingHorizontal: 8,
-                                            paddingVertical: 4,
-                                            borderRadius: 4,
-                                            height: 20,
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <Typography variant="caption" color={theme.colors.primary.main}>
-                                            kyoumu
-                                        </Typography>
-                                    </View>
-                                    <Typography variant="caption" color={theme.colors.text.secondary}>
-                                        1/5
-                                    </Typography>
-                                </View>
-                            </View>
-                        </View>
+                        <AlboNewsComponent />
 
                         {/* Bulletin Item 2 */}
-                        <View style={{ flexDirection: "row", gap: theme.spacing.md }}>
-                            <IconContainer name="user" size={20} variant="primary" containerStyle={{ width: 40, height: 40 }} />
-                            <View style={{ flex: 1, gap: 8 }}>
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        gap: 8,
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            backgroundColor: "#FEF5F5",
-                                            paddingHorizontal: 8,
-                                            paddingVertical: 4,
-                                            borderRadius: 4,
-                                            height: 24,
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <Typography variant="caption" color="#E57373" style={{ fontWeight: "600" }}>
-                                            重要
-                                        </Typography>
-                                    </View>
-                                    <Typography variant="body" color={theme.colors.text.primary} style={{ flex: 1, fontWeight: "500" }}>
-                                        未来の選択肢を...
-                                    </Typography>
-                                </View>
-                                <View
-                                    style={{
-                                        flexDirection: "row",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                    }}
-                                >
-                                    <View
-                                        style={{
-                                            backgroundColor: theme.colors.primary.light,
-                                            paddingHorizontal: 8,
-                                            paddingVertical: 4,
-                                            borderRadius: 4,
-                                            height: 20,
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <Typography variant="caption" color={theme.colors.primary.main}>
-                                            kyoumu
-                                        </Typography>
-                                    </View>
-                                    <Typography variant="caption" color={theme.colors.text.secondary}>
-                                        1/5
-                                    </Typography>
-                                </View>
-                            </View>
-                        </View>
+                        <AlboNewsComponent />
                     </View>
                 </Card>
 
@@ -238,14 +136,15 @@ export default function HomeScreen() {
                     style={{
                         marginBottom: theme.spacing.lg,
                         backgroundColor: "#F5F5F5",
-                        height: 120,
                     }}
                 >
                     <CardHeader title="最近のMaNaBoメール" icon={<Icon name="user" size={20} color={theme.colors.text.primary} />} />
                     <CardDivider />
-                    <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
-                        現在新しいメールはないです。
-                    </Typography>
+                    <View style={{ gap: theme.spacing.md }}>
+                        <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
+                            現在新しいメールはないです。
+                        </Typography>
+                    </View>
                 </Card>
 
                 {/* System News Card */}
@@ -253,14 +152,15 @@ export default function HomeScreen() {
                     style={{
                         marginBottom: theme.spacing.lg,
                         backgroundColor: "#F5F5F5",
-                        height: 120,
                     }}
                 >
                     <CardHeader title="MaNaBo お知らせ" icon={<Icon name="info" size={20} color={theme.colors.text.primary} />} />
                     <CardDivider />
-                    <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
-                        現在お知らせはないです。
-                    </Typography>
+                    <View style={{ gap: theme.spacing.md }}>
+                        <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
+                            現在お知らせはないです。
+                        </Typography>
+                    </View>
                 </Card>
 
                 {/* Portal Buttons */}
@@ -272,12 +172,12 @@ export default function HomeScreen() {
                     }}
                 >
                     <View style={{ flex: 1 }}>
-                        <Button variant="primary" size="large" fullWidth onPress={handleOpenALBO} style={{ height: 56, borderRadius: 28 }}>
+                        <Button variant="primary" fullWidth onPress={handleOpenALBO}>
                             ALBOを開く
                         </Button>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <Button variant="primary" size="large" fullWidth onPress={handleOpenMaNaBo} style={{ height: 56, borderRadius: 28 }}>
+                        <Button variant="primary" fullWidth onPress={handleOpenMaNaBo}>
                             MaNaBoを開く
                         </Button>
                     </View>
