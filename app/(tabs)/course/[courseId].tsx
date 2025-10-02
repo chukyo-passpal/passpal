@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { Card, Typography, Icon, useTheme } from "@/design-system";
 
@@ -38,12 +38,33 @@ export default function CourseDetail() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={{ flex: 1, backgroundColor: "#fff" }}>
             {/* Header */}
-            <View style={[styles.header, { backgroundColor: theme.colors.background.primary, borderBottomColor: theme.colors.border.default }]}>
-                <View style={styles.headerLeft}>
+            <View
+                style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    paddingHorizontal: 20,
+                    paddingTop: 48,
+                    paddingBottom: 12,
+                    borderBottomWidth: 1,
+                    backgroundColor: theme.colors.background.primary,
+                    borderBottomColor: theme.colors.border.default,
+                }}
+            >
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 15, flex: 1 }}>
                     <TouchableOpacity
-                        style={[styles.iconButton, { backgroundColor: theme.colors.background.secondary, borderColor: theme.colors.border.default }]}
+                        style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            borderWidth: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: theme.colors.background.secondary,
+                            borderColor: theme.colors.border.default,
+                        }}
                         onPress={() => router.back()}
                     >
                         <Icon name="clock" size={16} color={theme.colors.text.secondary} />
@@ -52,35 +73,46 @@ export default function CourseDetail() {
                         時間割 - 授業
                     </Typography>
                 </View>
-                <TouchableOpacity style={[styles.iconButton, { backgroundColor: theme.colors.background.secondary, borderColor: theme.colors.border.default }]}>
+                <TouchableOpacity
+                    style={{
+                        width: 40,
+                        height: 40,
+                        borderRadius: 20,
+                        borderWidth: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        backgroundColor: theme.colors.background.secondary,
+                        borderColor: theme.colors.border.default,
+                    }}
+                >
                     <Icon name="settings" size={16} color={theme.colors.text.secondary} />
                 </TouchableOpacity>
             </View>
 
-            <ScrollView style={styles.content} contentContainerStyle={styles.contentContainer}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 24 }}>
                 {/* Class Header Card */}
-                <Card variant="feature" style={styles.classHeader}>
-                    <View style={styles.classTitleRow}>
-                        <Typography variant="h2" color={theme.colors.primary.main} style={styles.classTitle}>
+                <Card variant="feature" style={{ gap: 16 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <Typography variant="h2" color={theme.colors.primary.main} style={{ flex: 1 }}>
                             {courseData.title}
                         </Typography>
                         <Icon name="clipboard-list" size={24} color={theme.colors.primary.main} />
                     </View>
 
-                    <View style={styles.classInfo}>
-                        <View style={styles.infoRow}>
+                    <View style={{ gap: 8 }}>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                             <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
                                 {courseData.schedule}
                             </Typography>
                         </View>
-                        <View style={styles.infoRow}>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                             <Icon name="map-pin" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
                                 {courseData.room}
                             </Typography>
                         </View>
-                        <View style={styles.infoRow}>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                             <Icon name="user" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
                                 {courseData.teacher}
@@ -90,7 +122,19 @@ export default function CourseDetail() {
                 </Card>
 
                 {/* Quick Actions */}
-                <TouchableOpacity style={[styles.actionButton, { backgroundColor: theme.colors.background.primary, borderColor: theme.colors.border.default }]}>
+                <TouchableOpacity
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        height: 48,
+                        borderRadius: 8,
+                        borderWidth: 1,
+                        gap: 8,
+                        backgroundColor: theme.colors.background.primary,
+                        borderColor: theme.colors.border.default,
+                    }}
+                >
                     <Icon name="clipboard-list" size={20} color={theme.colors.primary.main} />
                     <Typography variant="label" color={theme.colors.primary.main}>
                         課題・教材
@@ -99,16 +143,16 @@ export default function CourseDetail() {
                 </TouchableOpacity>
 
                 {/* Attendance Section */}
-                <Card variant="default" style={styles.section}>
-                    <View style={styles.sectionHeader}>
+                <Card variant="default" style={{ gap: 16 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <Typography variant="h3" color={theme.colors.text.primary}>
                             出欠管理
                         </Typography>
                         <Icon name="calendar" size={24} color={theme.colors.text.primary} />
                     </View>
 
-                    <View style={styles.attendanceStats}>
-                        <View style={styles.statItem}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8 }}>
+                        <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color="#90c695">
                                 {courseData.attendance.present}
                             </Typography>
@@ -116,7 +160,7 @@ export default function CourseDetail() {
                                 出席
                             </Typography>
                         </View>
-                        <View style={styles.statItem}>
+                        <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color="#e57373">
                                 {courseData.attendance.absent}
                             </Typography>
@@ -124,7 +168,7 @@ export default function CourseDetail() {
                                 欠席
                             </Typography>
                         </View>
-                        <View style={styles.statItem}>
+                        <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color="#f5c842">
                                 {courseData.attendance.late}
                             </Typography>
@@ -134,7 +178,7 @@ export default function CourseDetail() {
                         </View>
                     </View>
 
-                    <View style={[styles.attendanceRate, { backgroundColor: "#f0f9f1" }]}>
+                    <View style={{ padding: 12, borderRadius: 8, alignItems: "center", gap: 4, backgroundColor: "#f0f9f1" }}>
                         <Typography variant="label" color="#90c695">
                             出席率: {courseData.attendance.rate}%
                         </Typography>
@@ -145,21 +189,21 @@ export default function CourseDetail() {
                 </Card>
 
                 {/* Announcements Section */}
-                <Card variant="default" style={styles.section}>
-                    <View style={styles.sectionHeader}>
+                <Card variant="default" style={{ gap: 16 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <Typography variant="h3" color={theme.colors.text.primary}>
                             お知らせ
                         </Typography>
                         <Icon name="bell" size={24} color={theme.colors.text.primary} />
                     </View>
 
-                    <View style={styles.announcementsList}>
+                    <View style={{ gap: 12 }}>
                         {courseData.announcements.map((announcement) => (
-                            <View key={announcement.id} style={[styles.announcementItem, { backgroundColor: theme.colors.background.secondary }]}>
+                            <View key={announcement.id} style={{ padding: 16, borderRadius: 8, gap: 8, backgroundColor: theme.colors.background.secondary }}>
                                 <Typography variant="label" color={theme.colors.text.primary}>
                                     {announcement.title}
                                 </Typography>
-                                <Typography variant="bodySmall" color={theme.colors.text.secondary} style={styles.announcementContent}>
+                                <Typography variant="bodySmall" color={theme.colors.text.secondary} style={{ lineHeight: 20 }}>
                                     {announcement.content}
                                 </Typography>
                             </View>
@@ -168,17 +212,27 @@ export default function CourseDetail() {
                 </Card>
 
                 {/* Grade Evaluation Section */}
-                <Card variant="default" style={styles.section}>
-                    <View style={styles.sectionHeader}>
+                <Card variant="default" style={{ gap: 16 }}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <Typography variant="h3" color={theme.colors.text.primary}>
                             成績評価方法・基準
                         </Typography>
                         <Icon name="check" size={24} color={theme.colors.text.primary} />
                     </View>
 
-                    <View style={styles.gradeBreakdown}>
+                    <View style={{ gap: 12 }}>
                         {courseData.grading.map((grade, index) => (
-                            <View key={index} style={[styles.gradeItem, { backgroundColor: theme.colors.background.secondary }]}>
+                            <View
+                                key={index}
+                                style={{
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    padding: 16,
+                                    borderRadius: 8,
+                                    backgroundColor: theme.colors.background.secondary,
+                                }}
+                            >
                                 <Typography variant="label" color={theme.colors.text.primary}>
                                     {grade.item}
                                 </Typography>
@@ -193,112 +247,3 @@ export default function CourseDetail() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-    },
-    header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingHorizontal: 20,
-        paddingTop: 48,
-        paddingBottom: 12,
-        borderBottomWidth: 1,
-    },
-    headerLeft: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 15,
-        flex: 1,
-    },
-    iconButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        borderWidth: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    content: {
-        flex: 1,
-    },
-    contentContainer: {
-        padding: 20,
-        gap: 24,
-    },
-    classHeader: {
-        gap: 16,
-    },
-    classTitleRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    classTitle: {
-        flex: 1,
-    },
-    classInfo: {
-        gap: 8,
-    },
-    infoRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
-    },
-    actionButton: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "center",
-        height: 48,
-        borderRadius: 8,
-        borderWidth: 1,
-        gap: 8,
-    },
-    section: {
-        gap: 16,
-    },
-    sectionHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-    },
-    attendanceStats: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        paddingVertical: 8,
-    },
-    statItem: {
-        alignItems: "center",
-        gap: 4,
-    },
-    attendanceRate: {
-        padding: 12,
-        borderRadius: 8,
-        alignItems: "center",
-        gap: 4,
-    },
-    announcementsList: {
-        gap: 12,
-    },
-    announcementItem: {
-        padding: 16,
-        borderRadius: 8,
-        gap: 8,
-    },
-    announcementContent: {
-        lineHeight: 20,
-    },
-    gradeBreakdown: {
-        gap: 12,
-    },
-    gradeItem: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: 16,
-        borderRadius: 8,
-    },
-});
