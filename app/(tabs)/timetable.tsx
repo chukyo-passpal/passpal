@@ -3,6 +3,7 @@ import { View, ScrollView, TouchableOpacity, StyleSheet, Pressable } from "react
 import { Typography } from "@/design-system/components/Typography";
 import { Icon } from "@/design-system/components/Icon";
 import { useTheme } from "@/design-system/tokens/ThemeProvider";
+import Header from "@/components/Header";
 
 // 時間割データの型定義
 interface ClassInfo {
@@ -213,14 +214,7 @@ export default function TimetableScreen() {
     return (
         <View style={styles.container}>
             {/* ヘッダー */}
-            <View style={styles.header}>
-                <Typography variant="h1" color={theme.colors.primary.main}>
-                    時間割
-                </Typography>
-                <TouchableOpacity style={[styles.refreshButton, { borderColor: theme.colors.border.default }]} onPress={handleRefresh}>
-                    <Icon name="clock" size={20} color={theme.colors.text.secondary} />
-                </TouchableOpacity>
-            </View>
+            <Header title="時間割" subButtonIcon="refresh-cw" onPressSubButton={handleRefresh} />
 
             {/* コンテンツ */}
             <View style={styles.content}>
@@ -265,7 +259,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#FFFFFF",
-        paddingTop: 48,
     },
     header: {
         flexDirection: "row",

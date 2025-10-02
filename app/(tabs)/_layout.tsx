@@ -25,28 +25,28 @@ export default function TabLayout() {
                 name="index"
                 options={{
                     title: "ホーム",
-                    tabBarIcon: ({ color, size }) => <Icon name="home" size={size as any} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Icon name="home" size={size} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="timetable"
                 options={{
                     title: "時間割",
-                    tabBarIcon: ({ color, size }) => <Icon name="calendar" size={size as any} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Icon name="calendar" size={size} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="assignments"
                 options={{
                     title: "課題",
-                    tabBarIcon: ({ color, size }) => <Icon name="clipboard-list" size={size as any} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Icon name="clipboard-list" size={size} color={color} />,
                 }}
             />
             <Tabs.Screen
                 name="transport"
                 options={{
                     title: "時刻表",
-                    tabBarIcon: ({ color, size }) => <Icon name="bus" size={size as any} color={color} />,
+                    tabBarIcon: ({ color, size }) => <Icon name="bus" size={size} color={color} />,
                 }}
             />
             <Tabs.Screen

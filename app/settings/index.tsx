@@ -1,16 +1,12 @@
-import { View, ScrollView, TouchableOpacity } from "react-native";
+import { View, ScrollView, TouchableOpacity, Switch } from "react-native";
 import { Typography, Card, Icon, useTheme } from "@/design-system";
 import { Building, ChevronDown, Moon, Trash2 } from "lucide-react-native";
-import { router } from "expo-router";
 import { useAuth } from "@/context/authContext";
+import Header from "@/components/Header";
 
 export default function Settings() {
     const theme = useTheme();
     const { signOut } = useAuth();
-
-    const handleBack = () => {
-        router.back();
-    };
 
     const handleLogout = () => {
         signOut();
@@ -21,47 +17,10 @@ export default function Settings() {
             style={{
                 flex: 1,
                 backgroundColor: theme.colors.background.primary,
-                paddingTop: theme.spacing.xl,
             }}
         >
             {/* Header */}
-            <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    paddingHorizontal: theme.spacing.md,
-                    paddingVertical: theme.spacing.sm,
-                    position: "relative",
-                    marginBottom: theme.spacing.lg,
-                }}
-            >
-                <TouchableOpacity
-                    style={{
-                        position: "absolute",
-                        left: theme.spacing.md,
-                        backgroundColor: theme.colors.background.secondary,
-                        padding: theme.spacing.xs,
-                        borderRadius: 100,
-                        borderWidth: 1,
-                        borderColor: theme.colors.border.default,
-                    }}
-                    onPress={handleBack}
-                >
-                    <Icon name="chevron-right" size={24} color={theme.colors.text.primary} />
-                </TouchableOpacity>
-
-                <Typography
-                    variant="h2"
-                    style={{
-                        color: theme.colors.primary.main,
-                        fontSize: 20,
-                        fontWeight: "bold",
-                    }}
-                >
-                    設定
-                </Typography>
-            </View>
+            <Header title="設定" shownBackButton />
 
             <ScrollView
                 style={{
@@ -323,35 +282,8 @@ export default function Settings() {
                                 ダークモード
                             </Typography>
                         </View>
-                        <View
-                            style={{
-                                width: 52,
-                                height: 28,
-                                backgroundColor: theme.colors.border.default,
-                                borderRadius: 14,
-                                position: "relative",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <View
-                                style={{
-                                    position: "absolute",
-                                    left: 2,
-                                    width: 24,
-                                    height: 24,
-                                    backgroundColor: theme.colors.background.primary,
-                                    borderRadius: 12,
-                                    shadowColor: "#000",
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: 2,
-                                    },
-                                    shadowOpacity: 0.13,
-                                    shadowRadius: 4,
-                                    elevation: 4,
-                                }}
-                            />
-                        </View>
+
+                        <Switch />
                     </Card>
                 </View>
 

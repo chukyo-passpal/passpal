@@ -2,6 +2,7 @@ import React from "react";
 import { View, ScrollView, TouchableOpacity, Linking } from "react-native";
 import { useRouter } from "expo-router";
 import { Typography, Card, CardHeader, CardDivider, Button, Icon, IconContainer, useTheme } from "@/design-system";
+import Header from "@/components/Header";
 
 export default function HomeScreen() {
     const theme = useTheme();
@@ -15,40 +16,13 @@ export default function HomeScreen() {
         Linking.openURL("https://manabo.aitech.ac.jp/");
     };
 
-    const handleSettingsPress = () => {
+    const handleOpenSettings = () => {
         router.push("/settings");
     };
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
-            {/* Header */}
-            <View
-                style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    paddingHorizontal: theme.spacing.md,
-                    paddingTop: 48,
-                    paddingBottom: theme.spacing.md,
-                    backgroundColor: theme.colors.background.primary,
-                }}
-            >
-                <Typography variant="h2" color={theme.colors.primary.main}>
-                    PassPal
-                </Typography>
-                <TouchableOpacity
-                    onPress={handleSettingsPress}
-                    style={{
-                        backgroundColor: "#F8F9FA",
-                        borderRadius: 100,
-                        padding: 8,
-                        borderWidth: 1,
-                        borderColor: theme.colors.border.default,
-                    }}
-                >
-                    <Icon name="settings" size={24} color={theme.colors.text.secondary} />
-                </TouchableOpacity>
-            </View>
+            <Header title="PassPal" subButtonIcon="settings" onPressSubButton={handleOpenSettings} />
 
             {/* Scrollable Content */}
             <ScrollView

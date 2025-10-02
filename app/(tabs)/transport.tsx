@@ -3,6 +3,7 @@ import { View, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
 import { Typography } from "@/design-system/components/Typography";
 import { Icon } from "@/design-system/components/Icon";
 import { useTheme } from "@/design-system/tokens/ThemeProvider";
+import Header from "@/components/Header";
 
 type TransportMode = "bus" | "train";
 type Direction = "to-campus" | "from-campus";
@@ -87,13 +88,8 @@ export default function TransportScreen() {
     }, []);
 
     return (
-        <View style={[styles.container, { backgroundColor: theme.colors.background.primary }]}>
-            {/* Header */}
-            <View style={styles.header}>
-                <Typography variant="h2" color={theme.colors.primary.main}>
-                    バス・電車時刻表
-                </Typography>
-            </View>
+        <View style={{ backgroundColor: theme.colors.background.primary, flex: 1 }}>
+            <Header title="バス・電車時刻表" />
 
             <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
                 {/* Transport Type Selector */}
@@ -260,14 +256,6 @@ export default function TransportScreen() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingTop: 48,
-    },
-    header: {
-        paddingHorizontal: 20,
-        paddingBottom: 16,
-    },
     content: {
         flex: 1,
         paddingHorizontal: 20,

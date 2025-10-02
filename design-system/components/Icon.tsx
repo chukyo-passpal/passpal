@@ -31,10 +31,10 @@ import {
     CheckCircle,
     AlertTriangle,
     LucideProps,
+    ChevronLeft,
 } from "lucide-react-native";
 import { useTheme } from "../tokens/ThemeProvider";
 
-export type IconSize = 12 | 16 | 20 | 24 | 32;
 export type IconName =
     | "home"
     | "calendar"
@@ -48,6 +48,7 @@ export type IconName =
     | "cloud-upload"
     | "log-out"
     | "chevron-right"
+    | "chevron-left"
     | "train"
     | "footprints"
     | "map-pin"
@@ -63,7 +64,7 @@ export type IconName =
 
 interface IconProps {
     name: IconName;
-    size?: IconSize;
+    size?: number;
     color?: string;
     containerStyle?: ViewStyle;
 }
@@ -82,6 +83,7 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     "cloud-upload": CloudUpload,
     "log-out": LogOut,
     "chevron-right": ChevronRight,
+    "chevron-left": ChevronLeft,
     train: Train,
     footprints: Footprints,
     "map-pin": MapPin,
