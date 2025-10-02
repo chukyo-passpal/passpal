@@ -26,6 +26,7 @@ export default function Header({
         >
             <View
                 style={{
+                    height: 68,
                     flexDirection: "row",
                     alignItems: "center",
                     justifyContent: "space-between",
