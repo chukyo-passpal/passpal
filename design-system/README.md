@@ -99,6 +99,41 @@ Inter フォントファミリーを使用：
 </Button>
 ```
 
+### IconButton
+
+```tsx
+// Default Icon Button (戻るボタンなど)
+<IconButton 
+  icon="chevron-left" 
+  variant="default" 
+  size="medium"
+  onPress={handleBack}
+/>
+
+// Primary Icon Button (確認アクションなど)
+<IconButton 
+  icon="check" 
+  variant="primary"
+  onPress={handleConfirm}
+/>
+
+// Ghost Icon Button (控えめなアクション)
+<IconButton 
+  icon="settings" 
+  variant="ghost"
+/>
+
+// サイズバリエーション
+<IconButton icon="home" size="small" />   // 28px
+<IconButton icon="home" size="medium" />  // 34px (デフォルト)
+<IconButton icon="home" size="large" />   // 44px
+
+// 便利な短縮形コンポーネント
+<DefaultIconButton icon="chevron-left" />
+<PrimaryIconButton icon="check" />
+<GhostIconButton icon="settings" />
+```
+
 ### Input
 
 ```tsx

@@ -13,10 +13,11 @@ export * from "./tokens/spacing";
 // Components
 export { Typography, Heading1, Heading2, Heading3, BodyText, BodySmall, Caption, Label } from "./components/Typography";
 export { Button, PrimaryButton, SecondaryButton, TextButton } from "./components/Button";
+export { IconButton, DefaultIconButton, PrimaryIconButton, GhostIconButton } from "./components/IconButton";
 export { Input } from "./components/Input";
 export { Card, CardHeader, CardContent, CardDivider, FeatureCard, InfoCard } from "./components/Card";
 export { Icon, IconContainer, HomeIcon, CalendarIcon, UserIcon, SettingsIcon, BellIcon, BusIcon, ClipboardIcon, ClockIcon, CheckIcon } from "./components/Icon";
 export { TabNavigation, BottomNavigation, NavigationHeader } from "./components/Navigation";
 
 // Types
-export type { IconName, IconSize } from "./components/Icon";
+export type { IconName } from "./components/Icon";

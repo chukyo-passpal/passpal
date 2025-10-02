@@ -1,4 +1,4 @@
-import { Heading2, Icon, IconName, spacing } from "@/design-system";
+import { Heading2, Icon, IconButton, IconName, spacing } from "@/design-system";
 import { router } from "expo-router";
 import { Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -35,43 +35,11 @@ export default function Header({
                 }}
             >
                 <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.md }}>
-                    {shownBackButton && (
-                        <Pressable
-                            style={{
-                                width: 34,
-                                height: 34,
-                                backgroundColor: "#F8F9FA",
-                                borderRadius: 17,
-                                borderWidth: 1,
-                                borderColor: "#E8E8E8",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                            onPress={onPressBackButton}
-                        >
-                            <Icon name="chevron-left" size={20} color="#6C757D" />
-                        </Pressable>
-                    )}
+                    {shownBackButton && <IconButton icon="chevron-left" onPress={onPressBackButton} />}
                     <Heading2 color="#B19CD9">{title}</Heading2>
                 </View>
 
-                {subButtonIcon && (
-                    <Pressable
-                        style={{
-                            width: 34,
-                            height: 34,
-                            backgroundColor: "#F8F9FA",
-                            borderRadius: 17,
-                            borderWidth: 1,
-                            borderColor: "#E8E8E8",
-                            alignItems: "center",
-                            justifyContent: "center",
-                        }}
-                        onPress={onPressSubButton}
-                    >
-                        <Icon name={subButtonIcon} size={20} color="#6C757D" />
-                    </Pressable>
-                )}
+                {subButtonIcon && <IconButton icon={subButtonIcon} onPress={onPressSubButton} />}
             </View>
         </View>
     );

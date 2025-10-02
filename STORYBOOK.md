@@ -6,6 +6,7 @@ A comprehensive Storybook setup for the PassPal Design System that showcases all
 
 ### Components
 - **Button** - Primary, secondary, and text button variants with different sizes and states
+- **IconButton** - Circular icon-only buttons with default, primary, and ghost variants
 - **Typography** - Complete text hierarchy with all available variants
 - **Card** - Flexible containers with headers, content, and specialized variants
 - **Input** - Form inputs with labels, icons, validation, and password support
@@ -28,6 +29,7 @@ A comprehensive Storybook setup for the PassPal Design System that showcases all
 
 ### Component Stories
 - `design-system/components/Button.stories.tsx` - Button component variations
+- `design-system/components/IconButton.stories.tsx` - Icon button component with circular design
 - `design-system/components/Typography.stories.tsx` - Typography scale and text components
 - `design-system/components/Card.stories.tsx` - Card layouts and variants
 - `design-system/components/Icon.stories.tsx` - Icon showcase and usage

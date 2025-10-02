@@ -10,6 +10,7 @@ import {
     CardContent,
     Input,
     Icon,
+    IconButton,
     TabNavigation,
     PrimaryButton,
     SecondaryButton,
@@ -77,6 +78,19 @@ const DesignSystemOverviewComponent = () => {
                         <View style={{ gap: 12 }}>
                             <Button loading>Loading Button</Button>
                             <Button disabled>Disabled Button</Button>
+                        </View>
+
+                        <View style={{ gap: 12 }}>
+                            <Typography variant="label" style={{ marginTop: 8 }}>
+                                Icon Buttons
+                            </Typography>
+                            <View style={{ flexDirection: "row", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+                                <IconButton icon="chevron-left" variant="default" />
+                                <IconButton icon="check" variant="primary" />
+                                <IconButton icon="settings" variant="ghost" />
+                                <IconButton icon="home" variant="default" size="small" />
+                                <IconButton icon="home" variant="default" size="large" />
+                            </View>
                         </View>
                     </View>
                 </CardContent>
