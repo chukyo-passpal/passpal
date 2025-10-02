@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView, TouchableOpacity, StyleSheet, Pressable } from "react-native";
+import { View, ScrollView, TouchableOpacity, Pressable } from "react-native";
 import { Typography } from "@/design-system/components/Typography";
 import { Icon } from "@/design-system/components/Icon";
 import { useTheme } from "@/design-system/tokens/ThemeProvider";
@@ -78,18 +78,20 @@ export default function TimetableScreen() {
         const dayName = WEEKDAYS[selectedDay];
 
         return (
-            <View style={styles.dayViewContainer}>
+            <View style={{ flex: 1, gap: 24 }}>
                 {/* 曜日選択 */}
-                <View style={styles.weekdaySelector}>
+                <View style={{ flexDirection: "row", gap: 10 }}>
                     {WEEKDAYS.map((day, index) => (
                         <TouchableOpacity
                             key={day}
-                            style={[
-                                styles.weekdayButton,
-                                {
-                                    backgroundColor: index === selectedDay ? theme.colors.primary.main : theme.colors.neutral.gray200,
-                                },
-                            ]}
+                            style={{
+                                flex: 1,
+                                height: 40,
+                                borderRadius: 28,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                backgroundColor: index === selectedDay ? theme.colors.primary.main : theme.colors.neutral.gray200,
+                            }}
                             onPress={() => setSelectedDay(index)}
                         >
                             <Typography variant="h3" color={index === selectedDay ? theme.colors.text.inverse : theme.colors.text.secondary}>
@@ -100,15 +102,15 @@ export default function TimetableScreen() {
                 </View>
 
                 {/* 授業一覧 */}
-                <ScrollView style={styles.scheduleList} showsVerticalScrollIndicator={false}>
+                <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
                     {PERIODS.map((period) => {
                         const classKey = `${dayName}-${period.period}`;
                         const classInfo = SAMPLE_TIMETABLE[classKey];
 
                         return (
-                            <View key={period.period} style={styles.periodRow}>
+                            <View key={period.period} style={{ flexDirection: "row", gap: 16, alignItems: "center", marginBottom: 16 }}>
                                 {/* 時間情報 */}
-                                <View style={styles.timeInfo}>
+                                <View style={{ width: 80, alignItems: "center", gap: 4 }}>
                                     <Typography variant="h2" color={theme.colors.text.primary}>
                                         {period.period}限
                                     </Typography>
@@ -119,9 +121,20 @@ export default function TimetableScreen() {
 
                                 {/* 授業カード */}
                                 {classInfo ? (
-                                    <Pressable style={[styles.classCard, { backgroundColor: classInfo.color }]}>
-                                        <View style={styles.classInfo}>
-                                            <Typography variant="body" style={styles.className} color={theme.colors.text.inverse}>
+                                    <Pressable
+                                        style={{
+                                            flex: 1,
+                                            height: 80,
+                                            borderRadius: 12,
+                                            paddingHorizontal: 16,
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            backgroundColor: classInfo.color,
+                                        }}
+                                    >
+                                        <View style={{ flex: 1, gap: 4 }}>
+                                            <Typography variant="body" style={{ fontWeight: "600" }} color={theme.colors.text.inverse}>
                                                 {classInfo.name}
                                             </Typography>
                                             <Typography variant="caption" color={theme.colors.text.inverse}>
@@ -131,7 +144,18 @@ export default function TimetableScreen() {
                                         <Icon name="chevron-right" size={16} color={theme.colors.text.inverse} />
                                     </Pressable>
                                 ) : (
-                                    <View style={[styles.classCard, styles.noClass]}>
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            height: 80,
+                                            borderRadius: 12,
+                                            paddingHorizontal: 16,
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            backgroundColor: "#F5F5F5",
+                                        }}
+                                    >
                                         <Typography variant="body" color={theme.colors.text.placeholder}>
                                             授業がありません
                                         </Typography>
@@ -147,13 +171,16 @@ export default function TimetableScreen() {
 
     const renderWeekView = () => {
         return (
-            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.weekViewContainer}>
-                <View style={styles.timetableGrid}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ flex: 1 }}>
+                <View style={{ borderWidth: 1, borderColor: "#E8E8E8", borderRadius: 8, backgroundColor: "#FFFFFF", minHeight: 450 }}>
                     {/* ヘッダー行 */}
-                    <View style={styles.headerRow}>
-                        <View style={styles.timeHeader} />
+                    <View style={{ flexDirection: "row", backgroundColor: "#F9FAFB", borderBottomWidth: 1, borderBottomColor: "#E8E8E8", height: 35 }}>
+                        <View style={{ width: 24, borderRightWidth: 1, borderRightColor: "#E8E8E8" }} />
                         {WEEKDAYS.map((day) => (
-                            <View key={day} style={styles.dayHeader}>
+                            <View
+                                key={day}
+                                style={{ width: 80, justifyContent: "center", alignItems: "center", borderRightWidth: 1, borderRightColor: "#E8E8E8" }}
+                            >
                                 <Typography variant="body" color={theme.colors.text.primary}>
                                     {day}
                                 </Typography>
@@ -163,19 +190,28 @@ export default function TimetableScreen() {
 
                     {/* 時間割グリッド */}
                     {PERIODS.map((period) => (
-                        <View key={period.period} style={styles.gridRow}>
+                        <View key={period.period} style={{ flexDirection: "row", height: 105, borderBottomWidth: 1, borderBottomColor: "#E8E8E8" }}>
                             {/* 時間列 */}
-                            <View style={styles.timeCell}>
+                            <View
+                                style={{
+                                    width: 24,
+                                    paddingVertical: 8,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    borderRightWidth: 1,
+                                    borderRightColor: "#E8E8E8",
+                                }}
+                            >
                                 <Typography variant="h3" color={theme.colors.text.primary}>
                                     {period.period}
                                 </Typography>
-                                <Typography variant="caption" color={theme.colors.text.secondary} style={styles.timeCellText}>
+                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
                                     {period.startTime}
                                 </Typography>
-                                <Typography variant="caption" color={theme.colors.text.secondary} style={styles.timeCellText}>
+                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
                                     ~
                                 </Typography>
-                                <Typography variant="caption" color={theme.colors.text.secondary} style={styles.timeCellText}>
+                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
                                     {period.endTime}
                                 </Typography>
                             </View>
@@ -186,15 +222,37 @@ export default function TimetableScreen() {
                                 const classInfo = SAMPLE_TIMETABLE[classKey];
 
                                 return (
-                                    <View key={`${day}-${period.period}`} style={styles.gridCell}>
+                                    <View key={`${day}-${period.period}`} style={{ width: 80, padding: 3, borderRightWidth: 1, borderRightColor: "#E8E8E8" }}>
                                         {classInfo ? (
-                                            <View style={[styles.miniClassCard, { backgroundColor: classInfo.color }]}>
-                                                <View style={styles.miniClassName}>
-                                                    <Typography variant="caption" color={theme.colors.text.inverse} style={styles.miniClassText}>
+                                            <View
+                                                style={{
+                                                    flex: 1,
+                                                    borderRadius: 6,
+                                                    padding: 2,
+                                                    gap: 4,
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    backgroundColor: classInfo.color,
+                                                }}
+                                            >
+                                                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", overflow: "hidden" }}>
+                                                    <Typography
+                                                        variant="caption"
+                                                        color={theme.colors.text.inverse}
+                                                        style={{ fontSize: 10, lineHeight: 12, textAlign: "center" }}
+                                                    >
                                                         {classInfo.name}
                                                     </Typography>
                                                 </View>
-                                                <View style={styles.roomBadge}>
+                                                <View
+                                                    style={{
+                                                        backgroundColor: "#FFFFFF",
+                                                        paddingHorizontal: 6,
+                                                        paddingVertical: 2,
+                                                        borderRadius: 4,
+                                                        alignItems: "center",
+                                                    }}
+                                                >
                                                     <Typography variant="caption" color={theme.colors.text.primary}>
                                                         {classInfo.room}
                                                     </Typography>
@@ -212,21 +270,23 @@ export default function TimetableScreen() {
     };
 
     return (
-        <View style={styles.container}>
+        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
             {/* ヘッダー */}
             <Header title="時間割" subButtonIcon="refresh-cw" onPressSubButton={handleRefresh} />
 
             {/* コンテンツ */}
-            <View style={styles.content}>
+            <View style={{ flex: 1, gap: 24, paddingHorizontal: 20 }}>
                 {/* ビュー切り替えボタン */}
-                <View style={styles.viewToggle}>
+                <View style={{ flexDirection: "row", gap: 10 }}>
                     <TouchableOpacity
-                        style={[
-                            styles.toggleButton,
-                            {
-                                backgroundColor: viewMode === "day" ? theme.colors.primary.main : theme.colors.neutral.gray200,
-                            },
-                        ]}
+                        style={{
+                            flex: 1,
+                            height: 40,
+                            borderRadius: 28,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: viewMode === "day" ? theme.colors.primary.main : theme.colors.neutral.gray200,
+                        }}
                         onPress={() => setViewMode("day")}
                     >
                         <Typography variant="h3" color={viewMode === "day" ? theme.colors.text.inverse : theme.colors.text.secondary}>
@@ -234,12 +294,14 @@ export default function TimetableScreen() {
                         </Typography>
                     </TouchableOpacity>
                     <TouchableOpacity
-                        style={[
-                            styles.toggleButton,
-                            {
-                                backgroundColor: viewMode === "week" ? theme.colors.primary.main : theme.colors.neutral.gray200,
-                            },
-                        ]}
+                        style={{
+                            flex: 1,
+                            height: 40,
+                            borderRadius: 28,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: viewMode === "week" ? theme.colors.primary.main : theme.colors.neutral.gray200,
+                        }}
                         onPress={() => setViewMode("week")}
                     >
                         <Typography variant="h3" color={viewMode === "week" ? theme.colors.text.inverse : theme.colors.text.secondary}>
@@ -254,173 +316,3 @@ export default function TimetableScreen() {
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#FFFFFF",
-    },
-    header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingHorizontal: 20,
-        paddingBottom: 16,
-    },
-    refreshButton: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: "#F8F9FA",
-        borderWidth: 1,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    content: {
-        flex: 1,
-        gap: 24,
-        paddingHorizontal: 20,
-    },
-    viewToggle: {
-        flexDirection: "row",
-        gap: 10,
-    },
-    toggleButton: {
-        flex: 1,
-        height: 40,
-        borderRadius: 28,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    // Day View Styles
-    dayViewContainer: {
-        flex: 1,
-        gap: 24,
-    },
-    weekdaySelector: {
-        flexDirection: "row",
-        gap: 10,
-    },
-    weekdayButton: {
-        flex: 1,
-        height: 40,
-        borderRadius: 28,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    scheduleList: {
-        flex: 1,
-    },
-    periodRow: {
-        flexDirection: "row",
-        gap: 16,
-        alignItems: "center",
-        marginBottom: 16,
-    },
-    timeInfo: {
-        width: 80,
-        alignItems: "center",
-        gap: 4,
-    },
-    classCard: {
-        flex: 1,
-        height: 80,
-        borderRadius: 12,
-        paddingHorizontal: 16,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-    },
-    classInfo: {
-        flex: 1,
-        gap: 4,
-    },
-    className: {
-        fontWeight: "600",
-    },
-    noClass: {
-        backgroundColor: "#F5F5F5",
-        justifyContent: "center",
-    },
-    // Week View Styles
-    weekViewContainer: {
-        flex: 1,
-    },
-    timetableGrid: {
-        borderWidth: 1,
-        borderColor: "#E8E8E8",
-        borderRadius: 8,
-        backgroundColor: "#FFFFFF",
-        minHeight: 450,
-    },
-    headerRow: {
-        flexDirection: "row",
-        backgroundColor: "#F9FAFB",
-        borderBottomWidth: 1,
-        borderBottomColor: "#E8E8E8",
-        height: 35,
-    },
-    timeHeader: {
-        width: 24,
-        borderRightWidth: 1,
-        borderRightColor: "#E8E8E8",
-    },
-    dayHeader: {
-        width: 80,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRightWidth: 1,
-        borderRightColor: "#E8E8E8",
-    },
-    gridRow: {
-        flexDirection: "row",
-        height: 105,
-        borderBottomWidth: 1,
-        borderBottomColor: "#E8E8E8",
-    },
-    timeCell: {
-        width: 24,
-        paddingVertical: 8,
-        alignItems: "center",
-        justifyContent: "center",
-        borderRightWidth: 1,
-        borderRightColor: "#E8E8E8",
-    },
-    timeCellText: {
-        fontSize: 8,
-        lineHeight: 10,
-    },
-    gridCell: {
-        width: 80,
-        padding: 3,
-        borderRightWidth: 1,
-        borderRightColor: "#E8E8E8",
-    },
-    miniClassCard: {
-        flex: 1,
-        borderRadius: 6,
-        padding: 2,
-        gap: 4,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    miniClassName: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        width: "100%",
-        overflow: "hidden",
-    },
-    miniClassText: {
-        fontSize: 10,
-        lineHeight: 12,
-        textAlign: "center",
-    },
-    roomBadge: {
-        backgroundColor: "#FFFFFF",
-        paddingHorizontal: 6,
-        paddingVertical: 2,
-        borderRadius: 4,
-        alignItems: "center",
-    },
-});

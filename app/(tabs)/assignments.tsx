@@ -1,21 +1,18 @@
 import React from "react";
 import { View, ScrollView, Pressable } from "react-native";
-import { Heading3, BodyText, BodySmall, Caption, Card, Icon } from "@/design-system";
+import { Heading3, BodyText, BodySmall, Caption, Card, Icon, useTheme } from "@/design-system";
 import Header from "@/components/Header";
 
 export default function Assignments() {
+    const theme = useTheme();
+
     const handleRefresh = () => {
         // Refresh logic here
         console.log("Refresh pressed");
     };
 
     return (
-        <View
-            style={{
-                flex: 1,
-                backgroundColor: "#FFFFFF",
-            }}
-        >
+        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
             <Header title="課題一覧" subButtonIcon="refresh-cw" onPressSubButton={handleRefresh} />
 
             {/* Content */}

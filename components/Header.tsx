@@ -1,6 +1,6 @@
-import { Heading2, Icon, IconButton, IconName, spacing } from "@/design-system";
+import { Heading2, IconButton, IconName, spacing } from "@/design-system";
 import { router } from "expo-router";
-import { Pressable, View } from "react-native";
+import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Props = { title: string; subButtonIcon?: IconName; onPressSubButton?: () => void; shownBackButton?: boolean; onPressBackButton?: () => void };

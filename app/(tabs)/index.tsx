@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, TouchableOpacity, Linking } from "react-native";
+import { View, ScrollView, Linking } from "react-native";
 import { useRouter } from "expo-router";
 import { Typography, Card, CardHeader, CardDivider, Button, Icon, IconContainer, useTheme } from "@/design-system";
 import Header from "@/components/Header";
