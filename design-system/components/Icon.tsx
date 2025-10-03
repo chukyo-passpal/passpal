@@ -32,12 +32,16 @@ import {
     AlertTriangle,
     LucideProps,
     ChevronLeft,
+    CalendarCog,
+    ArrowLeftRight,
 } from "lucide-react-native";
 import { useTheme } from "../tokens/ThemeProvider";
 
 export type IconName =
+    | "arrow-left-right"
     | "home"
     | "calendar"
+    | "calendar-cog"
     | "user"
     | "settings"
     | "bell"
@@ -71,8 +75,10 @@ interface IconProps {
 
 // Icon mapping
 const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
+    "arrow-left-right": ArrowLeftRight,
     home: Home,
     calendar: Calendar,
+    "calendar-cog": CalendarCog,
     user: User,
     settings: Settings,
     bell: Bell,

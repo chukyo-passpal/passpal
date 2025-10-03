@@ -9,11 +9,11 @@ export default function HomeScreen() {
     const router = useRouter();
 
     const handleOpenALBO = () => {
-        Linking.openURL("https://albo.aitech.ac.jp/");
+        Linking.openURL("https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/UnLoginControl");
     };
 
     const handleOpenMaNaBo = () => {
-        Linking.openURL("https://manabo.aitech.ac.jp/");
+        Linking.openURL("https://manabo.cnc.chukyo-u.ac.jp/auth/shibboleth/");
     };
 
     const handleOpenSettings = () => {

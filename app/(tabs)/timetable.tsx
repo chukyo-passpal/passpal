@@ -67,13 +67,13 @@ const SAMPLE_TIMETABLE: { [key: string]: ClassInfo | null } = {
 
 export default function TimetableScreen() {
     const { theme } = useTheme();
-    const { timetableViewMode } = useSetting();
+    const { timetableViewMode, setTimetableViewMode } = useSetting();
 
     const [selectedDay, setSelectedDay] = useState(0); // 月曜日 = 0
 
-    const handleRefresh = () => {
-        // リフレッシュ機能の実装
-        console.log("Refreshing timetable...");
+    const handleChangeViewMode = () => {
+        const newMode = timetableViewMode === "day" ? "week" : "day";
+        setTimetableViewMode(newMode);
     };
 
     const renderDayView = () => {
@@ -295,7 +295,7 @@ export default function TimetableScreen() {
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
             {/* ヘッダー */}
-            <Header title="時間割" subButtonIcon="refresh-cw" onPressSubButton={handleRefresh} />
+            <Header title="時間割" subButtonIcon="arrow-left-right" onPressSubButton={handleChangeViewMode} />
 
             {/* コンテンツ */}
             <View style={{ flex: 1 }}>
