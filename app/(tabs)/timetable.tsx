@@ -132,7 +132,7 @@ export default function TimetableScreen() {
                                             flexDirection: "row",
                                             alignItems: "center",
                                             justifyContent: "space-between",
-                                            backgroundColor: classInfo.color,
+                                            backgroundColor: theme.colors.ui.classCard,
                                         }}
                                     >
                                         <View style={{ flex: 1, gap: 4 }}>
@@ -155,7 +155,7 @@ export default function TimetableScreen() {
                                             flexDirection: "row",
                                             alignItems: "center",
                                             justifyContent: "space-between",
-                                            backgroundColor: "#F5F5F5",
+                                            backgroundColor: theme.colors.background.disabled,
                                         }}
                                     >
                                         <Typography variant="body" color={theme.colors.text.placeholder}>
@@ -184,10 +184,26 @@ export default function TimetableScreen() {
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    <View style={{ borderWidth: 1, borderColor: "#E8E8E8", borderRadius: 8, backgroundColor: "#FFFFFF", width: "100%" }}>
+                    <View
+                        style={{
+                            borderWidth: 1,
+                            borderColor: theme.colors.border.default,
+                            borderRadius: 8,
+                            backgroundColor: theme.colors.background.primary,
+                            width: "100%",
+                        }}
+                    >
                         {/* ヘッダー行 */}
-                        <View style={{ flexDirection: "row", backgroundColor: "#F9FAFB", borderBottomWidth: 1, borderBottomColor: "#E8E8E8", height: 35 }}>
-                            <View style={{ flex: 1, minWidth: 25, maxWidth: 25, borderRightWidth: 1, borderRightColor: "#E8E8E8" }} />
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                backgroundColor: theme.colors.background.surface,
+                                borderBottomWidth: 1,
+                                borderBottomColor: theme.colors.border.default,
+                                height: 35,
+                            }}
+                        >
+                            <View style={{ flex: 1, minWidth: 25, maxWidth: 25, borderRightWidth: 1, borderRightColor: theme.colors.border.default }} />
                             {displayWeekdays.map((day) => (
                                 <View
                                     key={day}
@@ -196,7 +212,7 @@ export default function TimetableScreen() {
                                         justifyContent: "center",
                                         alignItems: "center",
                                         borderRightWidth: 1,
-                                        borderRightColor: "#E8E8E8",
+                                        borderRightColor: theme.colors.border.default,
                                     }}
                                 >
                                     <Typography variant="body" color={theme.colors.text.primary}>
@@ -209,7 +225,10 @@ export default function TimetableScreen() {
                         {/* 時間割グリッド */}
 
                         {PERIODS.map((period) => (
-                            <View key={period.period} style={{ flexDirection: "row", height: 105, borderBottomWidth: 1, borderBottomColor: "#E8E8E8" }}>
+                            <View
+                                key={period.period}
+                                style={{ flexDirection: "row", height: 105, borderBottomWidth: 1, borderBottomColor: theme.colors.border.default }}
+                            >
                                 {/* 時間列 */}
                                 <View
                                     style={{
@@ -219,7 +238,7 @@ export default function TimetableScreen() {
                                         alignItems: "center",
                                         justifyContent: "center",
                                         borderRightWidth: 1,
-                                        borderRightColor: "#E8E8E8",
+                                        borderRightColor: theme.colors.border.default,
                                     }}
                                 >
                                     <Typography variant="h3" color={theme.colors.text.primary}>
@@ -242,7 +261,10 @@ export default function TimetableScreen() {
                                     const classInfo = SAMPLE_TIMETABLE[classKey];
 
                                     return (
-                                        <View key={`${day}-${period.period}`} style={{ flex: 1, padding: 3, borderRightWidth: 1, borderRightColor: "#E8E8E8" }}>
+                                        <View
+                                            key={`${day}-${period.period}`}
+                                            style={{ flex: 1, padding: 3, borderRightWidth: 1, borderRightColor: theme.colors.border.default }}
+                                        >
                                             {classInfo ? (
                                                 <View
                                                     style={{
@@ -252,7 +274,7 @@ export default function TimetableScreen() {
                                                         gap: 4,
                                                         justifyContent: "center",
                                                         alignItems: "center",
-                                                        backgroundColor: classInfo.color,
+                                                        backgroundColor: theme.colors.ui.classCard,
                                                     }}
                                                 >
                                                     <View
@@ -268,7 +290,7 @@ export default function TimetableScreen() {
                                                     </View>
                                                     <View
                                                         style={{
-                                                            backgroundColor: "#FFFFFF",
+                                                            backgroundColor: theme.colors.background.primary,
                                                             paddingHorizontal: 6,
                                                             paddingVertical: 2,
                                                             borderRadius: 4,

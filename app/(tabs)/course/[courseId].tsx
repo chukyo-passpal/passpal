@@ -38,7 +38,7 @@ export default function CourseDetail() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#fff" }}>
+        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
             {/* Header */}
             <View
                 style={{
@@ -153,7 +153,7 @@ export default function CourseDetail() {
 
                     <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8 }}>
                         <View style={{ alignItems: "center", gap: 4 }}>
-                            <Typography variant="h2" color="#90c695">
+                            <Typography variant="h2" color={theme.colors.status.success}>
                                 {courseData.attendance.present}
                             </Typography>
                             <Typography variant="caption" color={theme.colors.text.secondary}>
@@ -161,7 +161,7 @@ export default function CourseDetail() {
                             </Typography>
                         </View>
                         <View style={{ alignItems: "center", gap: 4 }}>
-                            <Typography variant="h2" color="#e57373">
+                            <Typography variant="h2" color={theme.colors.status.error}>
                                 {courseData.attendance.absent}
                             </Typography>
                             <Typography variant="caption" color={theme.colors.text.secondary}>
@@ -169,7 +169,7 @@ export default function CourseDetail() {
                             </Typography>
                         </View>
                         <View style={{ alignItems: "center", gap: 4 }}>
-                            <Typography variant="h2" color="#f5c842">
+                            <Typography variant="h2" color={theme.colors.status.warning}>
                                 {courseData.attendance.late}
                             </Typography>
                             <Typography variant="caption" color={theme.colors.text.secondary}>
@@ -178,8 +178,8 @@ export default function CourseDetail() {
                         </View>
                     </View>
 
-                    <View style={{ padding: 12, borderRadius: 8, alignItems: "center", gap: 4, backgroundColor: "#f0f9f1" }}>
-                        <Typography variant="label" color="#90c695">
+                    <View style={{ padding: 12, borderRadius: 8, alignItems: "center", gap: 4, backgroundColor: theme.colors.status.success + "20" }}>
+                        <Typography variant="label" color={theme.colors.status.success}>
                             出席率: {courseData.attendance.rate}%
                         </Typography>
                         <Typography variant="bodySmall" color={theme.colors.text.secondary}>

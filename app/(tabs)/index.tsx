@@ -32,7 +32,7 @@ export default function HomeScreen() {
                 >
                     <View
                         style={{
-                            backgroundColor: "#FEF5F5",
+                            backgroundColor: theme.colors.status.error + "20",
                             paddingHorizontal: 8,
                             paddingVertical: 4,
                             borderRadius: 4,
@@ -40,7 +40,7 @@ export default function HomeScreen() {
                             justifyContent: "center",
                         }}
                     >
-                        <Typography variant="caption" color="#E57373" style={{ fontWeight: "600" }}>
+                        <Typography variant="caption" color={theme.colors.status.error} style={{ fontWeight: "600" }}>
                             重要
                         </Typography>
                     </View>
