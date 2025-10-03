@@ -13,7 +13,7 @@ export default {
 };
 
 export const NextClassCard = () => {
-    const theme = useTheme();
+    const { theme } = useTheme();
     return (
         <View style={{ padding: 16, backgroundColor: theme.colors.background.primary }}>
             <StatCard iconName="calendar" title="次の授業" content="アルゴリズムとデータ構造" subtitle="1273" />
@@ -22,7 +22,7 @@ export const NextClassCard = () => {
 };
 
 export const AssignmentCountCard = () => {
-    const theme = useTheme();
+    const { theme } = useTheme();
     return (
         <View style={{ padding: 16, backgroundColor: theme.colors.background.primary }}>
             <StatCard iconName="clipboard-list" title="残り課題数" content={12} largeContent />
@@ -31,7 +31,7 @@ export const AssignmentCountCard = () => {
 };
 
 export const CustomHeightCard = () => {
-    const theme = useTheme();
+    const { theme } = useTheme();
     return (
         <View style={{ padding: 16, backgroundColor: theme.colors.background.primary }}>
             <StatCard iconName="clock" title="カスタム高さ" content="200pxの高さ" height={200} />
@@ -40,7 +40,7 @@ export const CustomHeightCard = () => {
 };
 
 export const LeftAlignedCard = () => {
-    const theme = useTheme();
+    const { theme } = useTheme();
     return (
         <View style={{ padding: 16, backgroundColor: theme.colors.background.primary }}>
             <StatCard iconName="user" title="左寄せコンテンツ" content="これは左寄せのテキストです" contentAlign="left" />
@@ -49,7 +49,7 @@ export const LeftAlignedCard = () => {
 };
 
 export const AllVariants = () => {
-    const theme = useTheme();
+    const { theme } = useTheme();
     return (
         <View style={{ padding: 16, backgroundColor: theme.colors.background.primary, gap: 16 }}>
             <View style={{ flexDirection: "row", gap: 16 }}>

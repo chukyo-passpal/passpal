@@ -1,5 +1,5 @@
 import { Stack, usePathname } from "expo-router";
-import { AuthProvider, useAuth } from "@/context/authContext";
+import { AuthProvider, useAuth } from "@/hooks/authContext";
 import { ThemeProvider, useTheme } from "@/design-system";
 import { TamaguiProvider } from "tamagui";
 
@@ -20,7 +20,7 @@ export default function RootLayout() {
 function RootLayoutNav() {
     const { isLoading, isAuthenticated, isTermsAccepted } = useAuth();
     const pathname = usePathname();
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const isDebugMode = __DEV__; // デバッグ時のみ有効化
 

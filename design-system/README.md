@@ -306,7 +306,7 @@ export default function App() {
 import { useTheme } from './design-system';
 
 function CustomComponent() {
-  const theme = useTheme();
+  const { theme } = useTheme();
   
   return (
     <View style={{

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "expo-router";
 
 export default function Login() {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const router = useRouter();
     const [studentId, setStudentId] = useState("");
 

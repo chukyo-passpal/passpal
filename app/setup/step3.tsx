@@ -3,7 +3,7 @@ import { View, ScrollView } from "react-native";
 import { router } from "expo-router";
 import { Checkbox } from "expo-checkbox";
 import { Typography, Heading2, BodyText, BodySmall, Caption, PrimaryButton, Icon, Card } from "../../design-system";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/hooks/authContext";
 
 export default function Step3() {
     const { acceptTerms } = useAuth();

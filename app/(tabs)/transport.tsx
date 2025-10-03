@@ -22,7 +22,7 @@ interface Schedule {
 }
 
 export default function TransportScreen() {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const [mode, setMode] = useState<TransportMode>("bus");
     const [direction, setDirection] = useState<Direction>("from-campus");
     const [countdown] = useState("03:09");

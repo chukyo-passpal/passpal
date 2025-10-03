@@ -1,12 +1,12 @@
 import { View, ScrollView, TouchableOpacity, Switch } from "react-native";
 import { Typography, Card, Icon, useTheme } from "@/design-system";
 import { Building, Calendar, Moon, Trash2 } from "lucide-react-native";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/hooks/authContext";
 import Header from "@/components/Header";
 import { Select } from "@/design-system/components/Select";
 
 export default function Settings() {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const { signOut } = useAuth();
 
     const handleLogout = () => {

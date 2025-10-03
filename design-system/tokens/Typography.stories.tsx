@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { ThemeProvider, useTheme, Typography } from "../index";
 
 const TypographyTokensComponent = () => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const TypographyExample = ({ variant, label }: { variant: keyof typeof theme.typography.variants; label: string }) => {
         const style = theme.typography.variants[variant];

@@ -16,7 +16,7 @@ interface TypographyProps extends Omit<TextProps, "style"> {
 }
 
 export const Typography: React.FC<TypographyProps> = ({ variant = "body", color, style, children, ...props }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const variantStyle = theme.typography.variants[variant];
 
     const textStyle = [

@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { ThemeProvider, useTheme, Typography } from "../index";
 
 const ColorSwatchComponent = () => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const ColorSwatch = ({ title, colors }: { title: string; colors: Record<string, string> }) => (
         <View style={{ marginBottom: 24 }}>

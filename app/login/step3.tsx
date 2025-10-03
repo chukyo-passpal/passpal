@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { useState } from "react";
 import { ThemeProvider, Icon, Heading2, BodyText, Input, PrimaryButton, TextButton } from "../../design-system";
 import { router, useLocalSearchParams } from "expo-router";
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "@/hooks/authContext";
 
 export default function Index() {
     const { signIn } = useAuth();

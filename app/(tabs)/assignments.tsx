@@ -4,7 +4,7 @@ import { Heading3, BodyText, BodySmall, Caption, Card, Icon, useTheme } from "@/
 import Header from "@/components/Header";
 
 export default function Assignments() {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const handleRefresh = () => {
         // Refresh logic here

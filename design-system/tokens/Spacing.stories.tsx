@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { ThemeProvider, useTheme, Typography } from "../index";
 
 const SpacingTokensComponent = () => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const SpacingExample = ({ name, value }: { name: string; value: number }) => (
         <View style={{ marginBottom: 16, alignItems: "flex-start" }}>

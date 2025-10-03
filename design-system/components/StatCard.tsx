@@ -40,7 +40,7 @@ export const StatCard: React.FC<StatCardProps> = ({
     largeContent = false,
     contentAlign = "center",
 }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const contentTextAlign: TextStyle["textAlign"] = contentAlign;
 

@@ -40,7 +40,7 @@ export const Input = forwardRef<TextInput, InputProps>(
         },
         ref
     ) => {
-        const theme = useTheme();
+        const { theme } = useTheme();
         const [isFocused, setIsFocused] = useState(false);
         const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 

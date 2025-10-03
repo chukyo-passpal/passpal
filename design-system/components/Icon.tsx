@@ -99,7 +99,7 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
 };
 
 export const Icon: React.FC<IconProps> = ({ name, size = 24, color, containerStyle }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const IconComponent = iconMap[name];
 
     if (!IconComponent) {
@@ -123,7 +123,7 @@ interface IconContainerProps extends IconProps {
 }
 
 export const IconContainer: React.FC<IconContainerProps> = ({ variant = "default", backgroundColor, size = 24, containerStyle, ...iconProps }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const getBackgroundColor = () => {
         if (backgroundColor) return backgroundColor;

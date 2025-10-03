@@ -17,7 +17,7 @@ interface CardProps extends Omit<ViewProps, "style"> {
 }
 
 export const Card: React.FC<CardProps> = ({ variant = "default", children, style, ...props }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     const getCardStyles = (): ViewStyle => {
         const baseStyle: ViewStyle = {
@@ -68,7 +68,7 @@ interface CardHeaderProps {
 }
 
 export const CardHeader: React.FC<CardHeaderProps> = ({ title, subtitle, icon, children }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View
@@ -99,14 +99,14 @@ interface CardContentProps {
 }
 
 export const CardContent: React.FC<CardContentProps> = ({ children }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return <View style={{ marginTop: theme.spacing.sm }}>{children}</View>;
 };
 
 // Card Divider Component
 export const CardDivider: React.FC<{ color?: string }> = ({ color }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View
@@ -127,7 +127,7 @@ interface FeatureCardProps {
 }
 
 export const FeatureCard: React.FC<FeatureCardProps> = ({ title, description, icon }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return (
         <Card variant="feature">
@@ -163,7 +163,7 @@ interface InfoCardProps {
 }
 
 export const InfoCard: React.FC<InfoCardProps> = ({ title, content, icon }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return (
         <Card variant="info">

@@ -23,7 +23,7 @@ interface TabNavigationProps {
 }
 
 export const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, onTabPress, style }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View
@@ -74,7 +74,7 @@ interface BottomNavigationProps {
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({ items, onItemPress, style }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View
@@ -154,7 +154,7 @@ interface NavigationHeaderProps {
 }
 
 export const NavigationHeader: React.FC<NavigationHeaderProps> = ({ title, leftIcon, rightIcon, onLeftPress, onRightPress, style }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return (
         <View

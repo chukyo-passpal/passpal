@@ -2,7 +2,7 @@ import { Tabs } from "expo-router";
 import { useTheme, Icon } from "@/design-system";
 
 export default function TabLayout() {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     return (
         <Tabs

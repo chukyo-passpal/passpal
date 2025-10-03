@@ -30,7 +30,7 @@ export const Button: React.FC<ButtonProps> = ({
     disabled,
     ...props
 }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     // Get size configuration
     const sizeConfig = theme.components.button.sizes[size];

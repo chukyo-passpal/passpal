@@ -4,7 +4,7 @@ import { router } from "expo-router";
 import { Card, Typography, Icon, useTheme } from "@/design-system";
 
 export default function CourseDetail() {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     // Mock data - 実際のアプリではAPIから取得
     const courseData = {

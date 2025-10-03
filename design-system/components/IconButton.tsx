@@ -20,7 +20,7 @@ interface IconButtonProps extends Omit<PressableProps, "style"> {
 }
 
 export const IconButton: React.FC<IconButtonProps> = ({ icon, size = "medium", variant = "default", iconColor, disabled, style, ...props }) => {
-    const theme = useTheme();
+    const { theme } = useTheme();
 
     // Size configuration
     const sizeConfig = {
@@ -54,7 +54,7 @@ export const IconButton: React.FC<IconButtonProps> = ({ icon, size = "medium", v
             case "default":
                 return {
                     ...baseStyle,
-                    backgroundColor: "#F8F9FA",
+                    backgroundColor: theme.colors.background.surface,
                     borderWidth: 1,
                     borderColor: theme.colors.border.default,
                 };
@@ -81,7 +81,7 @@ export const IconButton: React.FC<IconButtonProps> = ({ icon, size = "medium", v
 
         switch (variant) {
             case "default":
-                return "#6C757D";
+                return theme.colors.text.primary;
             case "primary":
                 return theme.colors.text.inverse;
             case "ghost":

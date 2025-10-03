@@ -65,7 +65,7 @@ const SAMPLE_TIMETABLE: { [key: string]: ClassInfo | null } = {
 };
 
 export default function TimetableScreen() {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const [viewMode, setViewMode] = useState<"day" | "week">("week");
     const [selectedDay, setSelectedDay] = useState(0); // 月曜日 = 0
 

@@ -5,7 +5,7 @@ import { Typography, Card, CardHeader, CardDivider, Button, Icon, useTheme, Stat
 import Header from "@/components/Header";
 
 export default function HomeScreen() {
-    const theme = useTheme();
+    const { theme } = useTheme();
     const router = useRouter();
 
     const handleOpenALBO = () => {
@@ -117,7 +117,7 @@ export default function HomeScreen() {
                 <Card
                     style={{
                         marginBottom: theme.spacing.lg,
-                        backgroundColor: "#F5F5F5",
+                        backgroundColor: theme.colors.background.surface,
                     }}
                 >
                     <CardHeader title="ALBOお知らせ" icon={<Icon name="bell" size={20} color={theme.colors.text.primary} />} />
@@ -135,7 +135,7 @@ export default function HomeScreen() {
                 <Card
                     style={{
                         marginBottom: theme.spacing.lg,
-                        backgroundColor: "#F5F5F5",
+                        backgroundColor: theme.colors.background.surface,
                     }}
                 >
                     <CardHeader title="最近のMaNaBoメール" icon={<Icon name="user" size={20} color={theme.colors.text.primary} />} />
@@ -151,7 +151,7 @@ export default function HomeScreen() {
                 <Card
                     style={{
                         marginBottom: theme.spacing.lg,
-                        backgroundColor: "#F5F5F5",
+                        backgroundColor: theme.colors.background.surface,
                     }}
                 >
                     <CardHeader title="MaNaBo お知らせ" icon={<Icon name="info" size={20} color={theme.colors.text.primary} />} />
