@@ -4,6 +4,7 @@ import { Typography } from "@/design-system/components/Typography";
 import { Icon } from "@/design-system/components/Icon";
 import { useTheme } from "@/design-system/tokens/ThemeProvider";
 import Header from "@/components/Header";
+import useSetting from "@/hooks/useSetting";
 
 // 時間割データの型定義
 interface ClassInfo {
@@ -66,7 +67,8 @@ const SAMPLE_TIMETABLE: { [key: string]: ClassInfo | null } = {
 
 export default function TimetableScreen() {
     const { theme } = useTheme();
-    const [viewMode, setViewMode] = useState<"day" | "week">("week");
+    const { timetableViewMode } = useSetting();
+
     const [selectedDay, setSelectedDay] = useState(0); // 月曜日 = 0
 
     const handleRefresh = () => {
@@ -296,43 +298,9 @@ export default function TimetableScreen() {
             <Header title="時間割" subButtonIcon="refresh-cw" onPressSubButton={handleRefresh} />
 
             {/* コンテンツ */}
-            <View style={{ flex: 1, gap: 24 }}>
-                {/* ビュー切り替えボタン */}
-                <View style={{ flexDirection: "row", gap: 10, paddingHorizontal: 20 }}>
-                    <TouchableOpacity
-                        style={{
-                            flex: 1,
-                            height: 40,
-                            borderRadius: 28,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: viewMode === "day" ? theme.colors.primary.main : theme.colors.neutral.gray200,
-                        }}
-                        onPress={() => setViewMode("day")}
-                    >
-                        <Typography variant="h3" color={viewMode === "day" ? theme.colors.text.inverse : theme.colors.text.secondary}>
-                            1日
-                        </Typography>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={{
-                            flex: 1,
-                            height: 40,
-                            borderRadius: 28,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: viewMode === "week" ? theme.colors.primary.main : theme.colors.neutral.gray200,
-                        }}
-                        onPress={() => setViewMode("week")}
-                    >
-                        <Typography variant="h3" color={viewMode === "week" ? theme.colors.text.inverse : theme.colors.text.secondary}>
-                            1週間
-                        </Typography>
-                    </TouchableOpacity>
-                </View>
-
+            <View style={{ flex: 1 }}>
                 {/* ビューの表示 */}
-                {viewMode === "day" ? renderDayView() : renderWeekView()}
+                {timetableViewMode === "day" ? renderDayView() : renderWeekView()}
             </View>
         </View>
     );

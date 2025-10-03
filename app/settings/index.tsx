@@ -4,10 +4,12 @@ import { Building, Calendar, Moon, Trash2 } from "lucide-react-native";
 import { useAuth } from "@/hooks/authContext";
 import Header from "@/components/Header";
 import { Select } from "@/design-system/components/Select";
+import useSetting from "@/hooks/useSetting";
 
 export default function Settings() {
     const { theme } = useTheme();
     const { signOut } = useAuth();
+    const { campus, timetableViewMode, setCampus, setTimetableViewMode } = useSetting();
 
     const handleLogout = () => {
         signOut();
@@ -155,6 +157,8 @@ export default function Settings() {
                                 </Typography>
                             </View>
                             <Select
+                                value={campus}
+                                onValueChange={(value) => setCampus(value as "nagoya" | "toyota")}
                                 items={[
                                     { label: "名古屋キャンパス", value: "nagoya" },
                                     { label: "豊田キャンパス", value: "toyota" },
@@ -188,6 +192,8 @@ export default function Settings() {
                                 </Typography>
                             </View>
                             <Select
+                                value={timetableViewMode}
+                                onValueChange={(value) => setTimetableViewMode(value as "day" | "week")}
                                 items={[
                                     { label: "1日", value: "day" },
                                     { label: "1週間", value: "week" },
