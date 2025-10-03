@@ -78,7 +78,7 @@ export default function TimetableScreen() {
         const dayName = WEEKDAYS[selectedDay];
 
         return (
-            <View style={{ flex: 1, gap: 24 }}>
+            <View style={{ flex: 1, gap: 24, paddingHorizontal: 20 }}>
                 {/* 曜日選択 */}
                 <View style={{ flexDirection: "row", gap: 10 }}>
                     {WEEKDAYS.map((day, index) => (
@@ -181,39 +181,39 @@ export default function TimetableScreen() {
 
         return (
             <View style={{ flex: 1 }}>
-                <View style={{ borderWidth: 1, borderColor: "#E8E8E8", borderRadius: 8, backgroundColor: "#FFFFFF", minHeight: 450, width: "100%" }}>
-                    {/* ヘッダー行 */}
-                    <View style={{ flexDirection: "row", backgroundColor: "#F9FAFB", borderBottomWidth: 1, borderBottomColor: "#E8E8E8", height: 35 }}>
-                        <View style={{ flex: 1, minWidth: 24, maxWidth: 50, borderRightWidth: 1, borderRightColor: "#E8E8E8" }} />
-                        {displayWeekdays.map((day) => (
-                            <View
-                                key={day}
-                                style={{
-                                    flex: 1,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    borderRightWidth: 1,
-                                    borderRightColor: "#E8E8E8",
-                                }}
-                            >
-                                <Typography variant="body" color={theme.colors.text.primary}>
-                                    {day}
-                                </Typography>
-                            </View>
-                        ))}
-                    </View>
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <View style={{ borderWidth: 1, borderColor: "#E8E8E8", borderRadius: 8, backgroundColor: "#FFFFFF", width: "100%" }}>
+                        {/* ヘッダー行 */}
+                        <View style={{ flexDirection: "row", backgroundColor: "#F9FAFB", borderBottomWidth: 1, borderBottomColor: "#E8E8E8", height: 35 }}>
+                            <View style={{ flex: 1, minWidth: 25, maxWidth: 25, borderRightWidth: 1, borderRightColor: "#E8E8E8" }} />
+                            {displayWeekdays.map((day) => (
+                                <View
+                                    key={day}
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        borderRightWidth: 1,
+                                        borderRightColor: "#E8E8E8",
+                                    }}
+                                >
+                                    <Typography variant="body" color={theme.colors.text.primary}>
+                                        {day}
+                                    </Typography>
+                                </View>
+                            ))}
+                        </View>
 
-                    {/* 時間割グリッド */}
-                    <ScrollView showsVerticalScrollIndicator={false}>
+                        {/* 時間割グリッド */}
+
                         {PERIODS.map((period) => (
                             <View key={period.period} style={{ flexDirection: "row", height: 105, borderBottomWidth: 1, borderBottomColor: "#E8E8E8" }}>
                                 {/* 時間列 */}
                                 <View
                                     style={{
                                         flex: 1,
-                                        minWidth: 24,
-                                        maxWidth: 50,
-                                        paddingVertical: 8,
+                                        minWidth: 25,
+                                        maxWidth: 25,
                                         alignItems: "center",
                                         justifyContent: "center",
                                         borderRightWidth: 1,
@@ -284,8 +284,8 @@ export default function TimetableScreen() {
                                 })}
                             </View>
                         ))}
-                    </ScrollView>
-                </View>
+                    </View>
+                </ScrollView>
             </View>
         );
     };
@@ -296,9 +296,9 @@ export default function TimetableScreen() {
             <Header title="時間割" subButtonIcon="refresh-cw" onPressSubButton={handleRefresh} />
 
             {/* コンテンツ */}
-            <View style={{ flex: 1, gap: 24, paddingHorizontal: 20 }}>
+            <View style={{ flex: 1, gap: 24 }}>
                 {/* ビュー切り替えボタン */}
-                <View style={{ flexDirection: "row", gap: 10 }}>
+                <View style={{ flexDirection: "row", gap: 10, paddingHorizontal: 20 }}>
                     <TouchableOpacity
                         style={{
                             flex: 1,

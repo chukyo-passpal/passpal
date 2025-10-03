@@ -1,6 +1,6 @@
 import { View, ScrollView, TouchableOpacity, Switch } from "react-native";
 import { Typography, Card, Icon, useTheme } from "@/design-system";
-import { Building, Moon, Trash2 } from "lucide-react-native";
+import { Building, Calendar, Moon, Trash2 } from "lucide-react-native";
 import { useAuth } from "@/context/authContext";
 import Header from "@/components/Header";
 import { Select } from "@/design-system/components/Select";
@@ -117,7 +117,7 @@ export default function Settings() {
                 </View>
 
                 {/* App Settings Section */}
-                <View style={{ marginBottom: theme.spacing.xl }}>
+                <View style={{ marginBottom: theme.spacing.xl, gap: theme.spacing.xs }}>
                     <Typography
                         variant="h3"
                         style={{
@@ -163,10 +163,43 @@ export default function Settings() {
                             />
                         </View>
                     </Card>
+                    <Card
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            padding: theme.spacing.md,
+                            height: 64,
+                        }}
+                    >
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <Calendar size={24} color={theme.colors.text.primary} />
+                                <Typography
+                                    variant="body"
+                                    style={{
+                                        color: theme.colors.text.primary,
+                                        fontSize: 16,
+                                        fontWeight: "600",
+                                        marginLeft: theme.spacing.sm,
+                                    }}
+                                >
+                                    時間割表示
+                                </Typography>
+                            </View>
+                            <Select
+                                items={[
+                                    { label: "1日", value: "day" },
+                                    { label: "1週間", value: "week" },
+                                ]}
+                                maxWidth={160}
+                            />
+                        </View>
+                    </Card>
                 </View>
 
                 {/* Data Management Section */}
-                <View style={{ marginBottom: theme.spacing.xl }}>
+                <View style={{ marginBottom: theme.spacing.xl, gap: theme.spacing.xs }}>
                     <Typography
                         variant="h3"
                         style={{
