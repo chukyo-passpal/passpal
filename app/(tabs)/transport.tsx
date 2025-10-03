@@ -1,91 +1,96 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Typography } from "@/design-system/components/Typography";
 import { Icon } from "@/design-system/components/Icon";
 import { useTheme } from "@/design-system/tokens/ThemeProvider";
 import Header from "@/components/Header";
+import {
+    DEFAULT_SERVICE_BY_MODE,
+    Direction,
+    TimetableEntry,
+    TransportMode,
+    TRANSPORT_SERVICES,
+    TransportServiceId,
+} from "./transport/data";
 
-type TransportMode = "bus" | "train";
-type Direction = "to-campus" | "from-campus";
-
-interface RouteInfo {
-    name: string;
-    from: string;
-    to: string;
-    icon: "bus" | "train" | "map-pin";
+interface UpcomingTrip extends TimetableEntry {
+    departureDate: Date;
 }
 
-interface Schedule {
-    departure: string;
-    arrival: string;
-    via?: string;
-}
+const UPCOMING_LIMIT = 3;
+
+const parseTimeToDate = (time: string, reference: Date) => {
+    const [hours, minutes] = time.split(":").map(Number);
+    const candidate = new Date(reference);
+    candidate.setHours(hours, minutes, 0, 0);
+    if (candidate.getTime() < reference.getTime()) {
+        candidate.setDate(candidate.getDate() + 1);
+    }
+    return candidate;
+};
+
+const buildUpcomingTrips = (schedule: TimetableEntry[], now: Date): UpcomingTrip[] => {
+    return schedule
+        .map((entry) => ({
+            ...entry,
+            departureDate: parseTimeToDate(entry.departure, now),
+        }))
+        .sort((a, b) => a.departureDate.getTime() - b.departureDate.getTime())
+        .slice(0, UPCOMING_LIMIT);
+};
+
+const formatCountdown = (departureDate: Date, now: Date) => {
+    const diff = Math.max(0, departureDate.getTime() - now.getTime());
+    const minutes = Math.floor(diff / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+};
+
+const getCurrentSchedule = (serviceId: TransportServiceId, direction: Direction) => {
+    const service = TRANSPORT_SERVICES[serviceId];
+    const timetable = service.timetables[direction];
+    const variantKey = timetable.defaultVariantId as keyof typeof timetable.variants;
+    const rawVariant = timetable.variants[variantKey];
+    const entries = Array.isArray(rawVariant) ? (rawVariant as TimetableEntry[]) : [];
+    return {
+        service,
+        entries,
+    };
+};
 
 export default function TransportScreen() {
     const { theme } = useTheme();
     const [mode, setMode] = useState<TransportMode>("bus");
     const [direction, setDirection] = useState<Direction>("from-campus");
-    const [countdown] = useState("03:09");
+    const [now, setNow] = useState(() => new Date());
 
-    // Mock data - would come from API in production
-    const busRoute: Record<Direction, RouteInfo> = {
-        "to-campus": {
-            name: "スクールバス(豊田キャンパス)",
-            from: "浄水駅",
-            to: "豊田キャンパス",
-            icon: "map-pin",
-        },
-        "from-campus": {
-            name: "スクールバス(豊田キャンパス)",
-            from: "豊田キャンパス",
-            to: "浄水駅",
-            icon: "map-pin",
-        },
-    };
+    useEffect(() => {
+        const interval = setInterval(() => setNow(new Date()), 1000);
+        return () => clearInterval(interval);
+    }, []);
 
-    const trainRoute: Record<Direction, RouteInfo> = {
-        "to-campus": {
-            name: "名鉄豊田線",
-            from: "浄水駅",
-            to: "知立方面",
-            icon: "train",
-        },
-        "from-campus": {
-            name: "名鉄豊田線",
-            from: "浄水駅",
-            to: "知立方面",
-            icon: "train",
-        },
-    };
+    const activeServiceId = DEFAULT_SERVICE_BY_MODE[mode];
+    const { service, entries } = useMemo(
+        () => getCurrentSchedule(activeServiceId, direction),
+        [activeServiceId, direction],
+    );
 
-    const busSchedule: Schedule[] = [
-        { departure: "12:15", arrival: "12:30", via: "貝津経由" },
-        { departure: "12:45", arrival: "13:00" },
-        { departure: "13:15", arrival: "13:30" },
-        { departure: "13:15", arrival: "13:30" },
-    ];
-
-    const trainSchedule: Schedule[] = [
-        { departure: "12:15", arrival: "知立" },
-        { departure: "12:30", arrival: "知立" },
-        { departure: "12:45", arrival: "知立" },
-        { departure: "13:00", arrival: "知立" },
-    ];
-
-    const currentRoute = mode === "bus" ? busRoute[direction] : trainRoute[direction];
-    const currentSchedule = mode === "bus" ? busSchedule : trainSchedule;
+    const upcomingTrips = useMemo(() => buildUpcomingTrips(entries, now), [entries, now]);
+    const primaryTrip = upcomingTrips[0];
+    const countdown = primaryTrip ? formatCountdown(primaryTrip.departureDate, now) : "--:--";
+    const directionInfo = service.directions[direction];
+    const oppositeDirection = direction === "to-campus" ? "from-campus" : "to-campus";
+    const oppositeDirectionInfo = service.directions[oppositeDirection];
+    const arrivalLabel = "arrivalLabel" in directionInfo ? directionInfo.arrivalLabel : undefined;
+    const showsArrival = Boolean(arrivalLabel);
 
     const toggleDirection = () => {
         setDirection((prev) => (prev === "to-campus" ? "from-campus" : "to-campus"));
     };
 
-    // Countdown timer simulation (would be calculated from real time in production)
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // Mock countdown update
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+    const switchMode = () => {
+        setMode((prev) => (prev === "bus" ? "train" : "bus"));
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
@@ -103,22 +108,22 @@ export default function TransportScreen() {
                         gap: 4,
                         marginBottom: 24,
                     }}
-                    onPress={() => setMode(mode === "bus" ? "train" : "bus")}
+                    onPress={switchMode}
                 >
                     <View style={{ flex: 1, gap: 4 }}>
                         <Typography variant="bodySmall" color={theme.colors.text.inverse}>
-                            {currentRoute.name}
+                            {service.name}
                         </Typography>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-                            <Icon name={currentRoute.icon} size={16} color={theme.colors.text.inverse} />
+                            <Icon name={service.icon} size={16} color={theme.colors.text.inverse} />
                             <Typography variant="h3" color={theme.colors.text.inverse}>
-                                {currentRoute.from}
+                                {directionInfo.origin}
                             </Typography>
                             <Typography variant="h3" color={theme.colors.text.inverse}>
                                 →
                             </Typography>
                             <Typography variant="h3" color={theme.colors.text.inverse}>
-                                {currentRoute.to}
+                                {directionInfo.destination}
                             </Typography>
                         </View>
                     </View>
@@ -130,7 +135,7 @@ export default function TransportScreen() {
                 {/* Next Departure Card */}
                 <View style={{ backgroundColor: theme.colors.neutral.gray200, padding: 20, gap: 16, marginBottom: 24 }}>
                     {/* Via Badge */}
-                    {mode === "bus" && currentSchedule[0].via && (
+                    {service.mode === "bus" && primaryTrip?.via && (
                         <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
                             <View
                                 style={{
@@ -146,7 +151,7 @@ export default function TransportScreen() {
                                 }}
                             >
                                 <Typography variant="caption" color={theme.colors.primary.main}>
-                                    {currentSchedule[0].via}
+                                    {primaryTrip.via}
                                 </Typography>
                             </View>
                         </View>
@@ -163,28 +168,51 @@ export default function TransportScreen() {
                     </View>
 
                     {/* Time Info */}
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 20 }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: showsArrival ? "space-between" : "center",
+                            alignItems: "center",
+                            paddingHorizontal: 20,
+                        }}
+                    >
                         <View style={{ gap: 8, alignItems: "center" }}>
                             <Typography variant="body" color={theme.colors.text.primary} style={{ fontWeight: "600", fontSize: 16 }}>
-                                {currentSchedule[0].departure}
+                                {primaryTrip?.departure ?? "--:--"}
                             </Typography>
-                            <Icon name={mode === "bus" ? "footprints" : "train"} size={20} color={theme.colors.text.secondary} />
+                            <Icon
+                                name={service.mode === "bus" ? "footprints" : "train"}
+                                size={20}
+                                color={theme.colors.text.secondary}
+                            />
                             <Typography variant="caption" color={theme.colors.text.secondary}>
-                                {mode === "bus" ? "大学発" : "浄水駅発"}
+                                {directionInfo.departureLabel}
                             </Typography>
                         </View>
 
-                        <Icon name="chevron-right" size={24} color={theme.colors.text.secondary} />
+                        {showsArrival && (
+                            <>
+                                <Icon name="chevron-right" size={24} color={theme.colors.text.secondary} />
 
-                        <View style={{ gap: 8, alignItems: "center" }}>
-                            <Typography variant="body" color={theme.colors.text.primary} style={{ fontWeight: "600", fontSize: 16 }}>
-                                {currentSchedule[0].arrival}
-                            </Typography>
-                            <Icon name="train" size={20} color={theme.colors.text.secondary} />
-                            <Typography variant="caption" color={theme.colors.text.secondary}>
-                                {mode === "bus" ? "浄水駅着" : currentSchedule[0].arrival}
-                            </Typography>
-                        </View>
+                                <View style={{ gap: 8, alignItems: "center" }}>
+                                    <Typography
+                                        variant="body"
+                                        color={theme.colors.text.primary}
+                                        style={{ fontWeight: "600", fontSize: 16 }}
+                                    >
+                                        {primaryTrip?.arrival ?? "--:--"}
+                                    </Typography>
+                                    <Icon
+                                        name={service.mode === "bus" ? "map-pin" : "train"}
+                                        size={20}
+                                        color={theme.colors.text.secondary}
+                                    />
+                                    <Typography variant="caption" color={theme.colors.text.secondary}>
+                                        {arrivalLabel!}
+                                    </Typography>
+                                </View>
+                            </>
+                        )}
                     </View>
                 </View>
 
@@ -194,87 +222,114 @@ export default function TransportScreen() {
                         直近の便
                     </Typography>
 
-                    <View style={{ gap: 12 }}>
-                        {currentSchedule.map((item, index) => (
-                            <View
-                                key={index}
-                                style={{
-                                    backgroundColor: theme.colors.background.primary,
-                                    borderColor: theme.colors.border.default,
-                                    borderWidth: 1,
-                                    borderRadius: 8,
-                                    padding: 16,
-                                    flexDirection: "row",
-                                    gap: 16,
-                                    alignItems: "center",
-                                }}
-                            >
-                                {/* Number Badge */}
+                    {upcomingTrips.length === 0 ? (
+                        <View
+                            style={{
+                                backgroundColor: theme.colors.background.primary,
+                                borderColor: theme.colors.border.default,
+                                borderWidth: 1,
+                                borderRadius: 8,
+                                padding: 24,
+                                alignItems: "center",
+                                justifyContent: "center",
+                            }}
+                        >
+                            <Typography variant="body" color={theme.colors.text.secondary}>
+                                表示できる運行情報がありません
+                            </Typography>
+                        </View>
+                    ) : (
+                        <View style={{ gap: 12 }}>
+                            {upcomingTrips.map((item, index) => (
                                 <View
+                                    key={`${item.departure}-${index}`}
                                     style={{
-                                        backgroundColor: theme.colors.primary.main,
-                                        width: 32,
-                                        height: 32,
-                                        borderRadius: 16,
-                                        justifyContent: "center",
+                                        backgroundColor: theme.colors.background.primary,
+                                        borderColor: theme.colors.border.default,
+                                        borderWidth: 1,
+                                        borderRadius: 8,
+                                        padding: 16,
+                                        flexDirection: "row",
+                                        gap: 16,
                                         alignItems: "center",
                                     }}
                                 >
-                                    <Typography variant="body" color={theme.colors.text.inverse}>
-                                        {index + 1}
-                                    </Typography>
-                                </View>
-
-                                {/* Times */}
-                                <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                    <View style={{ gap: 4, alignItems: "center" }}>
-                                        <Typography variant="caption" color={theme.colors.text.secondary}>
-                                            {mode === "bus" ? "大学発" : "浄水駅発"}
-                                        </Typography>
-                                        <Typography variant="h3" color={theme.colors.text.primary}>
-                                            {item.departure}
+                                    {/* Number Badge */}
+                                    <View
+                                        style={{
+                                            backgroundColor: theme.colors.primary.main,
+                                            width: 32,
+                                            height: 32,
+                                            borderRadius: 16,
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <Typography variant="body" color={theme.colors.text.inverse}>
+                                            {index + 1}
                                         </Typography>
                                     </View>
 
-                                    <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-
-                                    <View style={{ gap: 4, alignItems: "center" }}>
-                                        <Typography variant="caption" color={theme.colors.text.secondary}>
-                                            {mode === "bus" ? "浄水駅着" : item.arrival}
-                                        </Typography>
-                                        {mode === "bus" && (
-                                            <Typography variant="h3" color={theme.colors.text.primary}>
-                                                {item.arrival}
+                                    {/* Times */}
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            flexDirection: "row",
+                                            justifyContent: showsArrival ? "space-between" : "center",
+                                            alignItems: "center",
+                                        }}
+                                    >
+                                        <View style={{ gap: 4, alignItems: "center" }}>
+                                            <Typography variant="caption" color={theme.colors.text.secondary}>
+                                                {directionInfo.departureLabel}
                                             </Typography>
+                                            <Typography variant="h3" color={theme.colors.text.primary}>
+                                                {item.departure}
+                                            </Typography>
+                                        </View>
+
+                                        {showsArrival && (
+                                            <>
+                                                <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+
+                                                <View style={{ gap: 4, alignItems: "center" }}>
+                                                    <Typography variant="caption" color={theme.colors.text.secondary}>
+                                                        {arrivalLabel!}
+                                                    </Typography>
+                                                    <Typography variant="h3" color={theme.colors.text.primary}>
+                                                        {item.arrival ?? "--:--"}
+                                                    </Typography>
+                                                </View>
+                                            </>
+                                        )}
+                                    </View>
+
+                                    {/* Via Badge */}
+                                    <View style={{ width: 80, height: "100%", justifyContent: "center", alignItems: "center" }}>
+                                        {service.mode === "bus" && item.via && (
+                                            <View
+                                                style={{
+                                                    backgroundColor: theme.colors.primary.light,
+                                                    borderColor: theme.colors.primary.main,
+                                                    height: 20,
+                                                    paddingHorizontal: 8,
+                                                    paddingVertical: 3,
+                                                    borderRadius: 10,
+                                                    borderWidth: 1,
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <Typography variant="caption" color={theme.colors.primary.main} style={{ fontSize: 8 }}>
+                                                    {item.via}
+                                                </Typography>
+                                            </View>
                                         )}
                                     </View>
                                 </View>
-
-                                {/* Via Badge */}
-                                <View style={{ width: 80, height: "100%", justifyContent: "center", alignItems: "center" }}>
-                                    {item.via && (
-                                        <View
-                                            style={{
-                                                backgroundColor: theme.colors.primary.light,
-                                                borderColor: theme.colors.primary.main,
-                                                height: 20,
-                                                paddingHorizontal: 8,
-                                                paddingVertical: 3,
-                                                borderRadius: 10,
-                                                borderWidth: 1,
-                                                justifyContent: "center",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Typography variant="caption" color={theme.colors.primary.main} style={{ fontSize: 8 }}>
-                                                {item.via}
-                                            </Typography>
-                                        </View>
-                                    )}
-                                </View>
-                            </View>
-                        ))}
-                    </View>
+                            ))}
+                        </View>
+                    )}
                 </View>
 
                 <View style={{ height: 80 }} />
@@ -300,7 +355,7 @@ export default function TransportScreen() {
             >
                 <Icon name="clock" size={20} color={theme.colors.text.inverse} />
                 <Typography variant="body" color={theme.colors.text.inverse}>
-                    逆方面にする
+                    {`${oppositeDirectionInfo.origin} → ${oppositeDirectionInfo.destination} を表示`}
                 </Typography>
             </TouchableOpacity>
         </View>
