@@ -21,8 +21,7 @@ export const Card: React.FC<CardProps> = ({ variant = "default", children, style
 
     const getCardStyles = (): ViewStyle => {
         const baseStyle: ViewStyle = {
-            borderRadius: theme.components.card.borderRadius,
-            padding: theme.components.card.padding,
+            ...theme.components.card,
             ...theme.components.shadows.small,
         };
 

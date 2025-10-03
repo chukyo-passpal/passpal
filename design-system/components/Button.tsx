@@ -38,9 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
     // Get button styles based on variant
     const getButtonStyles = (): ViewStyle => {
         const baseStyle: ViewStyle = {
-            height: sizeConfig.height,
-            paddingHorizontal: sizeConfig.paddingHorizontal,
-            borderRadius: sizeConfig.borderRadius,
+            ...sizeConfig,
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "row",

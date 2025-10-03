@@ -43,8 +43,7 @@ export const IconButton: React.FC<IconButtonProps> = ({ icon, size = "medium", v
     // Get button styles based on variant
     const getButtonStyles = (pressed: boolean): ViewStyle => {
         const baseStyle: ViewStyle = {
-            width: config.containerSize,
-            height: config.containerSize,
+            ...config,
             borderRadius: config.containerSize / 2,
             alignItems: "center",
             justifyContent: "center",
