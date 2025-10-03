@@ -39,36 +39,36 @@ export default function Assignments() {
                         >
                             <View style={{ flex: 1, gap: 4 }}>
                                 <Heading3>アルゴリズムとデータ構造</Heading3>
-                                <BodySmall color="#8B8B8B">B+木インデックスを実装しよう</BodySmall>
+                                <BodySmall color={theme.colors.text.secondary}>B+木インデックスを実装しよう</BodySmall>
                             </View>
                             <View
                                 style={{
-                                    backgroundColor: "#F0EBFF",
+                                    backgroundColor: theme.colors.primary.light,
                                     paddingHorizontal: 12,
                                     paddingVertical: 6,
                                     borderRadius: 16,
                                 }}
                             >
-                                <Caption color="#B19CD9">進行中</Caption>
+                                <Caption color={theme.colors.primary.main}>進行中</Caption>
                             </View>
                         </View>
 
                         {/* Divider */}
-                        <View style={{ height: 1, backgroundColor: "#E8E8E8" }} />
+                        <View style={{ height: 1, backgroundColor: theme.colors.border.default }} />
 
                         {/* Time Info */}
                         <View style={{ flexDirection: "row", gap: 24 }}>
                             <View style={{ flex: 1, gap: 4 }}>
-                                <Caption color="#8B8B8B">開始日時</Caption>
+                                <Caption color={theme.colors.text.secondary}>開始日時</Caption>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                    <Icon name="calendar" size={16} color="#8B8B8B" />
+                                    <Icon name="calendar" size={16} color={theme.colors.text.secondary} />
                                     <BodyText style={{ fontSize: 16 }}>7月4日(金) 12:00</BodyText>
                                 </View>
                             </View>
                             <View style={{ flex: 1, gap: 4 }}>
-                                <Caption color="#8B8B8B">締切日時</Caption>
+                                <Caption color={theme.colors.text.secondary}>締切日時</Caption>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                    <Icon name="clock" size={16} color="#8B8B8B" />
+                                    <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                                     <BodyText style={{ fontSize: 16 }}>12月12日(金) 12:00</BodyText>
                                 </View>
                             </View>
@@ -83,10 +83,10 @@ export default function Assignments() {
                             }}
                         >
                             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                <Icon name="flag" size={16} color="#F5C842" />
-                                <BodySmall color="#F5C842">高優先度</BodySmall>
+                                <Icon name="flag" size={16} color={theme.colors.status.warning} />
+                                <BodySmall color={theme.colors.status.warning}>高優先度</BodySmall>
                             </View>
-                            <Icon name="chevron-right" size={20} color="#8B8B8B" />
+                            <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                         </View>
                     </Card>
                 </Pressable>
@@ -104,36 +104,36 @@ export default function Assignments() {
                         >
                             <View style={{ flex: 1, gap: 4 }}>
                                 <Heading3>データベース設計</Heading3>
-                                <BodySmall color="#8B8B8B">正規化とER図の作成</BodySmall>
+                                <BodySmall color={theme.colors.text.secondary}>正規化とER図の作成</BodySmall>
                             </View>
                             <View
                                 style={{
-                                    backgroundColor: "#F0F9F1",
+                                    backgroundColor: theme.colors.status.success + "20",
                                     paddingHorizontal: 12,
                                     paddingVertical: 6,
                                     borderRadius: 16,
                                 }}
                             >
-                                <Caption color="#90C695">完了</Caption>
+                                <Caption color={theme.colors.status.success}>完了</Caption>
                             </View>
                         </View>
 
                         {/* Divider */}
-                        <View style={{ height: 1, backgroundColor: "#E8E8E8" }} />
+                        <View style={{ height: 1, backgroundColor: theme.colors.border.default }} />
 
                         {/* Time Info */}
                         <View style={{ flexDirection: "row", gap: 24 }}>
                             <View style={{ flex: 1, gap: 4 }}>
-                                <Caption color="#8B8B8B">開始日時</Caption>
+                                <Caption color={theme.colors.text.secondary}>開始日時</Caption>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                    <Icon name="calendar" size={16} color="#8B8B8B" />
+                                    <Icon name="calendar" size={16} color={theme.colors.text.secondary} />
                                     <BodyText style={{ fontSize: 16 }}>6月15日(月) 09:00</BodyText>
                                 </View>
                             </View>
                             <View style={{ flex: 1, gap: 4 }}>
-                                <Caption color="#8B8B8B">締切日時</Caption>
+                                <Caption color={theme.colors.text.secondary}>締切日時</Caption>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                    <Icon name="clock" size={16} color="#8B8B8B" />
+                                    <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                                     <BodyText style={{ fontSize: 16 }}>7月1日(月) 23:59</BodyText>
                                 </View>
                             </View>
@@ -148,10 +148,10 @@ export default function Assignments() {
                             }}
                         >
                             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                <Icon name="check-circle" size={16} color="#90C695" />
-                                <BodySmall color="#90C695">提出済み</BodySmall>
+                                <Icon name="check-circle" size={16} color={theme.colors.status.success} />
+                                <BodySmall color={theme.colors.status.success}>提出済み</BodySmall>
                             </View>
-                            <Icon name="chevron-right" size={20} color="#8B8B8B" />
+                            <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                         </View>
                     </Card>
                 </Pressable>
@@ -169,36 +169,36 @@ export default function Assignments() {
                         >
                             <View style={{ flex: 1, gap: 4 }}>
                                 <Heading3>ソフトウェア工学</Heading3>
-                                <BodySmall color="#8B8B8B">アジャイル開発手法のレポート</BodySmall>
+                                <BodySmall color={theme.colors.text.secondary}>アジャイル開発手法のレポート</BodySmall>
                             </View>
                             <View
                                 style={{
-                                    backgroundColor: "#FFFBF0",
+                                    backgroundColor: theme.colors.status.warning + "20",
                                     paddingHorizontal: 12,
                                     paddingVertical: 6,
                                     borderRadius: 16,
                                 }}
                             >
-                                <Caption color="#F5C842">期限近</Caption>
+                                <Caption color={theme.colors.status.warning}>期限近</Caption>
                             </View>
                         </View>
 
                         {/* Divider */}
-                        <View style={{ height: 1, backgroundColor: "#E8E8E8" }} />
+                        <View style={{ height: 1, backgroundColor: theme.colors.border.default }} />
 
                         {/* Time Info */}
                         <View style={{ flexDirection: "row", gap: 24 }}>
                             <View style={{ flex: 1, gap: 4 }}>
-                                <Caption color="#8B8B8B">開始日時</Caption>
+                                <Caption color={theme.colors.text.secondary}>開始日時</Caption>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                    <Icon name="calendar" size={16} color="#8B8B8B" />
+                                    <Icon name="calendar" size={16} color={theme.colors.text.secondary} />
                                     <BodyText style={{ fontSize: 16 }}>7月10日(水) 14:00</BodyText>
                                 </View>
                             </View>
                             <View style={{ flex: 1, gap: 4 }}>
-                                <Caption color="#8B8B8B">締切日時</Caption>
+                                <Caption color={theme.colors.text.secondary}>締切日時</Caption>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                    <Icon name="clock" size={16} color="#8B8B8B" />
+                                    <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                                     <BodyText style={{ fontSize: 16 }}>7月20日(土) 23:59</BodyText>
                                 </View>
                             </View>
@@ -213,10 +213,10 @@ export default function Assignments() {
                             }}
                         >
                             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                <Icon name="alert-triangle" size={16} color="#F5C842" />
-                                <BodySmall color="#F5C842">中優先度</BodySmall>
+                                <Icon name="alert-triangle" size={16} color={theme.colors.status.warning} />
+                                <BodySmall color={theme.colors.status.warning}>中優先度</BodySmall>
                             </View>
-                            <Icon name="chevron-right" size={20} color="#8B8B8B" />
+                            <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                         </View>
                     </Card>
                 </Pressable>
@@ -234,36 +234,36 @@ export default function Assignments() {
                         >
                             <View style={{ flex: 1, gap: 4 }}>
                                 <Heading3>アルゴリズムとデータ構造</Heading3>
-                                <BodySmall color="#8B8B8B">B+木インデックスを実装しよう</BodySmall>
+                                <BodySmall color={theme.colors.text.secondary}>B+木インデックスを実装しよう</BodySmall>
                             </View>
                             <View
                                 style={{
-                                    backgroundColor: "#F0EBFF",
+                                    backgroundColor: theme.colors.primary.light,
                                     paddingHorizontal: 12,
                                     paddingVertical: 6,
                                     borderRadius: 16,
                                 }}
                             >
-                                <Caption color="#B19CD9">進行中</Caption>
+                                <Caption color={theme.colors.primary.main}>進行中</Caption>
                             </View>
                         </View>
 
                         {/* Divider */}
-                        <View style={{ height: 1, backgroundColor: "#E8E8E8" }} />
+                        <View style={{ height: 1, backgroundColor: theme.colors.border.default }} />
 
                         {/* Time Info */}
                         <View style={{ flexDirection: "row", gap: 24 }}>
                             <View style={{ flex: 1, gap: 4 }}>
-                                <Caption color="#8B8B8B">開始日時</Caption>
+                                <Caption color={theme.colors.text.secondary}>開始日時</Caption>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                    <Icon name="calendar" size={16} color="#8B8B8B" />
+                                    <Icon name="calendar" size={16} color={theme.colors.text.secondary} />
                                     <BodyText style={{ fontSize: 16 }}>7月4日(金) 12:00</BodyText>
                                 </View>
                             </View>
                             <View style={{ flex: 1, gap: 4 }}>
-                                <Caption color="#8B8B8B">締切日時</Caption>
+                                <Caption color={theme.colors.text.secondary}>締切日時</Caption>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                    <Icon name="clock" size={16} color="#8B8B8B" />
+                                    <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                                     <BodyText style={{ fontSize: 16 }}>12月12日(金) 12:00</BodyText>
                                 </View>
                             </View>
@@ -278,10 +278,10 @@ export default function Assignments() {
                             }}
                         >
                             <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                <Icon name="flag" size={16} color="#F5C842" />
-                                <BodySmall color="#F5C842">高優先度</BodySmall>
+                                <Icon name="flag" size={16} color={theme.colors.status.warning} />
+                                <BodySmall color={theme.colors.status.warning}>高優先度</BodySmall>
                             </View>
-                            <Icon name="chevron-right" size={20} color="#8B8B8B" />
+                            <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                         </View>
                     </Card>
                 </Pressable>

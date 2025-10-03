@@ -15,6 +15,12 @@ export default function Settings() {
         signOut();
     };
 
+    const handlePurgeCache = () => {};
+
+    const handleAboutPassPal = () => {};
+
+    const handleLicenseInfo = () => {};
+
     return (
         <View
             style={{
@@ -218,12 +224,7 @@ export default function Settings() {
                         データ管理
                     </Typography>
 
-                    <TouchableOpacity
-                        onPress={() => {
-                            // TODO: Clear cache functionality
-                        }}
-                        activeOpacity={0.7}
-                    >
+                    <TouchableOpacity onPress={handlePurgeCache} activeOpacity={0.7}>
                         <Card
                             style={{
                                 flexDirection: "row",
@@ -264,7 +265,7 @@ export default function Settings() {
                 </View>
 
                 {/* Appearance Section */}
-                <View style={{ marginBottom: theme.spacing.xl }}>
+                {/* <View style={{ marginBottom: theme.spacing.xl }}>
                     <Typography
                         variant="h3"
                         style={{
@@ -303,7 +304,7 @@ export default function Settings() {
 
                         <Switch />
                     </Card>
-                </View>
+                </View> */}
 
                 {/* About Section */}
                 <View style={{ marginBottom: theme.spacing.xl }}>
@@ -320,12 +321,7 @@ export default function Settings() {
                     </Typography>
 
                     <View style={{ gap: theme.spacing.xs }}>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // TODO: About app functionality
-                            }}
-                            activeOpacity={0.7}
-                        >
+                        <TouchableOpacity onPress={handleAboutPassPal} activeOpacity={0.7}>
                             <Card
                                 style={{
                                     flexDirection: "row",
@@ -364,12 +360,7 @@ export default function Settings() {
                             </Card>
                         </TouchableOpacity>
 
-                        <TouchableOpacity
-                            onPress={() => {
-                                // TODO: License info functionality
-                            }}
-                            activeOpacity={0.7}
-                        >
+                        <TouchableOpacity onPress={handleLicenseInfo} activeOpacity={0.7}>
                             <Card
                                 style={{
                                     flexDirection: "row",

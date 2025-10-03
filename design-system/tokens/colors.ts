@@ -26,6 +26,12 @@ const baseColors = {
         infoDark: "#63A9B6",
     },
 
+    // UI Colors
+    ui: {
+        classCard: "#A8D8EA",
+        classCardDark: "#6B9BAA",
+    },
+
     // Neutral Colors
     neutral: {
         black: "#2D2D30",
