@@ -71,6 +71,15 @@ export default function TimetableScreen() {
 
     const [selectedDay, setSelectedDay] = useState(0); // 月曜日 = 0
 
+    // 土曜日の授業が全てnullかチェック
+    const hasSaturdayClasses = PERIODS.some((period) => {
+        const classKey = `土-${period.period}`;
+        return SAMPLE_TIMETABLE[classKey] !== null;
+    });
+
+    // 表示する曜日を決定
+    const displayWeekdays = hasSaturdayClasses ? WEEKDAYS : WEEKDAYS.filter((day) => day !== "土");
+
     const handleChangeViewMode = () => {
         const newMode = timetableViewMode === "day" ? "week" : "day";
         setTimetableViewMode(newMode);
@@ -81,13 +90,13 @@ export default function TimetableScreen() {
     };
 
     const renderDayView = () => {
-        const dayName = WEEKDAYS[selectedDay];
+        const dayName = displayWeekdays[selectedDay];
 
         return (
             <View style={{ flex: 1, gap: 24, paddingHorizontal: 20 }}>
                 {/* 曜日選択 */}
                 <View style={{ flexDirection: "row", gap: 10 }}>
-                    {WEEKDAYS.map((day, index) => (
+                    {displayWeekdays.map((day, index) => (
                         <TouchableOpacity
                             key={day}
                             style={{
@@ -178,15 +187,6 @@ export default function TimetableScreen() {
     };
 
     const renderWeekView = () => {
-        // 土曜日の授業が全てnullかチェック
-        const hasSaturdayClasses = PERIODS.some((period) => {
-            const classKey = `土-${period.period}`;
-            return SAMPLE_TIMETABLE[classKey] !== null;
-        });
-
-        // 表示する曜日を決定
-        const displayWeekdays = hasSaturdayClasses ? WEEKDAYS : WEEKDAYS.filter((day) => day !== "土");
-
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView showsVerticalScrollIndicator={false}>
