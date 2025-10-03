@@ -9,14 +9,7 @@ export default function Index() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#fff", paddingTop: 80, alignItems: "center" }}>
-            {/* Progress Bar Section */}
-            <View style={{ width: 338, height: 40, alignItems: "center", marginBottom: 24 }}>
-                <View style={{ width: 338, height: 12, backgroundColor: "#e8e8e8", borderRadius: 100, overflow: "hidden" }}>
-                    <View style={{ width: 112, height: 12, backgroundColor: "#b19cd9", borderRadius: 100 }} />
-                </View>
-                <BodyText style={{ color: "#b19cd9", fontWeight: "600", fontSize: 18, marginTop: 8, textAlign: "center" }}>キャンパス選択 1/3</BodyText>
-            </View>
+        <View style={{ flex: 1, backgroundColor: "#fff", alignItems: "center" }}>
             {/* Main Card Section */}
             <Card style={{ width: 338, padding: 24, alignItems: "center", backgroundColor: "#fff" }}>
                 <Heading1 style={{ color: "#2d2d30", fontSize: 24, marginBottom: 8, textAlign: "center" }}>どちらのキャンパスに在籍していますか？</Heading1>

@@ -16,16 +16,6 @@ export default function Step3() {
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: "#FFFFFF" }}>
-            {/* Progress Section */}
-            <View style={{ alignItems: "center", marginBottom: 40, gap: 16, paddingTop: 82, paddingHorizontal: 20 }}>
-                <View style={{ width: 338, height: 12, backgroundColor: "#E8E8E8", borderRadius: 100, overflow: "hidden" }}>
-                    <View style={{ width: "100%", height: 12, backgroundColor: "#B19CD9", borderRadius: 100 }} />
-                </View>
-                <Typography variant="h3" color="#B19CD9" style={{ textAlign: "center" }}>
-                    準備完了！3/3
-                </Typography>
-            </View>
-
             {/* Main Content */}
             <View style={{ paddingHorizontal: 40, paddingBottom: 40 }}>
                 <View style={{ gap: 40 }}>

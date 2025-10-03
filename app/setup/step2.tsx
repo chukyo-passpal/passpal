@@ -14,17 +14,7 @@ export default function Index() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 150 }}>
-            {/* Progress Section */}
-            <View style={{ position: "absolute", top: 82, left: 3, width: 412, alignItems: "center", gap: 16 }}>
-                <View style={{ width: 338, height: 12, backgroundColor: "#e8e8e8", borderRadius: 100, alignItems: "flex-start" }}>
-                    <View style={{ width: 224, height: 12, backgroundColor: "#b19cd9", borderRadius: 100 }} />
-                </View>
-                <Typography variant="label" color="#b19cd9" style={{ fontSize: 18, fontWeight: "600", textAlign: "center" }}>
-                    通知 2/3
-                </Typography>
-            </View>
-
+        <View style={{ flex: 1, backgroundColor: "#ffffff", alignItems: "center" }}>
             {/* Main Content */}
             <View style={{ width: 412, paddingHorizontal: 40, paddingVertical: 48, paddingBottom: 40, gap: 40 }}>
                 {/* Icon Section */}
