@@ -7,12 +7,20 @@ import { tamaguiConfig } from "../tamagui.config";
 
 export default function RootLayout() {
     return (
-        <TamaguiProvider config={tamaguiConfig}>
-            <ThemeProvider>
-                <AuthProvider>
-                    <RootLayoutNav />
-                </AuthProvider>
-            </ThemeProvider>
+        <ThemeProvider>
+            <TamaguiProviderWrapper />
+        </ThemeProvider>
+    );
+}
+
+function TamaguiProviderWrapper() {
+    const { isDark } = useTheme();
+
+    return (
+        <TamaguiProvider config={tamaguiConfig} defaultTheme={isDark ? "dark" : "light"}>
+            <AuthProvider>
+                <RootLayoutNav />
+            </AuthProvider>
         </TamaguiProvider>
     );
 }

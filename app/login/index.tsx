@@ -32,8 +32,8 @@ export default function Login() {
                 <View style={{ marginBottom: theme.spacing.xl }}>
                     <Typography
                         variant="h1"
+                        color={theme.colors.primary.main}
                         style={{
-                            color: theme.colors.primary.main,
                             textAlign: "center",
                             marginBottom: theme.spacing.md,
                         }}
@@ -42,8 +42,8 @@ export default function Login() {
                     </Typography>
                     <Typography
                         variant="body"
+                        color={theme.colors.text.secondary}
                         style={{
-                            color: theme.colors.text.secondary,
                             textAlign: "center",
                         }}
                     >
@@ -57,7 +57,6 @@ export default function Login() {
                         <Typography
                             variant="h3"
                             style={{
-                                color: theme.colors.text.primary,
                                 textAlign: "center",
                                 marginBottom: theme.spacing.md,
                             }}
@@ -66,8 +65,8 @@ export default function Login() {
                         </Typography>
                         <Typography
                             variant="bodySmall"
+                            color={theme.colors.text.secondary}
                             style={{
-                                color: theme.colors.text.secondary,
                                 textAlign: "center",
                                 marginBottom: theme.spacing.lg,
                             }}

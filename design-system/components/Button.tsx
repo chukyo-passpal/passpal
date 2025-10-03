@@ -52,14 +52,14 @@ export const Button: React.FC<ButtonProps> = ({
             case "primary":
                 return {
                     ...baseStyle,
-                    backgroundColor: disabled ? theme.colors.neutral.gray400 : theme.colors.primary.main,
+                    backgroundColor: disabled ? theme.colors.background.disabled : theme.colors.primary.main,
                 };
             case "secondary":
                 return {
                     ...baseStyle,
-                    backgroundColor: disabled ? theme.colors.neutral.gray200 : theme.colors.background.surface,
+                    backgroundColor: disabled ? theme.colors.background.disabled : theme.colors.background.surface,
                     borderWidth: 1,
-                    borderColor: disabled ? theme.colors.neutral.gray400 : theme.colors.border.default,
+                    borderColor: disabled ? theme.colors.border.disabled : theme.colors.border.default,
                 };
             case "text":
                 return {
@@ -75,7 +75,7 @@ export const Button: React.FC<ButtonProps> = ({
     // Get text color based on variant and state
     const getTextColor = (): string => {
         if (disabled) {
-            return variant === "primary" ? theme.colors.text.inverse : theme.colors.text.secondary;
+            return theme.colors.text.disabled;
         }
 
         switch (variant) {

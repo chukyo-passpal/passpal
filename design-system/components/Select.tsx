@@ -8,6 +8,7 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
 import type { SelectProps as TamaguiSelectProps } from "tamagui";
 import { Adapt, Select as TamaguiSelect, Sheet, YStack } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
+import { useTheme } from "../tokens/ThemeProvider";
 
 export interface SelectItem {
     label: string;
@@ -47,6 +48,7 @@ export const Select: React.FC<SelectProps> = ({
     disabled = false,
     ...props
 }) => {
+    const { theme } = useTheme();
     const [internalValue, setInternalValue] = React.useState(value || "");
 
     // Update internal value when prop value changes
@@ -64,7 +66,7 @@ export const Select: React.FC<SelectProps> = ({
     return (
         <TamaguiSelect value={internalValue} onValueChange={handleValueChange} disablePreventBodyScroll {...props}>
             {trigger || (
-                <TamaguiSelect.Trigger maxWidth={maxWidth} iconAfter={ChevronDown} disabled={disabled}>
+                <TamaguiSelect.Trigger maxWidth={maxWidth} iconAfter={<ChevronDown color={theme.colors.text.primary} />} disabled={disabled}>
                     <TamaguiSelect.Value placeholder={placeholder} />
                 </TamaguiSelect.Trigger>
             )}
@@ -83,7 +85,7 @@ export const Select: React.FC<SelectProps> = ({
             <TamaguiSelect.Content zIndex={200000}>
                 <TamaguiSelect.ScrollUpButton>
                     <YStack>
-                        <ChevronUp size={20} />
+                        <ChevronUp size={20} color={theme.colors.text.primary} />
                     </YStack>
                     <LinearGradient start={[0, 0]} end={[0, 1]} fullscreen colors={["$background", "transparent"]} />
                 </TamaguiSelect.ScrollUpButton>
@@ -95,7 +97,7 @@ export const Select: React.FC<SelectProps> = ({
                             <TamaguiSelect.Item key={item.value} index={index} value={item.value}>
                                 <TamaguiSelect.ItemText>{item.label}</TamaguiSelect.ItemText>
                                 <TamaguiSelect.ItemIndicator marginLeft="auto">
-                                    <Check size={16} />
+                                    <Check size={16} color={theme.colors.text.primary} />
                                 </TamaguiSelect.ItemIndicator>
                             </TamaguiSelect.Item>
                         ))}
@@ -104,7 +106,7 @@ export const Select: React.FC<SelectProps> = ({
 
                 <TamaguiSelect.ScrollDownButton>
                     <YStack>
-                        <ChevronDown size={20} />
+                        <ChevronDown color={theme.colors.text.primary} size={20} />
                     </YStack>
                     <LinearGradient start={[0, 0]} end={[0, 1]} fullscreen colors={["transparent", "$background"]} />
                 </TamaguiSelect.ScrollDownButton>
