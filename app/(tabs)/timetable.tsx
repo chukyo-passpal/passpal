@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, ScrollView, TouchableOpacity, Pressable } from "react-native";
+import { View, ScrollView, TouchableOpacity } from "react-native";
 import { Typography } from "@/design-system/components/Typography";
 import { Icon } from "@/design-system/components/Icon";
 import { useTheme } from "@/design-system/tokens/ThemeProvider";
@@ -76,6 +76,10 @@ export default function TimetableScreen() {
         setTimetableViewMode(newMode);
     };
 
+    const handleTouchClass = (classId: string) => {
+        // ここに授業をタッチした時のロジックを実装
+    };
+
     const renderDayView = () => {
         const dayName = WEEKDAYS[selectedDay];
 
@@ -92,7 +96,7 @@ export default function TimetableScreen() {
                                 borderRadius: 28,
                                 justifyContent: "center",
                                 alignItems: "center",
-                                backgroundColor: index === selectedDay ? theme.colors.primary.main : theme.colors.neutral.gray200,
+                                backgroundColor: index === selectedDay ? theme.colors.primary.main : theme.colors.background.disabled,
                             }}
                             onPress={() => setSelectedDay(index)}
                         >
@@ -123,7 +127,9 @@ export default function TimetableScreen() {
 
                                 {/* 授業カード */}
                                 {classInfo ? (
-                                    <Pressable
+                                    <TouchableOpacity
+                                        onPress={() => handleTouchClass(classInfo.id)}
+                                        activeOpacity={0.8}
                                         style={{
                                             flex: 1,
                                             height: 80,
@@ -144,7 +150,7 @@ export default function TimetableScreen() {
                                             </Typography>
                                         </View>
                                         <Icon name="chevron-right" size={16} color={theme.colors.text.inverse} />
-                                    </Pressable>
+                                    </TouchableOpacity>
                                 ) : (
                                     <View
                                         style={{
@@ -189,29 +195,29 @@ export default function TimetableScreen() {
                             borderWidth: 1,
                             borderColor: theme.colors.border.default,
                             borderRadius: 8,
-                            backgroundColor: theme.colors.background.primary,
                             width: "100%",
+                            overflow: "hidden",
                         }}
                     >
                         {/* ヘッダー行 */}
                         <View
                             style={{
                                 flexDirection: "row",
-                                backgroundColor: theme.colors.background.surface,
+                                backgroundColor: theme.colors.background.disabled,
                                 borderBottomWidth: 1,
                                 borderBottomColor: theme.colors.border.default,
                                 height: 35,
                             }}
                         >
                             <View style={{ flex: 1, minWidth: 25, maxWidth: 25, borderRightWidth: 1, borderRightColor: theme.colors.border.default }} />
-                            {displayWeekdays.map((day) => (
+                            {displayWeekdays.map((day, index) => (
                                 <View
                                     key={day}
                                     style={{
                                         flex: 1,
                                         justifyContent: "center",
                                         alignItems: "center",
-                                        borderRightWidth: 1,
+                                        borderRightWidth: displayWeekdays.length - 1 === index ? 0 : 1,
                                         borderRightColor: theme.colors.border.default,
                                     }}
                                 >
@@ -224,10 +230,15 @@ export default function TimetableScreen() {
 
                         {/* 時間割グリッド */}
 
-                        {PERIODS.map((period) => (
+                        {PERIODS.map((period, index) => (
                             <View
                                 key={period.period}
-                                style={{ flexDirection: "row", height: 105, borderBottomWidth: 1, borderBottomColor: theme.colors.border.default }}
+                                style={{
+                                    flexDirection: "row",
+                                    height: 105,
+                                    borderBottomWidth: PERIODS.length - 1 === index ? 0 : 1,
+                                    borderBottomColor: theme.colors.border.default,
+                                }}
                             >
                                 {/* 時間列 */}
                                 <View
@@ -256,17 +267,22 @@ export default function TimetableScreen() {
                                 </View>
 
                                 {/* 各曜日のセル */}
-                                {displayWeekdays.map((day) => {
+                                {displayWeekdays.map((day, index) => {
                                     const classKey = `${day}-${period.period}`;
                                     const classInfo = SAMPLE_TIMETABLE[classKey];
 
                                     return (
                                         <View
                                             key={`${day}-${period.period}`}
-                                            style={{ flex: 1, padding: 3, borderRightWidth: 1, borderRightColor: theme.colors.border.default }}
+                                            style={{
+                                                flex: 1,
+                                                padding: 3,
+                                                borderRightWidth: displayWeekdays.length - 1 === index ? 0 : 1,
+                                                borderRightColor: theme.colors.border.default,
+                                            }}
                                         >
                                             {classInfo ? (
-                                                <View
+                                                <TouchableOpacity
                                                     style={{
                                                         flex: 1,
                                                         borderRadius: 6,
@@ -276,9 +292,17 @@ export default function TimetableScreen() {
                                                         alignItems: "center",
                                                         backgroundColor: theme.colors.ui.classCard,
                                                     }}
+                                                    activeOpacity={0.8}
+                                                    onPress={() => handleTouchClass(classInfo.id)}
                                                 >
                                                     <View
-                                                        style={{ flex: 1, justifyContent: "center", alignItems: "center", width: "100%", overflow: "hidden" }}
+                                                        style={{
+                                                            flex: 1,
+                                                            justifyContent: "center",
+                                                            alignItems: "center",
+                                                            width: "100%",
+                                                            overflow: "hidden",
+                                                        }}
                                                     >
                                                         <Typography
                                                             variant="caption"
@@ -290,10 +314,10 @@ export default function TimetableScreen() {
                                                     </View>
                                                     <View
                                                         style={{
+                                                            width: "100%",
                                                             backgroundColor: theme.colors.background.primary,
-                                                            paddingHorizontal: 6,
-                                                            paddingVertical: 2,
-                                                            borderRadius: 4,
+                                                            paddingVertical: 1,
+                                                            borderRadius: 5,
                                                             alignItems: "center",
                                                         }}
                                                     >
@@ -301,7 +325,7 @@ export default function TimetableScreen() {
                                                             {classInfo.room}
                                                         </Typography>
                                                     </View>
-                                                </View>
+                                                </TouchableOpacity>
                                             ) : null}
                                         </View>
                                     );
