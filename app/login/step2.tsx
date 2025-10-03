@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { Button } from "../../design-system/components/Button";
 import { UserIcon } from "../../design-system/components/Icon";
 import { Typography } from "../../design-system/components/Typography";
@@ -23,29 +23,18 @@ export default function Index() {
         <View
             style={{
                 flex: 1,
-
                 backgroundColor: theme.colors.background.primary,
-                justifyContent: "center",
-                alignItems: "center",
-                paddingTop: 48,
+                padding: theme.spacing.lg,
             }}
         >
-            <View
-                style={{
-                    width: "100%",
-                    maxWidth: 412,
-                    paddingHorizontal: 40,
-                    paddingVertical: 48,
-                    alignItems: "center",
-                    gap: 40,
-                }}
-            >
+            <ScrollView contentContainerStyle={{ justifyContent: "center", flex: 1 }} showsVerticalScrollIndicator={false}>
                 {/* User Section */}
                 <View
                     style={{
                         width: "100%",
                         alignItems: "center",
                         gap: 32,
+                        marginBottom: 48,
                     }}
                 >
                     {/* User Icon Container */}
@@ -106,7 +95,7 @@ export default function Index() {
                         学籍番号入力に戻る
                     </Button>
                 </View>
-            </View>
+            </ScrollView>
         </View>
     );
 }

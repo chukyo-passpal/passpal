@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useState } from "react";
 import { Icon, Heading2, BodyText, Input, PrimaryButton, TextButton, useTheme } from "../../design-system";
 import { router, useLocalSearchParams } from "expo-router";
@@ -20,8 +20,8 @@ export default function Index() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
-            <View style={{ flex: 1, paddingHorizontal: 40, paddingVertical: 48, justifyContent: "center", alignSelf: "center" }}>
+        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary, padding: theme.spacing.lg }}>
+            <ScrollView contentContainerStyle={{ justifyContent: "center", flex: 1 }} showsVerticalScrollIndicator={false}>
                 {/* Header Section */}
                 <View style={{ alignItems: "center", marginBottom: 40 }}>
                     {/* Lock Icon Container */}
@@ -66,7 +66,7 @@ export default function Index() {
 
                 {/* Back Button */}
                 <TextButton onPress={handleBackToStudentId}>学籍番号入力に戻る</TextButton>
-            </View>
+            </ScrollView>
         </View>
     );
 }
