@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "707651746611",
+    "project_id": "chukyo-passpal",
+    "storage_bucket": "chukyo-passpal.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:707651746611:android:872b9bbb44f4fe6b055c46",
+        "android_client_info": {
+          "package_name": "app.chukyopasspal.passpal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "707651746611-c274h63sn1cj7g69ehp0nvafh5q3reis.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuP_JZfmf_Ogxk2IuA919_NfGCxJydugU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "707651746611-c274h63sn1cj7g69ehp0nvafh5q3reis.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "707651746611-kh4mnbu4lnql99sucumaiokpah8h5gve.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "app.chukyopasspal.passpal"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
