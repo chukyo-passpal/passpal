@@ -8,7 +8,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "lint": "expo lint"
+    "lint": "expo lint",
+    "storybook-generate": "sb-rn-get-stories"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.2",
@@ -63,10 +64,21 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@babel/core": "7.28.4",
+    "@gorhom/bottom-sheet": "5.2.6",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/datetimepicker": "8.4.5",
+    "@react-native-community/slider": "5.0.1",
+    "@storybook/addon-ondevice-actions": "9.1.4",
+    "@storybook/addon-ondevice-controls": "9.1.4",
+    "@storybook/react-native": "9.1.4",
     "@types/react": "~19.1.0",
-    "typescript": "~5.9.2",
+    "babel-loader": "8.4.1",
     "eslint": "^9.25.0",
-    "eslint-config-expo": "~10.0.0"
+    "eslint-config-expo": "~10.0.0",
+    "react-native-svg": "15.14.0",
+    "storybook": "9.1.12",
+    "typescript": "~5.9.2"
   },
   "private": true
 }
