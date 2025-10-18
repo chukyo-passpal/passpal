@@ -2,7 +2,7 @@ import { router } from "expo-router";
 import { Heading2 } from "lucide-react-native";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { spacing } from "../../tokens/spacing";
+import { spacing } from "../tokens/spacing";
 import { IconName } from "./Icon";
 import { IconButton } from "./IconButton";
 
