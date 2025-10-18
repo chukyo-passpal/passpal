@@ -1,6 +1,6 @@
 import { CookieCredentials } from "@/src/domain/models/auth";
 import { UserData } from "@/src/domain/models/user";
-import AuthServiceInstance, { AuthService } from "@/src/domain/service/authService";
+import AuthServiceInstance, { AuthService } from "@/src/domain/services/authService";
 import { SecureStorage } from "@/src/utils/secureStorage";
 import { Cookies } from "@react-native-cookies/cookies";
 import { User } from "@react-native-google-signin/google-signin";

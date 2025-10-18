@@ -1,7 +1,9 @@
 import CookieManager, { Cookies } from "@react-native-cookies/cookies";
 import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useRef, useState } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
+import { UnauthorizedError } from "../errors/AuthError";
+import { TimeoutError } from "../errors/NetworkError";
 
 interface Credential {
     enterUrl: string;
@@ -16,23 +18,25 @@ export interface shibbolethWebViewRef {
     auth: shibbolethWebViewAuthFunction;
 }
 
+const AuthTimeoutMs = 10_000;
+
 const ShibbolethWebViewBase: ForwardRefRenderFunction<shibbolethWebViewRef, object> = (_, ref) => {
     const [credential, setCredential] = useState<Credential | null>(null);
     const [randomKey, setRandomKey] = useState(0);
 
-    const [authResolve, setAuthResolve] = useState<(() => void) | null>(null);
-    const [authReject, setAuthReject] = useState<((reason?: any) => void) | null>(null);
+    const [authResolve, setAuthResolve] = useState<() => void>(() => {});
+    const [authReject, setAuthReject] = useState<(reason?: any) => void>(() => {});
 
     const isProcessingRef = useRef(false);
     const isProcessing = credential !== null;
 
     const handleMessage = (event: WebViewMessageEvent) => {
         switch (event.nativeEvent.data) {
-            case "LOGIN_FAILED":
-                if (authReject) authReject("LOGIN_FAILED");
+            case "UNAUTHORIZED":
+                authReject(new UnauthorizedError());
                 break;
-            case "LOGIN_SUCCESS":
-                if (authResolve) authResolve();
+            case "SUCCESS":
+                authResolve();
                 break;
         }
     };
@@ -55,17 +59,24 @@ const ShibbolethWebViewBase: ForwardRefRenderFunction<shibbolethWebViewRef, obje
                             CookieManager.clearAll();
                             CookieManager.clearAll(true);
                             setCredential(null);
-                            rej(new Error("timeout"));
-                        }, 5000);
+                            rej(new TimeoutError());
+                        }, AuthTimeoutMs);
                     });
 
                     const cookieBaseUrl = crd.goalUrl;
-                    const cookies1 = await CookieManager.get(cookieBaseUrl);
-                    const cookies2 = await CookieManager.get(cookieBaseUrl, true);
-                    const cookies = { ...cookies1, ...cookies2 };
+                    let cookies: Cookies;
+                    if (Platform.OS === "ios") {
+                        // iosはWebKitを使えるかもしれないので両方から取る
+                        const cookies1 = await CookieManager.get(cookieBaseUrl);
+                        const cookies2 = await CookieManager.get(cookieBaseUrl, true);
+                        cookies = { ...cookies1, ...cookies2 };
+                        CookieManager.clearAll(true);
+                    } else {
+                        // androidはWebKitが使えないので通常の方だけで良い
+                        cookies = await CookieManager.get(cookieBaseUrl);
+                    }
 
                     CookieManager.clearAll();
-                    CookieManager.clearAll(true);
                     setCredential(null);
                     resolve(cookies);
                 } catch (error) {
@@ -89,7 +100,7 @@ const ShibbolethWebViewBase: ForwardRefRenderFunction<shibbolethWebViewRef, obje
     if (url.startsWith(loginFormUrl)) {
         // ログイン情報が違う時の処理
         if (document.querySelector(".c-message._error") !== null) {
-            window.ReactNativeWebView.postMessage("LOGIN_FAILED");
+            window.ReactNativeWebView.postMessage("UNAUTHORIZED");
             return;
         }
 
@@ -102,7 +113,7 @@ const ShibbolethWebViewBase: ForwardRefRenderFunction<shibbolethWebViewRef, obje
 
     // 認証後のリダイレクト処理
     if (url.startsWith(goalUrl)) {
-        window.ReactNativeWebView.postMessage("LOGIN_SUCCESS");
+        window.ReactNativeWebView.postMessage("SUCCESS");
         return;
     }
 

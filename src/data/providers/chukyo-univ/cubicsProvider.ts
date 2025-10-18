@@ -1,4 +1,5 @@
-import { CUService } from "@/constants/chukyo-univ";
+import { httpClient } from "@/src/data/clients/httpClient";
+import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { abstractChukyoProvider } from "./abstractChukyoProvider";
 
 export class CubicsProvider extends abstractChukyoProvider {
@@ -7,15 +8,16 @@ export class CubicsProvider extends abstractChukyoProvider {
     protected authGoalPath = "/unias/UnSSOLoginControl2";
     protected serviceName: CUService = "cubics";
 
-    // 時間割(教室取得)
-    public async getTimetableHtml(): Promise<string> {
-        const response = await this.client.get(`${this.baseUrl}/unias/UnSSOLoginControl2?REQ_ACTION_DO=/ARF010.do&REQ_PRFR_MNU_ID=MNUIDSTD0103`, {
+    public async get(path: string): Promise<string> {
+        const response = await httpClient(`${this.baseUrl}${path}`, {
+            clientMode: "portal",
+            method: "GET",
+            credentials: "omit",
             headers: {
                 cookie: await this.getAuthedCookie(),
             },
         });
-
-        return response.text();
+        return await response.text();
     }
 }
 

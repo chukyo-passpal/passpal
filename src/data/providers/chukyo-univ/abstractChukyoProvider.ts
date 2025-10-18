@@ -1,9 +1,9 @@
-import { CUService } from "@/constants/chukyo-univ";
-import { HttpClient } from "@/data/clients/httpClient";
-import { authState } from "@/hooks/useAuth";
-import { CookieCredentials } from "@/types/auth";
-import { UserData } from "@/types/user";
-import { cookiesToString } from "@/utils/cookie";
+import { CUService } from "@/src/domain/constants/chukyo-univ";
+import { NotSetError } from "@/src/domain/errors/serviceError";
+import { CookieCredentials } from "@/src/domain/models/auth";
+import { UserData } from "@/src/domain/models/user";
+import { authState } from "@/src/presentation/hooks/useAuth";
+import { cookiesToString } from "@/src/utils/cookie";
 import { Cookies } from "@react-native-cookies/cookies";
 
 export abstract class abstractChukyoProvider {
@@ -12,22 +12,19 @@ export abstract class abstractChukyoProvider {
     protected abstract authGoalPath: string;
     protected abstract serviceName: CUService;
     protected credentialsRottenTime: number = 25 * 60 * 1000; // 25分
-    protected client: HttpClient;
-    protected auth: authState | undefined;
 
-    constructor() {
-        this.client = new HttpClient();
+    private _auth: authState | undefined;
+    protected get auth() {
+        if (!this._auth) {
+            throw new NotSetError({ cause: new Error("ChukyoProviderにauthStateが設定されていません") });
+        }
+        return this._auth;
     }
-
     public setAuthStore(auth: authState) {
-        this.auth = auth;
+        this._auth = auth;
     }
 
     private async setCredentialCookies(cookies: Cookies, service: CUService) {
-        if (!this.auth) {
-            throw new Error("Auth store is not set.");
-        }
-
         switch (service) {
             case "manabo":
                 this.auth.setManaboCookie(cookies);
@@ -44,10 +41,6 @@ export abstract class abstractChukyoProvider {
     }
 
     private async getCredentialCookies(service: CUService): Promise<CookieCredentials | undefined> {
-        if (!this.auth) {
-            throw new Error("Auth store is not set.");
-        }
-
         switch (service) {
             case "manabo":
                 return this.auth.manaboCredentials;
@@ -69,11 +62,8 @@ export abstract class abstractChukyoProvider {
     protected async authentication(user: UserData): Promise<Cookies> {
         const { studentId, cuIdPass } = user;
 
-        // MaNaBo にログイン
-        const authFunc = this.auth?.webViewAuth;
-        if (!authFunc) {
-            throw new Error("WebView auth function is not set.");
-        }
+        // SSOログイン
+        const authFunc = this.auth.authService.shibAuth;
         const cookies = await authFunc({
             enterUrl: `${this.baseUrl}${this.authEnterPath}`,
             goalUrl: `${this.baseUrl}${this.authGoalPath}`,
@@ -99,8 +89,8 @@ export abstract class abstractChukyoProvider {
     }
 
     protected async getAuthedCookie() {
-        if (!this.auth || !this.auth.user) {
-            throw new Error("User is not signed in.");
+        if (!this.auth.user) {
+            throw new NotSetError({ cause: new Error("ユーザー情報が設定されていません") });
         }
 
         const credentials = await this.getCredentialCookies(this.serviceName);

@@ -1,4 +1,5 @@
-import { CUService } from "@/constants/chukyo-univ";
+import { httpClient } from "@/src/data/clients/httpClient";
+import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { abstractChukyoProvider } from "./abstractChukyoProvider";
 
 export class AlboProvider extends abstractChukyoProvider {
@@ -7,26 +8,16 @@ export class AlboProvider extends abstractChukyoProvider {
     protected authGoalPath = "/uniprove_pt/portal";
     protected serviceName: CUService = "albo";
 
-    // ALBOお知らせ
-    public async getNewsHtml(): Promise<string> {
-        const response = await this.client.get(`${this.baseUrl}/uniprove_pt/portal/_ns:YXJldHJvLXN0dWRlbnQtMTAwMDN8ZDI_`, {
+    public async get(path: string): Promise<string> {
+        const response = await httpClient(`${this.baseUrl}${path}`, {
+            clientMode: "portal",
+            method: "GET",
+            credentials: "omit",
             headers: {
                 cookie: await this.getAuthedCookie(),
             },
         });
-
-        return response.text();
-    }
-
-    // ALBOお知らせ内容表示
-    public async getNewsViewHtml(): Promise<string> {
-        const response = await this.client.get(`${this.baseUrl}/uniprove_pt/PMA020PVI01Action.do`, {
-            headers: {
-                cookie: await this.getAuthedCookie(),
-            },
-        });
-
-        return response.text();
+        return await response.text();
     }
 }
 
