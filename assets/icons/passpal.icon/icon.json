@@ -1,19 +1,6 @@
 {
   "fill" : {
-    "linear-gradient" : [
-      "display-p3:0.84706,0.83137,0.91373,1.00000",
-      "display-p3:0.70980,0.69804,0.92549,1.00000"
-    ],
-    "orientation" : {
-      "start" : {
-        "x" : 0.5,
-        "y" : 0
-      },
-      "stop" : {
-        "x" : 0.5,
-        "y" : 0.7
-      }
-    }
+    "solid" : "display-p3:0.84706,0.83137,0.91373,1.00000"
   },
   "groups" : [
     {
@@ -22,28 +9,31 @@
       "hidden" : false,
       "layers" : [
         {
-          "image-name" : "head.png",
+          "hidden" : false,
+          "image-name" : "head.svg",
           "name" : "head"
         },
         {
-          "image-name" : "body.png",
+          "image-name" : "body.svg",
           "name" : "body"
         },
         {
-          "image-name" : "tail.png",
+          "glass" : true,
+          "hidden" : false,
+          "image-name" : "tail.svg",
           "name" : "tail"
         }
       ],
       "lighting" : "individual",
       "position" : {
-        "scale" : 0.87,
+        "scale" : 1.85,
         "translation-in-points" : [
           0,
           0
         ]
       },
       "shadow" : {
-        "kind" : "neutral",
+        "kind" : "layer-color",
         "opacity" : 0.6
       },
       "specular" : false,
