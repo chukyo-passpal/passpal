@@ -6,6 +6,8 @@ import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
+import useMail from "@/src/presentation/hooks/useMail";
+import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { router } from "expo-router";
@@ -16,16 +18,16 @@ export default function Settings() {
     const { user, signOut, purgeCache: purgeAuthCache } = useAuth();
     const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode } = useSetting();
     const { refetch: refetchTimetable, clear: clearTimetable } = useTimetable();
+    const { clear: clearMail } = useMail();
+    const { clear: clearNews } = useNews();
     // const { setCourseData, setFromTimetable } = useCourse();
-    // const { setMailData } = useMail();
-    // const { setNewsData } = useNews();
     // const { setAssignmentData } = useAssignment();
 
     const handleLogout = () => {
         clearTimetable();
+        clearMail();
+        clearNews();
         // setCourseData(null);
-        // setMailData(null);
-        // setNewsData(null);
         // setAssignmentData(null);
 
         signOut();
@@ -33,9 +35,9 @@ export default function Settings() {
 
     const handlePurgeCache = () => {
         purgeAuthCache();
+        clearMail();
+        clearNews();
         // setAssignmentData(null);
-        // setMailData(null);
-        // setNewsData(null);
         alert("キャッシュを削除しました");
     };
 

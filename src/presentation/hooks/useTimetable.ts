@@ -68,7 +68,7 @@ const useTimetable = create<TimetableState>()(
             version: 0,
             partialize: (state) => ({
                 lastFetch: state.lastFetch,
-                timetable: state.timetableData,
+                timetableData: state.timetableData,
             }),
             storage: createJSONStorage(() => AsyncStorage),
             migrate: (persistedState: any, version: number) => {

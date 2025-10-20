@@ -93,7 +93,7 @@ const useAuth = create<authState>()(
             version: 0,
             partialize: (state) => ({
                 user: state.user,
-                firebaseCritical: state.firebaseUser,
+                firebaseUser: state.firebaseUser,
                 isTermsAccepted: state.isTermsAccepted,
             }),
             storage: createJSONStorage(() => SecureStorage),
