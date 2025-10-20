@@ -1,3 +1,4 @@
+import { AlboNewsInfo } from "@/src/domain/models/news";
 import { Button } from "@/src/presentation/components/Button";
 import { Card, CardDivider, CardHeader } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
@@ -5,6 +6,8 @@ import { Icon } from "@/src/presentation/components/Icon";
 import { StatCard } from "@/src/presentation/components/StatCard";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useMail from "@/src/presentation/hooks/useMail";
+import useNews from "@/src/presentation/hooks/useNews";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Linking, ScrollView, View } from "react-native";
@@ -12,6 +15,8 @@ import { Linking, ScrollView, View } from "react-native";
 export default function HomeScreen() {
     const { theme } = useTheme();
     const router = useRouter();
+    const { newsData, refetch: refetchNews, loading: loadingNews } = useNews();
+    const { mailData, refetch: refetchMail, loading: mailLoading } = useMail();
 
     const handleOpenALBO = () => {
         Linking.openURL("https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/UnLoginControl");
@@ -25,7 +30,164 @@ export default function HomeScreen() {
         router.push("/settings");
     };
 
-    const AlboNewsComponent = ({ newsItem }: { newsItem: { isImportant: boolean; category: string; title: string } }) => (
+    return (
+        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
+            <Header title="PassPal" subButtonIcon="settings" onPressSubButton={handleOpenSettings} />
+
+            {/* Scrollable Content */}
+            <ScrollView
+                style={{ flex: 1 }}
+                contentContainerStyle={{
+                    padding: theme.spacing.md,
+                    paddingBottom: theme.spacing.xl,
+                }}
+            >
+                {/* Welcome Message */}
+                <Typography variant="h1" color={theme.colors.primary.main} style={{ marginBottom: theme.spacing.lg }}>
+                    おかえりなさい!
+                </Typography>
+
+                <Button
+                    variant="text"
+                    onPress={() => {
+                        refetchNews();
+                    }}
+                >
+                    refetch news
+                </Button>
+                <Button
+                    variant="text"
+                    onPress={() => {
+                        refetchMail();
+                    }}
+                >
+                    refetch mail
+                </Button>
+
+                {/* Info Cards Row */}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        gap: theme.spacing.md,
+                        marginBottom: theme.spacing.lg,
+                    }}
+                >
+                    {/* Next Class Card */}
+                    <View style={{ flex: 1 }}>
+                        <StatCard iconName="calendar" title="次の授業" content="アルゴリズムとデータ構造" subtitle="1273" />
+                    </View>
+
+                    {/* Assignment Count Card */}
+                    <View style={{ flex: 1 }}>
+                        <StatCard iconName="clipboard-list" title="残り課題数" content={12} largeContent />
+                    </View>
+                </View>
+
+                {/* ALBO Bulletin Card */}
+                <Card
+                    style={{
+                        marginBottom: theme.spacing.lg,
+                        backgroundColor: theme.colors.background.surface,
+                    }}
+                >
+                    <CardHeader title="ALBOお知らせ" icon={<Icon name="bell" size={20} color={theme.colors.text.primary} />} />
+                    <CardDivider />
+                    <View style={{ gap: theme.spacing.md }}>
+                        {loadingNews ? (
+                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                                読み込み中...
+                            </Typography>
+                        ) : newsData?.alboNews && newsData.alboNews.length > 0 ? (
+                            newsData.alboNews.map((news, index) => <AlboNewsComponent key={index} newsItem={news} />)
+                        ) : (
+                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                                現在お知らせはないです。
+                            </Typography>
+                        )}
+                    </View>
+                </Card>
+
+                {/* Recent Mail Card */}
+                <Card
+                    style={{
+                        marginBottom: theme.spacing.lg,
+                        backgroundColor: theme.colors.background.surface,
+                    }}
+                >
+                    <CardHeader title="最近のMaNaBoメール" icon={<Icon name="user" size={20} color={theme.colors.text.primary} />} />
+                    <CardDivider />
+                    <View style={{ gap: theme.spacing.md }}>
+                        {mailLoading ? (
+                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                                読み込み中...
+                            </Typography>
+                        ) : mailData?.manaboMails && mailData.manaboMails.length > 0 ? (
+                            mailData.manaboMails.slice(0, 3).map((mail, index) => (
+                                <MailComponent
+                                    key={index}
+                                    mailItem={{
+                                        title: mail.title,
+                                        author: mail.author,
+                                        date: new Date(mail.receivedAt).toLocaleDateString("ja-JP", {
+                                            month: "short",
+                                            day: "numeric",
+                                        }),
+                                        isRead: mail.isRead,
+                                    }}
+                                />
+                            ))
+                        ) : (
+                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
+                                現在新しいメールはないです。
+                            </Typography>
+                        )}
+                    </View>
+                </Card>
+
+                {/* Manabo News Card */}
+                {/* <Card
+                    style={{
+                        marginBottom: theme.spacing.lg,
+                        backgroundColor: theme.colors.background.surface,
+                    }}
+                >
+                    <CardHeader title="MaNaBo お知らせ" icon={<Icon name="info" size={20} color={theme.colors.text.primary} />} />
+                    <CardDivider />
+                    <View style={{ gap: theme.spacing.md }}>
+                        <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
+                            現在お知らせはないです。
+                        </Typography>
+                    </View>
+                </Card> */}
+
+                {/* Portal Buttons */}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        gap: theme.spacing.md,
+                        marginBottom: theme.spacing.md,
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <Button variant="primary" fullWidth onPress={handleOpenALBO}>
+                            ALBOを開く
+                        </Button>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <Button variant="primary" fullWidth onPress={handleOpenMaNaBo}>
+                            MaNaBoを開く
+                        </Button>
+                    </View>
+                </View>
+            </ScrollView>
+        </View>
+    );
+}
+
+const AlboNewsComponent = ({ newsItem }: { newsItem: AlboNewsInfo }) => {
+    const { theme } = useTheme();
+
+    return (
         <View style={{ flexDirection: "row", gap: theme.spacing.md }}>
             <View style={{ flex: 1, gap: 8 }}>
                 <View
@@ -80,8 +242,12 @@ export default function HomeScreen() {
             </View>
         </View>
     );
+};
 
-    const MailComponent = ({ mailItem }: { mailItem: { title: string; author: string; date: string; isRead: boolean } }) => (
+const MailComponent = ({ mailItem }: { mailItem: { title: string; author: string; date: string; isRead: boolean } }) => {
+    const { theme } = useTheme();
+
+    return (
         <View style={{ flexDirection: "row", gap: theme.spacing.md }}>
             <View style={{ flex: 1, gap: 8 }}>
                 <View
@@ -122,147 +288,4 @@ export default function HomeScreen() {
             </View>
         </View>
     );
-
-    return (
-        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
-            <Header title="PassPal" subButtonIcon="settings" onPressSubButton={handleOpenSettings} />
-
-            {/* Scrollable Content */}
-            <ScrollView
-                style={{ flex: 1 }}
-                contentContainerStyle={{
-                    padding: theme.spacing.md,
-                    paddingBottom: theme.spacing.xl,
-                }}
-            >
-                {/* Welcome Message */}
-                <Typography variant="h1" color={theme.colors.primary.main} style={{ marginBottom: theme.spacing.lg }}>
-                    おかえりなさい!
-                </Typography>
-
-                <Button variant="text" onPress={() => {}}>
-                    refetch news
-                </Button>
-                <Button variant="text" onPress={() => {}}>
-                    refetch mail
-                </Button>
-
-                {/* Info Cards Row */}
-                <View
-                    style={{
-                        flexDirection: "row",
-                        gap: theme.spacing.md,
-                        marginBottom: theme.spacing.lg,
-                    }}
-                >
-                    {/* Next Class Card */}
-                    <View style={{ flex: 1 }}>
-                        <StatCard iconName="calendar" title="次の授業" content="アルゴリズムとデータ構造" subtitle="1273" />
-                    </View>
-
-                    {/* Assignment Count Card */}
-                    <View style={{ flex: 1 }}>
-                        <StatCard iconName="clipboard-list" title="残り課題数" content={12} largeContent />
-                    </View>
-                </View>
-
-                {/* ALBO Bulletin Card */}
-                <Card
-                    style={{
-                        marginBottom: theme.spacing.lg,
-                        backgroundColor: theme.colors.background.surface,
-                    }}
-                >
-                    <CardHeader title="ALBOお知らせ" icon={<Icon name="bell" size={20} color={theme.colors.text.primary} />} />
-                    <CardDivider />
-                    <View style={{ gap: theme.spacing.md }}>
-                        {/* {loading ? (
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
-                                読み込み中...
-                            </Typography>
-                        ) : newsData?.alboNews && newsData.alboNews.length > 0 ? (
-                            newsData.alboNews.map((news, index) => <AlboNewsComponent key={index} newsItem={news} />)
-                        ) : (
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
-                                現在お知らせはないです。
-                            </Typography>
-                        )} */}
-                    </View>
-                </Card>
-
-                {/* Recent Mail Card */}
-                <Card
-                    style={{
-                        marginBottom: theme.spacing.lg,
-                        backgroundColor: theme.colors.background.surface,
-                    }}
-                >
-                    <CardHeader title="最近のMaNaBoメール" icon={<Icon name="user" size={20} color={theme.colors.text.primary} />} />
-                    <CardDivider />
-                    <View style={{ gap: theme.spacing.md }}>
-                        {/* {mailLoading ? (
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
-                                読み込み中...
-                            </Typography>
-                        ) : mailData?.manaboMails && mailData.manaboMails.length > 0 ? (
-                            mailData.manaboMails.slice(0, 3).map((mail, index) => (
-                                <MailComponent
-                                    key={index}
-                                    mailItem={{
-                                        title: mail.title,
-                                        author: mail.author,
-                                        date: new Date(mail.receivedAt).toLocaleDateString("ja-JP", {
-                                            month: "short",
-                                            day: "numeric",
-                                        }),
-                                        isRead: mail.isRead,
-                                    }}
-                                />
-                            ))
-                        ) : (
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
-                                現在新しいメールはないです。
-                            </Typography>
-                        )} */}
-                    </View>
-                </Card>
-
-                {/* Manabo News Card */}
-                {/* <Card
-                    style={{
-                        marginBottom: theme.spacing.lg,
-                        backgroundColor: theme.colors.background.surface,
-                    }}
-                >
-                    <CardHeader title="MaNaBo お知らせ" icon={<Icon name="info" size={20} color={theme.colors.text.primary} />} />
-                    <CardDivider />
-                    <View style={{ gap: theme.spacing.md }}>
-                        <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
-                            現在お知らせはないです。
-                        </Typography>
-                    </View>
-                </Card> */}
-
-                {/* Portal Buttons */}
-                <View
-                    style={{
-                        flexDirection: "row",
-                        gap: theme.spacing.md,
-                        marginBottom: theme.spacing.md,
-                    }}
-                >
-                    <View style={{ flex: 1 }}>
-                        <Button variant="primary" fullWidth onPress={handleOpenALBO}>
-                            ALBOを開く
-                        </Button>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <Button variant="primary" fullWidth onPress={handleOpenMaNaBo}>
-                            MaNaBoを開く
-                        </Button>
-                    </View>
-                </View>
-            </ScrollView>
-        </View>
-    );
-}
+};

@@ -16,9 +16,9 @@ export interface TimetableState {
     lastFetch: Date | null;
     timetableData: TimetableData | null;
     loading: boolean;
-    clearTimetable: () => void;
+    clear: () => void;
     setCourse: (day: Weekday, period: Period, courseInfo: TimetableCourseInfo | null) => void;
-    refetch: (service?: TimetableService) => Promise<void>;
+    refetch: (service?: TimetableService) => Promise<TimetableData>;
 }
 
 const useTimetable = create<TimetableState>()(
@@ -28,7 +28,7 @@ const useTimetable = create<TimetableState>()(
             timetableData: null,
             loading: false,
 
-            clearTimetable: () =>
+            clear: () =>
                 set((state) => {
                     state.timetableData = null;
                     state.lastFetch = null;
@@ -45,13 +45,22 @@ const useTimetable = create<TimetableState>()(
                     state.loading = true;
                 });
 
-                const timetable = await service.getTimetable();
+                try {
+                    const timetable = await service.getTimetable();
 
-                set((state) => {
-                    state.timetableData = timetable;
-                    state.loading = false;
-                    state.lastFetch = new Date();
-                });
+                    set((state) => {
+                        state.timetableData = timetable;
+                        state.loading = false;
+                        state.lastFetch = new Date();
+                    });
+
+                    return timetable;
+                } catch (err) {
+                    set((state) => {
+                        state.loading = false;
+                    });
+                    throw err;
+                }
             },
         })),
         {

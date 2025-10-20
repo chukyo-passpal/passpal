@@ -15,7 +15,7 @@ export default function Settings() {
     const { theme } = useTheme();
     const { user, signOut, purgeCache: purgeAuthCache } = useAuth();
     const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode } = useSetting();
-    const { refetch: refetchTimetable, clearTimetable } = useTimetable();
+    const { refetch: refetchTimetable, clear: clearTimetable } = useTimetable();
     // const { setCourseData, setFromTimetable } = useCourse();
     // const { setMailData } = useMail();
     // const { setNewsData } = useNews();

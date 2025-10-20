@@ -1,5 +1,6 @@
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
+import { receivedMailToDomain } from "../mappers/mailMapper";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export class MailRepository {
@@ -21,8 +22,7 @@ export class MailRepository {
         );
         const dto = parser.parseManaboReceivedMail(response);
         if (dto.success) {
-            // TODO: domain形にmapする
-            return dto.data;
+            return receivedMailToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }

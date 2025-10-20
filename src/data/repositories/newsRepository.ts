@@ -1,5 +1,6 @@
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
+import { mapAlboNewsToDomain } from "../mappers/newsMapper";
 import alboProviderInstance, { AlboProvider } from "../providers/chukyo-univ/alboProvider";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
@@ -38,8 +39,7 @@ export class NewsRepository {
         const response = await this.alboProvider.get("/uniprove_pt/portal/_ns:YXJldHJvLXN0dWRlbnQtMTAwMDN8ZDI_");
         const dto = parser.parseCubicsPtNews(response);
         if (dto.success) {
-            // TODO: domain形にmapする
-            return dto.data;
+            return mapAlboNewsToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }
