@@ -11,9 +11,11 @@ export interface CourseState {
     courseData: CourseData | null;
     loading: boolean;
 
+    courseService: CourseService;
+
     clear: () => void;
-    setFromTimetable: (timetableData: TimetableData, courseService?: CourseService) => TimetableData;
-    refetchCourseInfo: (manaboCourseId: string, courseService?: CourseService) => Promise<CourseInfo>;
+    setFromTimetable: (timetableData: TimetableData) => TimetableData;
+    refetchCourseInfo: (manaboCourseId: string) => Promise<CourseInfo>;
 }
 
 const useCourse = create<CourseState>()(
@@ -23,19 +25,21 @@ const useCourse = create<CourseState>()(
             courseData: null,
             loading: false,
 
+            courseService: courseServiceInstance,
+
             clear: () =>
                 set((state) => {
                     state.courseData = null;
                 }),
 
-            setFromTimetable: (timetableData: TimetableData, courseService = courseServiceInstance) => {
+            setFromTimetable: (timetableData: TimetableData) => {
                 set((state) => {
-                    state.courseData = courseService.buildCourseInfoFromTimetable(timetableData);
+                    state.courseData = get().courseService.buildCourseInfoFromTimetable(timetableData);
                 });
                 return timetableData;
             },
 
-            refetchCourseInfo: async (manaboCourseId: string, courseService = courseServiceInstance) => {
+            refetchCourseInfo: async (manaboCourseId: string) => {
                 const nowCourseData = get().courseData;
                 if (!nowCourseData) {
                     throw new Error("Course data is not set.");
@@ -44,7 +48,7 @@ const useCourse = create<CourseState>()(
                     state.loading = true;
                 });
                 try {
-                    const courseData = await courseService.updateCourseInfo(nowCourseData.courses[manaboCourseId]);
+                    const courseData = await get().courseService.updateCourseInfo(nowCourseData.courses[manaboCourseId]);
                     set((state) => {
                         if (state.courseData) {
                             state.courseData.courses[manaboCourseId] = courseData;

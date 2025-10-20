@@ -1,7 +1,11 @@
 import courseRepositoryInstance, { CourseRepository } from "@/src/data/repositories/courseRepository";
 import { ManaboDirectoryInfo } from "../models/course";
 
-export class AssignmentService {
+export interface AssignmentService {
+    getDirectory(manaboCourseId: string): Promise<ManaboDirectoryInfo>;
+}
+
+export class IntegratedAssignmentService implements AssignmentService {
     protected readonly courseRepository: CourseRepository;
 
     constructor(courseRepository = courseRepositoryInstance) {
@@ -13,5 +17,5 @@ export class AssignmentService {
     }
 }
 
-const assignmentServiceInstance = new AssignmentService();
+const assignmentServiceInstance = new IntegratedAssignmentService();
 export default assignmentServiceInstance;

@@ -11,17 +11,22 @@ export interface TimetableState {
     lastFetch: Date | null;
     timetableData: TimetableData | null;
     loading: boolean;
+
+    timetableService: TimetableService;
+
     clear: () => void;
     setCourse: (day: Weekday, period: Period, courseInfo: TimetableCourseInfo | null) => void;
-    refetch: (service?: TimetableService) => Promise<TimetableData>;
+    refetch: () => Promise<TimetableData>;
 }
 
 const useTimetable = create<TimetableState>()(
     persist(
-        immer((set) => ({
+        immer((set, get) => ({
             lastFetch: null,
             timetableData: null,
             loading: false,
+
+            timetableService: timetableServiceInstance,
 
             clear: () =>
                 set((state) => {
@@ -35,13 +40,13 @@ const useTimetable = create<TimetableState>()(
                     state.timetableData.timetable[day][period] = courseInfo;
                 }),
 
-            refetch: async (service = timetableServiceInstance) => {
+            refetch: async () => {
                 set((state) => {
                     state.loading = true;
                 });
 
                 try {
-                    const timetable = await service.getTimetable();
+                    const timetable = await get().timetableService.getTimetable();
 
                     set((state) => {
                         state.timetableData = timetable;

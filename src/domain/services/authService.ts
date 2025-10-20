@@ -1,7 +1,12 @@
 import { shibbolethWebViewAuthFunction } from "@/src/data/clients/chukyoShibboleth";
 import { NotSetError } from "../errors/serviceError";
 
-export class AuthService {
+export interface AuthService {
+    shibAuth: (...params: Parameters<shibbolethWebViewAuthFunction>) => ReturnType<shibbolethWebViewAuthFunction>;
+    setChukyoShibbolethAuthFunction: (func: shibbolethWebViewAuthFunction) => void;
+}
+
+export class IntegratedAuthService implements AuthService {
     protected chukyoShibbolethAuth?: shibbolethWebViewAuthFunction;
     protected shibAuthQueue: Promise<void> = Promise.resolve();
 
@@ -24,5 +29,5 @@ export class AuthService {
     };
 }
 
-const authServiceInstance = new AuthService();
+const authServiceInstance = new IntegratedAuthService();
 export default authServiceInstance;

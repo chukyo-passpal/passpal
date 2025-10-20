@@ -1,7 +1,11 @@
 import mailRepositoryInstance, { MailRepository } from "@/src/data/repositories/mailRepository";
 import { MailData } from "../models/mail";
 
-export class MailService {
+export interface MailService {
+    getMails(page?: number): Promise<MailData>;
+}
+
+export class IntegratedMailService implements MailService {
     protected readonly mailRepository: MailRepository;
 
     constructor(mailRepository = mailRepositoryInstance) {
@@ -13,5 +17,5 @@ export class MailService {
     }
 }
 
-const mailServiceInstance = new MailService();
+const mailServiceInstance = new IntegratedMailService();
 export default mailServiceInstance;

@@ -1,7 +1,11 @@
 import newsRepositoryInstance, { NewsRepository } from "@/src/data/repositories/newsRepository";
 import { NewsData } from "../models/news";
 
-export class NewsService {
+export interface NewsService {
+    getNews(): Promise<NewsData>;
+}
+
+export class IntegratedNewsService implements NewsService {
     protected readonly newsRepository: NewsRepository;
 
     constructor(newsRepository = newsRepositoryInstance) {
@@ -17,5 +21,5 @@ export class NewsService {
     }
 }
 
-const newsServiceInstance = new NewsService();
+const newsServiceInstance = new IntegratedNewsService();
 export default newsServiceInstance;

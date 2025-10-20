@@ -9,29 +9,34 @@ export interface MailState {
     lastFetch: Date | null;
     mailData: MailData | null;
     loading: boolean;
+
+    mailService: MailService;
+
     clear: () => void;
-    refetch: (page?: number, service?: MailService) => Promise<MailData>;
+    refetch: (page?: number) => Promise<MailData>;
 }
 
 const useMail = create<MailState>()(
     persist(
-        immer((set) => ({
+        immer((set, get) => ({
             lastFetch: null,
             mailData: null,
             loading: false,
+
+            mailService: mailServiceInstance,
 
             clear: () =>
                 set((state) => {
                     state.mailData = null;
                 }),
 
-            refetch: async (page: number = 1, service: MailService = mailServiceInstance) => {
+            refetch: async (page: number = 1) => {
                 set((state) => {
                     state.loading = true;
                 });
 
                 try {
-                    const data = await service.getMails(page);
+                    const data = await get().mailService.getMails(page);
                     set((state) => {
                         state.mailData = data;
                         state.loading = false;

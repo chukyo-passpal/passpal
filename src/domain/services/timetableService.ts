@@ -9,7 +9,14 @@ function pt(time: string): Date {
     return new Date(`1970-01-01T${time}:00+09:00`);
 }
 
-export class TimetableService {
+export interface TimetableService {
+    getTimetable(): Promise<TimetableData>;
+    getShouldDisplayWeekdays(timetable: TimetableData): Weekday[];
+    getShouldDisplayPeriods(timetable: TimetableData, campus: Campus): Period[];
+    periodData: PeriodData;
+}
+
+export class IntegratedTimetableService implements TimetableService {
     private readonly timetableRepository: TimetableRepository;
 
     private _periodData: PeriodData = {
@@ -98,5 +105,5 @@ export class TimetableService {
     }
 }
 
-const timetableServiceInstance = new TimetableService();
+const timetableServiceInstance = new IntegratedTimetableService();
 export default timetableServiceInstance;

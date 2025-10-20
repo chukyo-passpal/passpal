@@ -4,7 +4,12 @@ import { Weekday } from "../constants/week";
 import { AttendanceInfo, CourseData, CourseInfo } from "../models/course";
 import { TimetableData } from "../models/timetable";
 
-export class CourseService {
+export interface CourseService {
+    updateCourseInfo(course: CourseInfo): Promise<CourseInfo>;
+    buildCourseInfoFromTimetable(timetableData: TimetableData): CourseData;
+}
+
+export class IntegratedCourseService implements CourseService {
     protected readonly courseRepository: CourseRepository;
 
     constructor(courseRepository = courseRepositoryInstance) {
@@ -89,5 +94,5 @@ export class CourseService {
     }
 }
 
-const courseServiceInstance = new CourseService();
+const courseServiceInstance = new IntegratedCourseService();
 export default courseServiceInstance;

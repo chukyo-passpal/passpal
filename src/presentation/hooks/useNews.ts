@@ -9,16 +9,21 @@ export interface NewsState {
     lastFetch: Date | null;
     newsData: NewsData | null;
     loading: boolean;
+
+    newsService: NewsService;
+
     clear: () => void;
-    refetch: (service?: NewsService) => Promise<NewsData>;
+    refetch: () => Promise<NewsData>;
 }
 
 const useNews = create<NewsState>()(
     persist(
-        immer((set) => ({
+        immer((set, get) => ({
             lastFetch: null,
             newsData: null,
             loading: false,
+
+            newsService: newsServiceInstance,
 
             clear: () =>
                 set((state) => {
@@ -26,13 +31,13 @@ const useNews = create<NewsState>()(
                     state.newsData = null;
                 }),
 
-            refetch: async (service: NewsService = newsServiceInstance) => {
+            refetch: async () => {
                 set((state) => {
                     state.loading = true;
                 });
 
                 try {
-                    const news = await service.getNews();
+                    const news = await get().newsService.getNews();
 
                     set((state) => {
                         state.newsData = news;
