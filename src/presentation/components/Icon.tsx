@@ -8,6 +8,7 @@ import {
     AlertTriangle,
     ArrowLeftRight,
     Bell,
+    Building,
     Bus,
     Calendar,
     CalendarCog,
@@ -32,6 +33,7 @@ import {
     RefreshCw,
     Settings,
     Train,
+    Trash2,
     User,
 } from "lucide-react-native";
 import React from "react";
@@ -41,6 +43,7 @@ export type IconName =
     | "alert-triangle"
     | "arrow-left-right"
     | "bell"
+    | "building"
     | "bus"
     | "calendar"
     | "calendar-cog"
@@ -64,6 +67,7 @@ export type IconName =
     | "refresh-cw"
     | "settings"
     | "train"
+    | "trash-2"
     | "user";
 
 interface IconProps {
@@ -78,6 +82,7 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     "alert-triangle": AlertTriangle,
     "arrow-left-right": ArrowLeftRight,
     bell: Bell,
+    building: Building,
     bus: Bus,
     calendar: Calendar,
     "calendar-cog": CalendarCog,
@@ -101,6 +106,7 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     "refresh-cw": RefreshCw,
     settings: Settings,
     train: Train,
+    "trash-2": Trash2,
     user: User,
 };
 
@@ -156,22 +162,3 @@ export const IconContainer: React.FC<IconContainerProps> = ({ variant = "default
         </View>
     );
 };
-
-// Specific icon components for common usage
-export const HomeIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="home" {...props} />;
-
-export const CalendarIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="calendar" {...props} />;
-
-export const UserIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="user" {...props} />;
-
-export const SettingsIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="settings" {...props} />;
-
-export const BellIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="bell" {...props} />;
-
-export const BusIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="bus" {...props} />;
-
-export const ClipboardIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="clipboard-list" {...props} />;
-
-export const ClockIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="clock" {...props} />;
-
-export const CheckIcon: React.FC<Omit<IconProps, "name">> = (props) => <Icon name="check" {...props} />;

@@ -1,7 +1,11 @@
 import { router } from "expo-router";
 import { ScrollView, View } from "react-native";
-import { BodyText, Button, Card, Heading2, Icon, useTheme } from "../../design-system";
 
+import { Button } from "@/src/presentation/components/Button";
+import { Card } from "@/src/presentation/components/Card";
+import { Icon } from "@/src/presentation/components/Icon";
+import { Typography } from "@/src/presentation/components/Typography";
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
 
@@ -56,10 +60,10 @@ export default function Index() {
                         </View>
 
                         <View style={{ alignItems: "center", gap: 16, width: "100%" }}>
-                            <Heading2>通知を有効にしますか？</Heading2>
-                            <BodyText color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                            <Typography variant="h2">通知を有効にしますか？</Typography>
+                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
                                 課題、授業スケジュール、重要なお知らせをすぐににお知らせします。
-                            </BodyText>
+                            </Typography>
                         </View>
                     </View>
 
@@ -67,21 +71,21 @@ export default function Index() {
                     <Card variant="feature" style={{ gap: 16 }}>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
                             <Icon name="calendar" size={24} color={theme.colors.primary.main} />
-                            <BodyText color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
+                            <Typography variant="body" color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
                                 課題提出期限のお知らせ
-                            </BodyText>
+                            </Typography>
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
                             <Icon name="clock" size={24} color={theme.colors.primary.main} />
-                            <BodyText color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
+                            <Typography variant="body" color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
                                 授業開始時間のお知らせ（未実装）
-                            </BodyText>
+                            </Typography>
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
                             <Icon name="bus" size={24} color={theme.colors.primary.main} />
-                            <BodyText color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
+                            <Typography variant="body" color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
                                 バスの出発時刻お知らせ（未実装）
-                            </BodyText>
+                            </Typography>
                         </View>
                     </Card>
 

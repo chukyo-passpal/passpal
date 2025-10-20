@@ -99,10 +99,3 @@ export const IconButton: React.FC<IconButtonProps> = ({ icon, size = "medium", v
         </Pressable>
     );
 };
-
-// Convenience components for specific variants
-export const DefaultIconButton: React.FC<Omit<IconButtonProps, "variant">> = (props) => <IconButton variant="default" {...props} />;
-
-export const PrimaryIconButton: React.FC<Omit<IconButtonProps, "variant">> = (props) => <IconButton variant="primary" {...props} />;
-
-export const GhostIconButton: React.FC<Omit<IconButtonProps, "variant">> = (props) => <IconButton variant="ghost" {...props} />;

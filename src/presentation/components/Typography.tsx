@@ -34,18 +34,3 @@ export const Typography: React.FC<TypographyProps> = ({ variant = "body", color,
         </Text>
     );
 };
-
-// Convenience components for common variants
-export const Heading1: React.FC<Omit<TypographyProps, "variant">> = (props) => <Typography variant="h1" {...props} />;
-
-export const Heading2: React.FC<Omit<TypographyProps, "variant">> = (props) => <Typography variant="h2" {...props} />;
-
-export const Heading3: React.FC<Omit<TypographyProps, "variant">> = (props) => <Typography variant="h3" {...props} />;
-
-export const BodyText: React.FC<Omit<TypographyProps, "variant">> = (props) => <Typography variant="body" {...props} />;
-
-export const BodySmall: React.FC<Omit<TypographyProps, "variant">> = (props) => <Typography variant="bodySmall" {...props} />;
-
-export const Caption: React.FC<Omit<TypographyProps, "variant">> = (props) => <Typography variant="caption" {...props} />;
-
-export const Label: React.FC<Omit<TypographyProps, "variant">> = (props) => <Typography variant="label" {...props} />;

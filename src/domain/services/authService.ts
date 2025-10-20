@@ -5,12 +5,12 @@ export class AuthService {
     protected chukyoShibbolethAuth?: shibbolethWebViewAuthFunction;
     protected shibAuthQueue: Promise<void> = Promise.resolve();
 
-    public setChukyoShibbolethAuthFunction(func: shibbolethWebViewAuthFunction) {
+    public setChukyoShibbolethAuthFunction = (func: shibbolethWebViewAuthFunction) => {
         this.chukyoShibbolethAuth = func;
-    }
+    };
 
-    public shibAuth(...params: Parameters<NonNullable<typeof this.chukyoShibbolethAuth>>): ReturnType<NonNullable<typeof this.chukyoShibbolethAuth>> {
-        if (!this.chukyoShibbolethAuth) {
+    public shibAuth = (...params: Parameters<shibbolethWebViewAuthFunction>): ReturnType<shibbolethWebViewAuthFunction> => {
+        if (this.chukyoShibbolethAuth === undefined) {
             throw new NotSetError({ cause: new Error("AuthServiceにChukyoShibbolethAuthが設定されていません") });
         }
         const authFn = this.chukyoShibbolethAuth;
@@ -21,7 +21,7 @@ export class AuthService {
             () => undefined
         );
         return queuedPromise;
-    }
+    };
 }
 
 const AuthServiceInstance = new AuthService();

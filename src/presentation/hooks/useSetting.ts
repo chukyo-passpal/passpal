@@ -7,24 +7,24 @@ import { immer } from "zustand/middleware/immer";
 
 export interface settingState {
     campus: Campus;
-    timetableViewMode: TimetableViewMode;
+    initTimetableViewMode: TimetableViewMode;
     setCampus: (campus: Campus) => void;
-    setTimetableViewMode: (mode: TimetableViewMode) => void;
+    setInitTimetableViewMode: (mode: TimetableViewMode) => void;
 }
 
 const useSetting = create<settingState>()(
     persist(
         immer((set) => ({
             campus: "nagoya" as Campus,
-            timetableViewMode: "week" as TimetableViewMode,
+            initTimetableViewMode: "week" as TimetableViewMode,
 
             setCampus: (campus: Campus) =>
                 set((state) => {
                     state.campus = campus;
                 }),
-            setTimetableViewMode: (mode: TimetableViewMode) =>
+            setInitTimetableViewMode: (mode: TimetableViewMode) =>
                 set((state) => {
-                    state.timetableViewMode = mode;
+                    state.initTimetableViewMode = mode;
                 }),
         })),
         {

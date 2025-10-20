@@ -1,7 +1,10 @@
-import Header from "@/components/Header";
-import { Button, Card, CardDivider, CardHeader, Icon, StatCard, TextButton, Typography, useTheme } from "@/design-system";
-import useMail from "@/features/mail/hooks/useMail";
-import useNews from "@/features/news/hooks/useNews";
+import { Button } from "@/src/presentation/components/Button";
+import { Card, CardDivider, CardHeader } from "@/src/presentation/components/Card";
+import Header from "@/src/presentation/components/Header";
+import { Icon } from "@/src/presentation/components/Icon";
+import { StatCard } from "@/src/presentation/components/StatCard";
+import { Typography } from "@/src/presentation/components/Typography";
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Linking, ScrollView, View } from "react-native";
@@ -9,8 +12,6 @@ import { Linking, ScrollView, View } from "react-native";
 export default function HomeScreen() {
     const { theme } = useTheme();
     const router = useRouter();
-    const { newsData, loading, refetch } = useNews();
-    const { mailData, loading: mailLoading, refetch: refetchMail } = useMail();
 
     const handleOpenALBO = () => {
         Linking.openURL("https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/UnLoginControl");
@@ -139,20 +140,12 @@ export default function HomeScreen() {
                     おかえりなさい!
                 </Typography>
 
-                <TextButton
-                    onPress={() => {
-                        refetch();
-                    }}
-                >
+                <Button variant="text" onPress={() => {}}>
                     refetch news
-                </TextButton>
-                <TextButton
-                    onPress={() => {
-                        refetchMail();
-                    }}
-                >
+                </Button>
+                <Button variant="text" onPress={() => {}}>
                     refetch mail
-                </TextButton>
+                </Button>
 
                 {/* Info Cards Row */}
                 <View
@@ -183,7 +176,7 @@ export default function HomeScreen() {
                     <CardHeader title="ALBOお知らせ" icon={<Icon name="bell" size={20} color={theme.colors.text.primary} />} />
                     <CardDivider />
                     <View style={{ gap: theme.spacing.md }}>
-                        {loading ? (
+                        {/* {loading ? (
                             <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
                                 読み込み中...
                             </Typography>
@@ -193,7 +186,7 @@ export default function HomeScreen() {
                             <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
                                 現在お知らせはないです。
                             </Typography>
-                        )}
+                        )} */}
                     </View>
                 </Card>
 
@@ -207,7 +200,7 @@ export default function HomeScreen() {
                     <CardHeader title="最近のMaNaBoメール" icon={<Icon name="user" size={20} color={theme.colors.text.primary} />} />
                     <CardDivider />
                     <View style={{ gap: theme.spacing.md }}>
-                        {mailLoading ? (
+                        {/* {mailLoading ? (
                             <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
                                 読み込み中...
                             </Typography>
@@ -230,7 +223,7 @@ export default function HomeScreen() {
                             <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
                                 現在新しいメールはないです。
                             </Typography>
-                        )}
+                        )} */}
                     </View>
                 </Card>
 

@@ -1,49 +1,46 @@
-import Header from "@/components/Header";
-import { Card, Icon, TextButton, Typography, useTheme } from "@/design-system";
-import { Select } from "@/design-system/components/Select";
-import useAssignment from "@/features/assignment/hooks/useAssignment";
-import useCourse from "@/features/course/hooks/useCourse";
-import useMail from "@/features/mail/hooks/useMail";
-import useNews from "@/features/news/hooks/useNews";
-import useTimetable from "@/features/timetable/hooks/useTimetable";
-import useAuth from "@/hooks/useAuth";
-import useSetting from "@/hooks/useSetting";
+import { Button } from "@/src/presentation/components/Button";
+import { Card } from "@/src/presentation/components/Card";
+import Header from "@/src/presentation/components/Header";
+import { Icon } from "@/src/presentation/components/Icon";
+import { Select } from "@/src/presentation/components/Select";
+import { Typography } from "@/src/presentation/components/Typography";
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useAuth from "@/src/presentation/hooks/useAuth";
+import useSetting from "@/src/presentation/hooks/useSetting";
+import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { router } from "expo-router";
-import { Building, Calendar, Trash2 } from "lucide-react-native";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Settings() {
     const { theme } = useTheme();
     const { user, signOut, purgeCache: purgeAuthCache } = useAuth();
-    const { campus, timetableViewMode, setCampus, setTimetableViewMode } = useSetting();
-    const { refetch: refetchTimetable, setTimetable, timetable } = useTimetable();
-    const { setFromTimetable } = useCourse();
-    const { setCourseData } = useCourse();
-    const { setMailData } = useMail();
-    const { setNewsData } = useNews();
-    const { setAssignmentData } = useAssignment();
+    const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode } = useSetting();
+    const { refetch: refetchTimetable, clearTimetable } = useTimetable();
+    // const { setCourseData, setFromTimetable } = useCourse();
+    // const { setMailData } = useMail();
+    // const { setNewsData } = useNews();
+    // const { setAssignmentData } = useAssignment();
 
     const handleLogout = () => {
-        setTimetable(null);
-        setCourseData(null);
-        setMailData(null);
-        setNewsData(null);
-        setAssignmentData(null);
+        clearTimetable();
+        // setCourseData(null);
+        // setMailData(null);
+        // setNewsData(null);
+        // setAssignmentData(null);
 
         signOut();
     };
 
     const handlePurgeCache = () => {
         purgeAuthCache();
-        setAssignmentData(null);
-        setMailData(null);
-        setNewsData(null);
+        // setAssignmentData(null);
+        // setMailData(null);
+        // setNewsData(null);
         alert("キャッシュを削除しました");
     };
 
     const handleRefetchTimetable = async () => {
         await refetchTimetable();
-        if (timetable) setFromTimetable(timetable);
         alert("時間割を更新しました");
     };
 
@@ -70,14 +67,17 @@ export default function Settings() {
             >
                 {__DEV__ && (
                     <>
-                        <TextButton
+                        <Button
+                            variant="text"
                             onPress={() => {
                                 router.push("/storybook");
                             }}
                         >
                             StoryBook
-                        </TextButton>
-                        <TextButton onPress={() => {}}>debug</TextButton>
+                        </Button>
+                        <Button variant="text" onPress={() => {}}>
+                            debug
+                        </Button>
                     </>
                 )}
                 {/* Account Section */}
@@ -191,7 +191,7 @@ export default function Settings() {
                     >
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Building size={24} color={theme.colors.text.primary} />
+                                <Icon name="building" size={24} color={theme.colors.text.primary} />
                                 <Typography
                                     variant="body"
                                     style={{
@@ -226,7 +226,7 @@ export default function Settings() {
                     >
                         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Calendar size={24} color={theme.colors.text.primary} />
+                                <Icon name="calendar" size={24} color={theme.colors.text.primary} />
                                 <Typography
                                     variant="body"
                                     style={{
@@ -240,8 +240,8 @@ export default function Settings() {
                                 </Typography>
                             </View>
                             <Select
-                                value={timetableViewMode}
-                                onValueChange={(value) => setTimetableViewMode(value as "day" | "week")}
+                                value={initTimetableViewMode}
+                                onValueChange={(value) => setInitTimetableViewMode(value as "day" | "week")}
                                 items={[
                                     { label: "1日", value: "day" },
                                     { label: "1週間", value: "week" },
@@ -277,7 +277,7 @@ export default function Settings() {
                             }}
                         >
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Trash2 size={24} color={theme.colors.text.primary} />
+                                <Icon name="trash-2" size={24} color={theme.colors.text.primary} />
                                 <View style={{ marginLeft: theme.spacing.sm }}>
                                     <Typography
                                         variant="body"
@@ -316,7 +316,7 @@ export default function Settings() {
                             }}
                         >
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Calendar size={24} color={theme.colors.text.primary} />
+                                <Icon name="calendar" size={24} color={theme.colors.text.primary} />
                                 <View style={{ marginLeft: theme.spacing.sm }}>
                                     <Typography
                                         variant="body"

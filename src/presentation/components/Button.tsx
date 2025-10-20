@@ -104,10 +104,3 @@ export const Button: React.FC<ButtonProps> = ({
         </TouchableOpacity>
     );
 };
-
-// Convenience components for specific variants
-export const PrimaryButton: React.FC<Omit<ButtonProps, "variant">> = (props) => <Button variant="primary" {...props} />;
-
-export const SecondaryButton: React.FC<Omit<ButtonProps, "variant">> = (props) => <Button variant="secondary" {...props} />;
-
-export const TextButton: React.FC<Omit<ButtonProps, "variant">> = (props) => <Button variant="text" {...props} />;

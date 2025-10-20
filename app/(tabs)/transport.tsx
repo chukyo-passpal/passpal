@@ -1,7 +1,7 @@
-import Header from "@/components/Header";
-import { Icon } from "@/design-system/components/Icon";
-import { Typography } from "@/design-system/components/Typography";
-import { useTheme } from "@/design-system/tokens/ThemeProvider";
+import Header from "@/src/presentation/components/Header";
+import { Icon } from "@/src/presentation/components/Icon";
+import { Typography } from "@/src/presentation/components/Typography";
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import React, { useEffect, useMemo, useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 

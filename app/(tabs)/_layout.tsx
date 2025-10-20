@@ -1,4 +1,5 @@
-import { Icon, useTheme } from "@/design-system";
+import { Icon } from "@/src/presentation/components/Icon";
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { Tabs } from "expo-router";
 
 export default function TabLayout() {

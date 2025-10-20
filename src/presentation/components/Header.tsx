@@ -1,10 +1,10 @@
 import { router } from "expo-router";
-import { Heading2 } from "lucide-react-native";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { spacing } from "../tokens/spacing";
 import { IconName } from "./Icon";
 import { IconButton } from "./IconButton";
+import { Typography } from "./Typography";
 
 type Props = { title: string; subButtonIcon?: IconName; onPressSubButton?: () => void; shownBackButton?: boolean; onPressBackButton?: () => void };
 
@@ -40,7 +40,9 @@ export default function Header({
             >
                 <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.md }}>
                     {shownBackButton && <IconButton icon="chevron-left" onPress={onPressBackButton} />}
-                    <Heading2 color="#B19CD9">{title}</Heading2>
+                    <Typography variant="h2" color="#B19CD9">
+                        {title}
+                    </Typography>
                 </View>
 
                 {subButtonIcon && <IconButton icon={subButtonIcon} onPress={onPressSubButton} />}

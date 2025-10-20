@@ -1,5 +1,6 @@
-import { Typography, useTheme } from "@/design-system";
-import useAuth from "@/hooks/useAuth";
+import { Typography } from "@/src/presentation/components/Typography";
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useAuth from "@/src/presentation/hooks/useAuth";
 import { GoogleSignin, isErrorWithCode, isSuccessResponse } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";

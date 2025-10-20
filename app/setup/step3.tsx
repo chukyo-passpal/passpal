@@ -1,9 +1,13 @@
-import useAuth from "@/hooks/useAuth";
+import { Button } from "@/src/presentation/components/Button";
+import { Card } from "@/src/presentation/components/Card";
+import { Icon } from "@/src/presentation/components/Icon";
+import { Typography } from "@/src/presentation/components/Typography";
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useAuth from "@/src/presentation/hooks/useAuth";
 import { Checkbox } from "expo-checkbox";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
-import { BodySmall, BodyText, Caption, Card, Heading2, Icon, PrimaryButton, Typography, useTheme } from "../../design-system";
 
 export default function Step3() {
     const { acceptTerms } = useAuth();
@@ -49,10 +53,12 @@ export default function Step3() {
 
                         {/* Header Text */}
                         <View style={{ alignItems: "center", gap: 16 }}>
-                            <Heading2 style={{ textAlign: "center" }}>セットアップ完了！</Heading2>
-                            <BodyText color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                            <Typography variant="h2" style={{ textAlign: "center" }}>
+                                セットアップ完了！
+                            </Typography>
+                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
                                 PassPalと一緒に、シンプルなキャンパスライフを。
-                            </BodyText>
+                            </Typography>
                         </View>
 
                         {/* Features Card */}
@@ -68,7 +74,9 @@ export default function Step3() {
                                         <Typography variant="label" color={theme.colors.primary.main}>
                                             時間割・出欠管理
                                         </Typography>
-                                        <Caption color={theme.colors.text.secondary}>授業の時間割をひと目で確認。スムーズに一日をスタートできます。</Caption>
+                                        <Typography variant="caption" color={theme.colors.text.secondary}>
+                                            授業の時間割をひと目で確認。スムーズに一日をスタートできます。
+                                        </Typography>
                                     </View>
                                 </View>
 
@@ -79,7 +87,9 @@ export default function Step3() {
                                         <Typography variant="label" color={theme.colors.primary.main}>
                                             課題管理機能
                                         </Typography>
-                                        <Caption color={theme.colors.text.secondary}>提出期限も忘れない。課題の管理がもっとラクに。</Caption>
+                                        <Typography variant="caption" color={theme.colors.text.secondary}>
+                                            提出期限も忘れない。課題の管理がもっとラクに。
+                                        </Typography>
                                     </View>
                                 </View>
 
@@ -90,7 +100,9 @@ export default function Step3() {
                                         <Typography variant="label" color={theme.colors.primary.main}>
                                             バス時刻表
                                         </Typography>
-                                        <Caption color={theme.colors.text.secondary}>通学に便利なバスの発着時刻をいつでもチェック。</Caption>
+                                        <Typography variant="caption" color={theme.colors.text.secondary}>
+                                            通学に便利なバスの発着時刻をいつでもチェック。
+                                        </Typography>
                                     </View>
                                 </View>
                             </View>
@@ -113,22 +125,26 @@ export default function Step3() {
                                             利用規約
                                         </Typography>
                                     </TouchableOpacity>
-                                    <BodySmall color={theme.colors.text.secondary}>および</BodySmall>
+                                    <Typography variant="bodySmall" color={theme.colors.text.secondary}>
+                                        および
+                                    </Typography>
                                     <TouchableOpacity onPress={handleClickPrivacy}>
                                         <Typography variant="label" color={theme.colors.primary.main}>
                                             プライバシーポリシー
                                         </Typography>
                                     </TouchableOpacity>
-                                    <BodySmall color={theme.colors.text.secondary}>に同意します</BodySmall>
+                                    <Typography variant="bodySmall" color={theme.colors.text.secondary}>
+                                        に同意します
+                                    </Typography>
                                 </View>
                             </View>
                         </View>
                     </View>
 
                     {/* Next Button */}
-                    <PrimaryButton fullWidth size="large" style={{ marginBottom: 40 }} onPress={handleNext} disabled={!isAcceptedTerms}>
+                    <Button variant="primary" fullWidth size="large" style={{ marginBottom: 40 }} onPress={handleNext} disabled={!isAcceptedTerms}>
                         次へ
-                    </PrimaryButton>
+                    </Button>
                 </View>
             </ScrollView>
         </View>
