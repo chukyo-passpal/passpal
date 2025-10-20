@@ -1,8 +1,3 @@
-/**
- * News フック
- * UI向けのニュースデータ取得フック
- */
-
 import { NewsData } from "@/src/domain/models/news";
 import newsServiceInstance, { NewsService } from "@/src/domain/services/newsService";
 import AsyncStorage from "@react-native-async-storage/async-storage";

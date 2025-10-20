@@ -1,8 +1,3 @@
-// /**
-//  * Assignment Hooks
-//  * Zustandを使用した課題データの状態管理
-//  */
-
 // import { AssignmentStatus } from "@/constants/assignment";
 // import { AssignmentData, AssignmentInfo } from "@/types/assignment";
 // import AsyncStorage from "@react-native-async-storage/async-storage";

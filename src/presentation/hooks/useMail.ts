@@ -1,5 +1,3 @@
-// UI向けの唯一の入口。キャッシュ/ローディング/エラーを面倒見る
-
 import { MailData } from "@/src/domain/models/mail";
 import mailServiceInstance, { MailService } from "@/src/domain/services/mailService";
 import AsyncStorage from "@react-native-async-storage/async-storage";

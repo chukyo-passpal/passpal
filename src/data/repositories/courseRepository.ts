@@ -1,5 +1,6 @@
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
+import { classDirectoryToDomain, classNewsToDomain, courseSyllabusToDomain, entryToDomain } from "../mappers/courseMapper";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export class CourseRepository {
@@ -22,8 +23,7 @@ export class CourseRepository {
         );
         const dto = parser.parseManaboClassNews(response);
         if (dto.success) {
-            // TODO: domain形にmapする
-            return dto.data;
+            return classNewsToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }
@@ -41,8 +41,7 @@ export class CourseRepository {
         );
         const dto = parser.parseManaboClassSyllabus(response);
         if (dto.success) {
-            // TODO: domain形にmapする
-            return dto.data;
+            return courseSyllabusToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }
@@ -60,8 +59,7 @@ export class CourseRepository {
         );
         const dto = parser.parseManaboClassEntry(response);
         if (dto.success) {
-            // TODO: domain形にmapする
-            return dto.data;
+            return entryToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }
@@ -81,8 +79,7 @@ export class CourseRepository {
 
         const dto = parser.parseManaboClassDirectory(response);
         if (dto.success) {
-            // TODO: domain形にmapする
-            return dto.data;
+            return classDirectoryToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }
@@ -142,9 +139,9 @@ export class CourseRepository {
     }
 
     // 出席登録
-    public async submitEntry(classId: string, directoryId: string, entryId: string, uniqid: string) {
+    public async submitEntry(classId: string, directoryId: string, entryId: string, uniqueId: string) {
         const response = await this.manaboProvider.get(
-            `/?action=glexa_modal_entry_form_accept&class_id=${classId}&directory_id=${directoryId}&entry_id=${entryId}&uniqid=${uniqid}&_=${Date.now()}`
+            `/?action=glexa_modal_entry_form_accept&class_id=${classId}&directory_id=${directoryId}&entry_id=${entryId}&uniqid=${uniqueId}&_=${Date.now()}`
         );
         const dto = parser.parseManaboEntryResponse(response);
         if (dto.success) {

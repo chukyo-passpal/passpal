@@ -6,6 +6,7 @@ import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
+import useCourse from "@/src/presentation/hooks/useCourse";
 import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
@@ -20,14 +21,14 @@ export default function Settings() {
     const { refetch: refetchTimetable, clear: clearTimetable } = useTimetable();
     const { clear: clearMail } = useMail();
     const { clear: clearNews } = useNews();
-    // const { setCourseData, setFromTimetable } = useCourse();
+    const { clear: clearCourse, setFromTimetable } = useCourse();
     // const { setAssignmentData } = useAssignment();
 
     const handleLogout = () => {
         clearTimetable();
         clearMail();
         clearNews();
-        // setCourseData(null);
+        clearCourse();
         // setAssignmentData(null);
 
         signOut();
@@ -42,7 +43,8 @@ export default function Settings() {
     };
 
     const handleRefetchTimetable = async () => {
-        await refetchTimetable();
+        const timetable = await refetchTimetable();
+        setFromTimetable(timetable);
         alert("時間割を更新しました");
     };
 

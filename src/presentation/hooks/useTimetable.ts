@@ -1,8 +1,3 @@
-/**
- * Timetable フック
- * UI向けの時間割データ取得フック
- */
-
 import { Period } from "@/src/domain/constants/period";
 import { Weekday } from "@/src/domain/constants/week";
 import { TimetableCourseInfo, TimetableData } from "@/src/domain/models/timetable";

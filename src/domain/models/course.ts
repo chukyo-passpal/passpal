@@ -30,16 +30,25 @@ export interface CourseNewsInfo {
     body: string;
 }
 
-export interface AttendanceInfo {
+export interface UserRegisteredAttendance {
+    regType: "user";
     date: Date;
     status: AttendanceStatus;
 }
 
+export interface PortalRecordedAttendance {
+    regType: "portal";
+    lecture: string;
+    status: AttendanceStatus;
+}
+
+export type AttendanceInfo = UserRegisteredAttendance | PortalRecordedAttendance;
+
 export interface CourseInfo {
     info: CourseBasicInfo;
     attendanceLog: AttendanceInfo[];
+    news: CourseNewsInfo[];
     detail?: CourseDetailInfo;
-    news?: CourseNewsInfo[];
 }
 
 export type CourseData = {
@@ -51,7 +60,10 @@ export type CourseData = {
 
 /* Manaboの授業ディレクトリ */
 export interface ManaboDirectoryInfo {
-    courseId: string;
-    directoryId: string;
-    directoryName: string;
+    classId: string;
+    className: string;
+    directories: {
+        directoryId: string;
+        title: string;
+    }[];
 }
