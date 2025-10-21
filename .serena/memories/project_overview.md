@@ -1,0 +1,4 @@
+- Expo React Native application named PassPal that targets mobile (Android/iOS) and web using expo-router for navigation.
+- Monorepo-like layering in `src`: data (clients, repositories, mappers), domain (models, services, constants, errors), presentation (components, errors, hooks, tokens), plus utilities.
+- Additional `app` directory defines UI screens via file-based routing; includes login/setup flows and tabbed views.
+- Storybook support present under `app/storybook.tsx` and `storybook/` for component development.

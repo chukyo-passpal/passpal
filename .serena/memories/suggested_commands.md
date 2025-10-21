@@ -1,0 +1,7 @@
+- `npm install` — install project dependencies.
+- `npx expo start` — launch Expo dev server with platform options.
+- `npm run android` / `npm run ios` — build and run native targets via Expo.
+- `npm run lint` — run ESLint with Expo config.
+- `npm run storybook-generate` — sync Tamagui component stories for SB RN.
+- `npm run prebuild` — regenerate native projects with a clean prebuild.
+- `npm run build:android` / `npm run build:ios` — run local EAS builds for each platform.

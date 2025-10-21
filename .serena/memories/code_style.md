@@ -1,0 +1,4 @@
+- TypeScript-first codebase targeting React Native/Expo 54 with React 19; uses Expo Router file-based routing.
+- Linting relies on `eslint-config-expo` flat config; no custom rules besides ignoring `dist/`.
+- UI components leverage Tamagui and Storybook stories; keep components typed and reuse domain models/services from `src`.
+- Follow existing folder boundaries (data/domain/presentation) when adding features.

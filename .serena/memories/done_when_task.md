@@ -1,0 +1,3 @@
+- Run `npm run lint` before finishing to catch lint issues.
+- For UI or behavior changes, start the Expo dev server via `npx expo start` (or platform-specific `npm run android`/`npm run ios`) to verify manually.
+- Update or add Storybook stories if component API changes.
