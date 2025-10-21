@@ -10,6 +10,7 @@ export interface settingState {
     initTimetableViewMode: TimetableViewMode;
     setCampus: (campus: Campus) => void;
     setInitTimetableViewMode: (mode: TimetableViewMode) => void;
+    reset: () => void;
 }
 
 const useSetting = create<settingState>()(
@@ -25,6 +26,11 @@ const useSetting = create<settingState>()(
             setInitTimetableViewMode: (mode: TimetableViewMode) =>
                 set((state) => {
                     state.initTimetableViewMode = mode;
+                }),
+            reset: () =>
+                set((state) => {
+                    state.campus = "nagoya";
+                    state.initTimetableViewMode = "week";
                 }),
         })),
         {

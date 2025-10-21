@@ -99,7 +99,7 @@ export default function Index() {
 
                 {/* Back Button */}
                 <Button variant="text" onPress={handleBackToStudentId}>
-                    学籍番号入力に戻る
+                    Google認証に戻る
                 </Button>
             </ScrollView>
         </View>

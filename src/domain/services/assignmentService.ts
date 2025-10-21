@@ -49,7 +49,6 @@ export class IntegratedAssignmentService implements AssignmentService {
             for (const periodKey of Object.keys(timetable.timetable[days])) {
                 const period = periodKey as keyof (typeof timetable.timetable)[typeof days];
                 const classes = timetable.timetable[days][period];
-                console.log("Classes for", days, period, ":", classes);
                 courseIds.push(classes?.manaboCourseId ?? "");
             }
         }

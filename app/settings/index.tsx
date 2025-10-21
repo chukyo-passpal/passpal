@@ -5,6 +5,7 @@ import { Icon } from "@/src/presentation/components/Icon";
 import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import useCourse from "@/src/presentation/hooks/useCourse";
 import useMail from "@/src/presentation/hooks/useMail";
@@ -17,19 +18,21 @@ import { ScrollView, TouchableOpacity, View } from "react-native";
 export default function Settings() {
     const { theme } = useTheme();
     const { user, signOut, purgeCache: purgeAuthCache } = useAuth();
-    const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode } = useSetting();
+    const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode, reset: resetSettings } = useSetting();
     const { refetch: refetchTimetable, clear: clearTimetable } = useTimetable();
     const { clear: clearMail } = useMail();
     const { clear: clearNews } = useNews();
     const { clear: clearCourse, setFromTimetable } = useCourse();
-    // const { setAssignmentData } = useAssignment();
+    const { clear: clearAssignment } = useAssignment();
 
     const handleLogout = () => {
         clearTimetable();
         clearMail();
         clearNews();
         clearCourse();
-        // setAssignmentData(null);
+        clearAssignment();
+
+        resetSettings();
 
         signOut();
     };
@@ -38,7 +41,8 @@ export default function Settings() {
         purgeAuthCache();
         clearMail();
         clearNews();
-        // setAssignmentData(null);
+        clearCourse();
+        clearAssignment();
         alert("キャッシュを削除しました");
     };
 
