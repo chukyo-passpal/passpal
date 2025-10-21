@@ -51,13 +51,6 @@ export default function TabLayout() {
                     tabBarIcon: ({ color, size }) => <Icon name="bus" size={size} color={color} />,
                 }}
             />
-
-            <Tabs.Screen
-                name="course"
-                options={{
-                    href: null, // Hide from tab bar
-                }}
-            />
         </Tabs>
     );
 }
