@@ -33,6 +33,18 @@ export class ManaboProvider extends abstractChukyoProvider {
         });
         return await response.text();
     }
+
+    public async authTest(studentId: string, cuIdPass: string): Promise<boolean> {
+        try {
+            await this.authentication({
+                studentId,
+                cuIdPass,
+            });
+            return true;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 const manaboProviderInstance = new ManaboProvider();

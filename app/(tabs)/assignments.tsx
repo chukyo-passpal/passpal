@@ -21,7 +21,6 @@ type Assignment = {
     statusLabel: string;
     statusColor: string;
     statusBgColor: string;
-    actionIcon: string;
     actionLabel: string;
     actionColor: string;
 };
@@ -156,7 +155,7 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: Assignment; h
                     }}
                 >
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                        <Icon name={assignment.actionIcon as any} size={16} color={assignment.actionColor} />
+                        <Icon name="calendar" size={16} color={assignment.actionColor} />
                         <Typography variant="bodySmall" color={assignment.actionColor}>
                             {assignment.actionLabel}
                         </Typography>

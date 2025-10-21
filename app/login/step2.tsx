@@ -9,7 +9,7 @@ import { useState } from "react";
 import { ScrollView, View } from "react-native";
 
 export default function Index() {
-    const { signIn } = useAuth();
+    const { signIn, authService } = useAuth();
     const { theme } = useTheme();
     const { studentId } = useLocalSearchParams<{ studentId: string }>();
     const [password, setPassword] = useState("");
@@ -23,17 +23,19 @@ export default function Index() {
         }
 
         setIsLoading(true);
-        // const authResult = await manaboProviderInstance.authTest({
-        //     studentId,
-        //     cuIdPass: password,
-        // });
-        const authResult = await Promise.resolve({ isSuccess: true } as const); // TODO: モック実装
-        setIsLoading(false);
-
-        if (!authResult.isSuccess) {
-            alert("学籍番号またはパスワードが正しくありません");
+        try {
+            await authService.authTest(studentId, password);
+        } catch (error) {
+            if (error instanceof Error) {
+                alert(error.message);
+            } else {
+                alert("不明なエラーが発生しました。");
+            }
+            setIsLoading(false);
             return;
         }
+        setIsLoading(false);
+
         // ログイン処理を実装
         signIn(studentId, password);
     };
