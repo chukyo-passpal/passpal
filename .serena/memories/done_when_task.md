@@ -1,3 +1,3 @@
-- Run `npm run lint` before finishing to catch lint issues.
-- For UI or behavior changes, start the Expo dev server via `npx expo start` (or platform-specific `npm run android`/`npm run ios`) to verify manually.
+- Run `bun run lint` before finishing to catch lint issues.
+- For UI or behavior changes, start the Expo dev server via `bun run start` (or platform-specific `bun run android`/`bun run ios`) to verify manually.
 - Update or add Storybook stories if component API changes.
