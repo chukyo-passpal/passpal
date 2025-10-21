@@ -1,6 +1,6 @@
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
-import { classDirectoryToDomain, classNewsToDomain, courseSyllabusToDomain, entryToDomain } from "../mappers/courseMapper";
+import { classDirectoryToDomain, classNewsToDomain, courseSyllabusToDomain, entryToDomain, manaboContentToDomain } from "../mappers/courseMapper";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export class CourseRepository {
@@ -100,7 +100,7 @@ export class CourseRepository {
         const response = await this.manaboProvider.post("/", "application/x-www-form-urlencoded", searchParams);
         const dto = parser.parseManaboClassContent(response);
         if (dto.success) {
-            return dto.data;
+            return manaboContentToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }

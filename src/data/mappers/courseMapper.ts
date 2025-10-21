@@ -1,5 +1,5 @@
 import { AttendanceStatus } from "@/src/domain/constants/course";
-import { CourseDetailInfo, CourseNewsInfo, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/course";
+import { CourseDetailInfo, CourseNewsInfo, ManaboContentInfo, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/course";
 import * as parser from "@chukyo-passpal/web_parser";
 
 export function classDirectoryToDomain(data: parser.ManaboClassDirectoryDTO): ManaboDirectoryInfo {
@@ -43,4 +43,13 @@ export function courseSyllabusToDomain(data: parser.ManaboClassSyllabusDTO): Cou
             weight: item.weight,
         })),
     };
+}
+
+export function manaboContentToDomain(data: parser.ManaboClassContentDTO): ManaboContentInfo[] {
+    return data.items.map((item) => ({
+        contentId: item.contentId,
+        type: item.pluginKey,
+        title: item.title,
+        body: item.descriptionHtml ?? "",
+    }));
 }

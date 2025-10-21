@@ -1,7 +1,7 @@
 import { AlboNewsInfo } from "@/src/domain/models/news";
 import * as parser from "@chukyo-passpal/web_parser";
 
-export function mapAlboNewsToDomain(data: parser.CubicsPtNewsDTO): AlboNewsInfo[] {
+export function alboNewsToDomain(data: parser.CubicsPtNewsDTO): AlboNewsInfo[] {
     return data.tabs.flatMap((tab) =>
         tab.entries.map((news) => {
             const isRead: boolean = news.status?.startsWith("既読") ?? false;

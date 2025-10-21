@@ -67,3 +67,11 @@ export interface ManaboDirectoryInfo {
         title: string;
     }[];
 }
+
+/* Manaboの授業コンテンツ */
+export interface ManaboContentInfo {
+    contentId: string;
+    title: string;
+    type: string;
+    body: string;
+}

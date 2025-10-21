@@ -1,6 +1,6 @@
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
-import { mapCubicsTimetableToDomain, mapManaboTimetableToDomain } from "../mappers/timetableMapper";
+import { cubicsTimetableToDomain, manaboTimetableToDomain } from "../mappers/timetableMapper";
 import cubicsProviderInstance, { CubicsProvider } from "../providers/chukyo-univ/cubicsProvider";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
@@ -28,7 +28,7 @@ export class TimetableRepository {
 
         const dto = parser.parseManaboTimetable(response);
         if (dto.success) {
-            return mapManaboTimetableToDomain(dto.data);
+            return manaboTimetableToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }
@@ -40,7 +40,7 @@ export class TimetableRepository {
 
         const dto = parser.parseCubicsAsTimetable(response);
         if (dto.success) {
-            return mapCubicsTimetableToDomain(dto.data);
+            return cubicsTimetableToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }

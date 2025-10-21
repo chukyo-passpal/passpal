@@ -2,15 +2,15 @@ import { AssignmentPriority, AssignmentStatus } from "@/src/domain/constants/ass
 
 export interface AssignmentInfo {
     id: string;
-    semester: string;
-    courseId: string;
-    courseName: string;
     title: string;
+    directory: string;
     status: AssignmentStatus;
-    startDate: Date;
+    startDate?: Date;
     dueDate?: Date;
     priority?: AssignmentPriority;
     manaboUrl?: string;
 }
 
-export type AssignmentData = AssignmentInfo[];
+export type AssignmentData = {
+    [courseId: string]: AssignmentInfo[];
+};

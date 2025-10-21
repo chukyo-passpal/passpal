@@ -19,7 +19,7 @@ function extractWeekday(label: string): string {
     return match ? match[0] : "";
 }
 
-export function mapManaboTimetableToDomain(data: parser.ManaboTimetableDTO): TimetableData {
+export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): TimetableData {
     let tbl: Pick<TimetableData, "timetable"> = {
         timetable: WEEKDAYS.reduce((acc, curr) => {
             acc[curr] = PERIODS.reduce((acc2, curr2) => {
@@ -64,7 +64,7 @@ export function mapManaboTimetableToDomain(data: parser.ManaboTimetableDTO): Tim
     };
 }
 
-export function mapCubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): TimetableData {
+export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): TimetableData {
     let tbl: Pick<TimetableData, "timetable"> = {
         timetable: WEEKDAYS.reduce((acc, curr) => {
             acc[curr] = PERIODS.reduce((acc2, curr2) => {
