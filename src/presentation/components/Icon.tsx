@@ -29,9 +29,11 @@ import {
     LogOut,
     LucideProps,
     MapPin,
+    MessageCircleQuestionMark,
     Palette,
     RefreshCw,
     Settings,
+    Sticker,
     Train,
     Trash2,
     User,
@@ -63,9 +65,11 @@ export type IconName =
     | "lock"
     | "log-out"
     | "map-pin"
+    | "message-circle-question-mark"
     | "palette"
     | "refresh-cw"
     | "settings"
+    | "sticker"
     | "train"
     | "trash-2"
     | "user";
@@ -102,9 +106,11 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     lock: Lock,
     "log-out": LogOut,
     "map-pin": MapPin,
+    "message-circle-question-mark": MessageCircleQuestionMark,
     palette: Palette,
     "refresh-cw": RefreshCw,
     settings: Settings,
+    sticker: Sticker,
     train: Train,
     "trash-2": Trash2,
     user: User,

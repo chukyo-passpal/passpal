@@ -1,4 +1,3 @@
-import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -12,8 +11,9 @@ import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
+import * as Application from "expo-application";
 import { router } from "expo-router";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Settings() {
     const { theme } = useTheme();
@@ -52,7 +52,13 @@ export default function Settings() {
         alert("時間割を更新しました");
     };
 
-    const handleAboutPassPal = () => {};
+    const handleFeedback = () => {
+        Linking.openURL("https://docs.google.com/forms/d/e/1FAIpQLSeu7t-Z3PgwvG0aKY4XCSz160FyjE03SNUyu7Qhq11F_2Z_Dg/viewform?usp=dialog");
+    };
+
+    const handleInquiry = () => {
+        Linking.openURL("https://docs.google.com/forms/d/e/1FAIpQLScnnbnSoIpNizG1gU_pDVuDq9GifE1EeevYd3-n4Uy1fGAQiw/viewform?usp=publish-editor");
+    };
 
     const handleLicenseInfo = () => {
         router.push("/license");
@@ -75,19 +81,55 @@ export default function Settings() {
                 }}
                 showsVerticalScrollIndicator={false}
             >
+                {/* DEBUG Section */}
                 {__DEV__ && (
                     <>
-                        <Button
-                            variant="text"
-                            onPress={() => {
-                                router.push("/storybook");
-                            }}
-                        >
-                            StoryBook
-                        </Button>
-                        <Button variant="text" onPress={() => {}}>
-                            debug
-                        </Button>
+                        <View style={{ marginBottom: theme.spacing.xl }}>
+                            <Typography
+                                variant="h3"
+                                style={{
+                                    color: theme.colors.primary.main,
+                                    fontSize: 18,
+                                    fontWeight: "bold",
+                                    marginBottom: theme.spacing.md,
+                                }}
+                            >
+                                デバッグメニュー
+                            </Typography>
+
+                            <View style={{ gap: theme.spacing.xs }}>
+                                {/* StoryBook Item */}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        router.push("/storybook");
+                                    }}
+                                    activeOpacity={0.7}
+                                >
+                                    <Card
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            padding: theme.spacing.md,
+                                            height: 56,
+                                        }}
+                                    >
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <Typography
+                                                variant="body"
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: "600",
+                                                }}
+                                            >
+                                                StoryBookを開く
+                                            </Typography>
+                                        </View>
+                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+                                    </Card>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
                     </>
                 )}
                 {/* Account Section */}
@@ -412,7 +454,7 @@ export default function Settings() {
                     </Typography>
 
                     <View style={{ gap: theme.spacing.xs }}>
-                        <TouchableOpacity onPress={handleAboutPassPal} activeOpacity={0.7}>
+                        <TouchableOpacity onPress={handleFeedback} activeOpacity={0.7}>
                             <Card
                                 style={{
                                     flexDirection: "row",
@@ -423,7 +465,7 @@ export default function Settings() {
                                 }}
                             >
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Icon name="info" size={24} color={theme.colors.text.primary} />
+                                    <Icon name="sticker" size={24} color={theme.colors.text.primary} />
                                     <View style={{ marginLeft: theme.spacing.sm }}>
                                         <Typography
                                             variant="body"
@@ -434,7 +476,7 @@ export default function Settings() {
                                                 marginBottom: theme.spacing.xs,
                                             }}
                                         >
-                                            About PassPal
+                                            フィードバック
                                         </Typography>
                                         <Typography
                                             variant="caption"
@@ -443,13 +485,88 @@ export default function Settings() {
                                                 fontSize: 14,
                                             }}
                                         >
-                                            Version 1.0.0
+                                            ご意見・ご要望をお聞かせください
                                         </Typography>
                                     </View>
                                 </View>
                                 <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                             </Card>
                         </TouchableOpacity>
+
+                        <TouchableOpacity onPress={handleInquiry} activeOpacity={0.7}>
+                            <Card
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    padding: theme.spacing.md,
+                                    height: 72,
+                                }}
+                            >
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <Icon name="message-circle-question-mark" size={24} color={theme.colors.text.primary} />
+                                    <View style={{ marginLeft: theme.spacing.sm }}>
+                                        <Typography
+                                            variant="body"
+                                            style={{
+                                                color: theme.colors.text.primary,
+                                                fontSize: 16,
+                                                fontWeight: "600",
+                                                marginBottom: theme.spacing.xs,
+                                            }}
+                                        >
+                                            問い合わせ
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            style={{
+                                                color: theme.colors.text.secondary,
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            不明点などがあればこちらから
+                                        </Typography>
+                                    </View>
+                                </View>
+                                <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+                            </Card>
+                        </TouchableOpacity>
+
+                        <Card
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                padding: theme.spacing.md,
+                                height: 72,
+                            }}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <Icon name="info" size={24} color={theme.colors.text.primary} />
+                                <View style={{ marginLeft: theme.spacing.sm }}>
+                                    <Typography
+                                        variant="body"
+                                        style={{
+                                            color: theme.colors.text.primary,
+                                            fontSize: 16,
+                                            fontWeight: "600",
+                                            marginBottom: theme.spacing.xs,
+                                        }}
+                                    >
+                                        About PassPal
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        style={{
+                                            color: theme.colors.text.secondary,
+                                            fontSize: 14,
+                                        }}
+                                    >
+                                        Version {Application.nativeApplicationVersion ?? "unknown"}
+                                    </Typography>
+                                </View>
+                            </View>
+                        </Card>
 
                         <TouchableOpacity onPress={handleLicenseInfo} activeOpacity={0.7}>
                             <Card
