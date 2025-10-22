@@ -5,11 +5,26 @@ import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ
 export class AssignmentRepository {
     private readonly manaboProvider: ManaboProvider;
 
+    /**
+     * リポジトリを初期化します。
+     * @param manaboProvider Manaboプロバイダーの差し替え用インスタンス
+     */
     constructor({ manaboProvider = manaboProviderInstance }: { manaboProvider?: ManaboProvider } = {}) {
         this.manaboProvider = manaboProvider;
     }
 
-    // クイズ結果取得
+    /**
+     * クイズ結果をManaboから取得します。
+     * @param pluginId プラグインID
+     * @param classId 授業ID
+     * @param id クイズID
+     * @param directoryId ディレクトリID
+     * @param attendId 出席ID
+     * @param result 結果種別（初期値は`0`）
+     * @param page ページ番号（初期値は0）
+     * @returns クイズ結果のドメインデータ
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getClassQuizResult(
         pluginId: string,
         classId: string,

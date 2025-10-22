@@ -4,21 +4,42 @@ import { TimetableData } from "@/src/domain/models/timetable";
 import * as parser from "@chukyo-passpal/web_parser";
 import { MapError } from "../errors/MapError";
 
+/**
+ * URLパスからManaboの授業IDを抽出します。
+ * @param path 解析対象のURLパス
+ * @returns 抽出した授業ID。見つからない場合は空文字
+ */
 function extractClassId(path: string): string {
     const match = path.match(/\/class\/(\d+)\//);
     return match ? match[1] : "";
 }
 
+/**
+ * 表示ラベルから時限情報を抽出します。
+ * @param label 解析対象のラベル文字列
+ * @returns 抽出した時限。見つからない場合は空文字
+ */
 function extractPeriod(label: string): string {
     const match = label.match(/^\w+/);
     return match ? match[0] : "";
 }
 
+/**
+ * ラベルから曜日文字列を抽出します。
+ * @param label 解析対象のラベル文字列
+ * @returns 曜日の文字列。見つからない場合は空文字
+ */
 function extractWeekday(label: string): string {
     const match = label.match(/^[^\d/]+/);
     return match ? match[0] : "";
 }
 
+/**
+ * Manaboの時間割DTOをドメインモデルへ変換します。
+ * @param data Manabo時間割DTO
+ * @returns ドメインモデルの時間割データ
+ * @throws MapError 変換に必要な情報が欠けている場合
+ */
 export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): TimetableData {
     let tbl: Pick<TimetableData, "timetable"> = {
         timetable: WEEKDAYS.reduce((acc, curr) => {
@@ -64,6 +85,12 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
     };
 }
 
+/**
+ * Cubicsの時間割DTOをドメインモデルへ変換します。
+ * @param data Cubics時間割DTO
+ * @returns ドメインモデルの時間割データ
+ * @throws MapError 変換に必要な情報が欠けている場合
+ */
 export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): TimetableData {
     let tbl: Pick<TimetableData, "timetable"> = {
         timetable: WEEKDAYS.reduce((acc, curr) => {

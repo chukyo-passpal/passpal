@@ -13,20 +13,34 @@ export interface settingState {
     reset: () => void;
 }
 
+/**
+ * 時間割表示などのユーザー設定を管理するZustandストアを提供します。
+ */
 const useSetting = create<settingState>()(
     persist(
         immer((set) => ({
             campus: "nagoya" as Campus,
             initTimetableViewMode: "week" as TimetableViewMode,
 
+            /**
+             * 利用キャンパスを更新します。
+             * @param campus 設定するキャンパス
+             */
             setCampus: (campus: Campus) =>
                 set((state) => {
                     state.campus = campus;
                 }),
+            /**
+             * 初期表示の時間割モードを更新します。
+             * @param mode 設定する表示モード
+             */
             setInitTimetableViewMode: (mode: TimetableViewMode) =>
                 set((state) => {
                     state.initTimetableViewMode = mode;
                 }),
+            /**
+             * 設定をデフォルト値へ戻します。
+             */
             reset: () =>
                 set((state) => {
                     state.campus = "nagoya";

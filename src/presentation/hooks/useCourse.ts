@@ -18,6 +18,9 @@ export interface CourseState {
     refetchCourseInfo: (manaboCourseId: string) => Promise<CourseInfo>;
 }
 
+/**
+ * 授業関連の状態を保持するZustandストアを提供します。
+ */
 const useCourse = create<CourseState>()(
     persist(
         immer((set, get) => ({
@@ -27,11 +30,19 @@ const useCourse = create<CourseState>()(
 
             courseService: courseServiceInstance,
 
+            /**
+             * 保存している授業データをリセットします。
+             */
             clear: () =>
                 set((state) => {
                     state.courseData = null;
                 }),
 
+            /**
+             * 時間割データから授業情報を構築し、ストアに保存します。
+             * @param timetableData 時間割データ
+             * @returns 渡された時間割データ
+             */
             setFromTimetable: (timetableData: TimetableData) => {
                 set((state) => {
                     state.courseData = get().courseService.buildCourseInfoFromTimetable(timetableData);
@@ -39,6 +50,11 @@ const useCourse = create<CourseState>()(
                 return timetableData;
             },
 
+            /**
+             * 指定した授業の詳細情報を再取得します。
+             * @param manaboCourseId Manaboの授業ID
+             * @returns 更新された授業情報
+             */
             refetchCourseInfo: async (manaboCourseId: string) => {
                 const nowCourseData = get().courseData;
                 if (!nowCourseData) {

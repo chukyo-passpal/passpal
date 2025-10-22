@@ -13,6 +13,10 @@ type HttpClientOptions = RequestInit & {
     clientMode?: HttpClientMode;
 };
 
+/**
+ * User-Agent用の文字列を組み立てます。
+ * @returns `アプリ名/バージョン (OS)`形式のUser-Agent文字列
+ */
 const buildUserAgent = (): string => {
     const appName = Application.applicationName ?? "PassPal";
     const appVersion = Application.nativeApplicationVersion ?? "unknown";
@@ -23,6 +27,11 @@ const buildUserAgent = (): string => {
 
 const userAgent = buildUserAgent();
 
+/**
+ * エラーがAbortErrorであるかを判定するユーティリティ関数
+ * @param error 判定対象のエラー
+ * @returns AbortErrorならtrue、それ以外はfalse
+ */
 const isAbortError = (error: unknown): boolean => {
     if (!error) {
         return false;
@@ -35,6 +44,13 @@ const isAbortError = (error: unknown): boolean => {
     return false;
 };
 
+/**
+ * 共通のHTTPクライアントとしてfetchを呼び出し、タイムアウトやエラーハンドリングを統一します。
+ * @param input リクエストURLまたはURLオブジェクト
+ * @param options リクエストオプションとPassPal固有の設定 clientModeの設定によって個別のエラー処理などを行う。
+ * @returns 成功したHTTPレスポンス
+ * @throws MaintenanceError|NetworkError|TimeoutError
+ */
 export const httpClient = async (input: string | URL, options: HttpClientOptions = {}): Promise<Response> => {
     const { timeoutMs: timeoutOverride = DEFAULT_TIMEOUT_MS, clientMode, mode, headers, signal, ...requestInit } = options;
 
@@ -49,6 +65,9 @@ export const httpClient = async (input: string | URL, options: HttpClientOptions
         controller.abort();
     }, timeoutMs);
 
+    /**
+     * 親シグナルの中断通知をリレーするためのコールバック
+     */
     const abortCallback = () => controller.abort();
     if (signal) {
         if (signal.aborted) {

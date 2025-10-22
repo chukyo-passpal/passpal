@@ -48,7 +48,7 @@ export const WithSubButton: Story = {
 
 export const WithBothButtons: Story = {
     args: {
-        title: "コース詳細",
+        title: "授業詳細",
         shownBackButton: true,
         subButtonIcon: "refresh-cw",
         onPressBackButton: () => console.log("Back button pressed"),

@@ -1,6 +1,11 @@
 import { AlboNewsInfo } from "@/src/domain/models/news";
 import * as parser from "@chukyo-passpal/web_parser";
 
+/**
+ * AlboニュースDTOをドメインモデルへ変換します。
+ * @param data AlboニュースDTO
+ * @returns ドメインモデルのニュース配列
+ */
 export function alboNewsToDomain(data: parser.CubicsPtNewsDTO): AlboNewsInfo[] {
     return data.tabs.flatMap((tab) =>
         tab.entries.map((news) => {

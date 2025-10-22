@@ -19,6 +19,9 @@ export interface TimetableState {
     refetch: () => Promise<TimetableData>;
 }
 
+/**
+ * 時間割データを保持・更新するZustandストアを提供します。
+ */
 const useTimetable = create<TimetableState>()(
     persist(
         immer((set, get) => ({
@@ -28,18 +31,31 @@ const useTimetable = create<TimetableState>()(
 
             timetableService: timetableServiceInstance,
 
+            /**
+             * 時間割と取得時刻を初期化します。
+             */
             clear: () =>
                 set((state) => {
                     state.timetableData = null;
                     state.lastFetch = null;
                 }),
 
+            /**
+             * 指定した曜日・時限の授業情報を更新します。
+             * @param day 曜日
+             * @param period 時限
+             * @param courseInfo 設定する授業情報
+             */
             setCourse: (day, period, courseInfo) =>
                 set((state) => {
                     if (!state.timetableData) return;
                     state.timetableData.timetable[day][period] = courseInfo;
                 }),
 
+            /**
+             * リモートから時間割を再取得します。
+             * @returns 最新の時間割データ
+             */
             refetch: async () => {
                 set((state) => {
                     state.loading = true;

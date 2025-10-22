@@ -8,6 +8,11 @@ export class ManaboProvider extends abstractChukyoProvider {
     protected authGoalPath = "/auth/shibboleth/";
     protected serviceName: CUService = "manabo";
 
+    /**
+     * Manaboの指定パスにGETリクエストを送り、内容を取得します。
+     * @param path 取得したいリソースのパス
+     * @returns レスポンスボディの文字列
+     */
     public async get(path: string): Promise<string> {
         const response = await httpClient(`${this.baseUrl}${path}`, {
             clientMode: "portal",
@@ -20,6 +25,13 @@ export class ManaboProvider extends abstractChukyoProvider {
         return await response.text();
     }
 
+    /**
+     * ManaboにPOSTリクエストを送り、応答本文を取得します。
+     * @param path POST先のパス
+     * @param contentType リクエストのContent-Typeヘッダー
+     * @param body 送信するボディ
+     * @returns レスポンスボディの文字列
+     */
     public async post(path: string, contentType: string, body: BodyInit): Promise<string> {
         const response = await httpClient(`${this.baseUrl}${path}`, {
             clientMode: "portal",
@@ -34,6 +46,12 @@ export class ManaboProvider extends abstractChukyoProvider {
         return await response.text();
     }
 
+    /**
+     * 認証情報が有効かどうかをShibboleth認証で検証します。
+     * @param studentId 学籍番号
+     * @param cuIdPass CU-IDのパスワード
+     * @returns 認証が成功した場合はtrue
+     */
     public async authTest(studentId: string, cuIdPass: string): Promise<boolean> {
         try {
             await this.authentication({

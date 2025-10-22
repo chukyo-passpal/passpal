@@ -4,7 +4,11 @@ import { Period } from "../constants/period";
 import { Weekday } from "../constants/week";
 import { PeriodData, TimetableData } from "../models/timetable";
 
-// 時間割の時限情報を生成するヘルパー関数 PeriodTimeの略。
+/**
+ * 時間文字列から基準日のDateオブジェクトを生成します。
+ * @param time `HH:MM`形式の時間文字列
+ * @returns 指定時間のDateオブジェクト
+ */
 function pt(time: string): Date {
     return new Date(`1970-01-01T${time}:00+09:00`);
 }
@@ -46,14 +50,26 @@ export class IntegratedTimetableService implements TimetableService {
             C: null,
         },
     };
+    /**
+     * キャンパスごとの時限情報を返します。
+     * @returns 時限データ
+     */
     public get periodData(): PeriodData {
         return this._periodData;
     }
 
+    /**
+     * サービスを初期化し、時間割リポジトリを設定します。
+     * @param timetableRepository 時間割取得に利用するリポジトリ
+     */
     constructor(timetableRepository: TimetableRepository = new TimetableRepository()) {
         this.timetableRepository = timetableRepository;
     }
 
+    /**
+     * ManaboとCubicsの時間割を取得し、マージした結果を返します。
+     * @returns マージ済みの時間割データ
+     */
     public async getTimetable(): Promise<TimetableData> {
         const manaboTimetable = await this.timetableRepository.getManaboTimetable();
         const cubicsTimetable = await this.timetableRepository.getCubicsTimetable();
@@ -64,6 +80,11 @@ export class IntegratedTimetableService implements TimetableService {
         return mergedTimetable;
     }
 
+    /**
+     * 時間割に基づいて表示すべき曜日を算出します。
+     * @param Timetable 判定対象の時間割
+     * @returns 表示対象の曜日配列
+     */
     public getShouldDisplayWeekdays(Timetable: TimetableData): Weekday[] {
         const shouldDisplay: Weekday[] = ["月", "火", "水", "木", "金"];
 
@@ -80,11 +101,23 @@ export class IntegratedTimetableService implements TimetableService {
         return shouldDisplay;
     }
 
+    /**
+     * 表示すべき時限を算出します。
+     * @param timetable 判定対象の時間割
+     * @param campus 対象キャンパス
+     * @returns 表示する時限リスト
+     */
     public getShouldDisplayPeriods(timetable: TimetableData, campus: Campus): Period[] {
         // TODO: ちゃんと実装する
         return ["1", "2", "3", "4", "5"];
     }
 
+    /**
+     * ManaboとCubicsの時間割データをマージします。
+     * @param manabo Manabo由来の時間割
+     * @param cubics Cubics由来の時間割
+     * @returns 部室情報などを統合した時間割データ
+     */
     private mergeTimetables(manabo: TimetableData, cubics: TimetableData): TimetableData {
         const mergedTimetable: TimetableData["timetable"] = { ...manabo.timetable };
 

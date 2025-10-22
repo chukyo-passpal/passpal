@@ -15,7 +15,7 @@ export default function CourseAssignments() {
     const { courseData } = useCourse();
     const { loading, assignmentData, fetchClassAssignments } = useAssignment();
 
-    // コース情報を取得
+    // 授業情報を取得
     const courseInfo = courseData?.courses[courseId || ""];
 
     // この授業の課題のみを取得
@@ -114,7 +114,7 @@ export default function CourseAssignments() {
         return { total, completed, inProgress, notStarted, overdue };
     }, [assignments]);
 
-    // コースが見つからない場合
+    // 授業が見つからない場合
     if (!courseInfo) {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>

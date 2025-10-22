@@ -12,10 +12,19 @@ export interface CourseService {
 export class IntegratedCourseService implements CourseService {
     protected readonly courseRepository: CourseRepository;
 
+    /**
+     * 授業サービスを初期化します。
+     * @param courseRepository 授業関連データを扱うリポジトリ
+     */
     constructor(courseRepository = courseRepositoryInstance) {
         this.courseRepository = courseRepository;
     }
 
+    /**
+     * 授業の詳細情報を取得し、最新の授業情報へ更新します。
+     * @param course 更新対象の授業情報
+     * @returns 取得した詳細を含む授業情報
+     */
     public async updateCourseInfo(course: CourseInfo): Promise<CourseInfo> {
         const attendanceLog = await this.getAttendance(course.info.manaboCourseId);
         const news = await this.courseRepository.getClassNews(course.info.manaboCourseId);
@@ -29,6 +38,11 @@ export class IntegratedCourseService implements CourseService {
         };
     }
 
+    /**
+     * 時間割データから授業情報を構築します。
+     * @param timetableData 基になる時間割データ
+     * @returns 構築された授業データ
+     */
     public buildCourseInfoFromTimetable(timetableData: TimetableData): CourseData {
         // manaboCourseIdをキーとするマップで授業を管理
         const courseMap = new Map<string, CourseInfo>();
@@ -88,6 +102,11 @@ export class IntegratedCourseService implements CourseService {
         };
     }
 
+    /**
+     * 指定した授業の出席記録を取得します。
+     * @param manaboCourseId Manaboの授業ID
+     * @returns 出席情報の配列
+     */
     private async getAttendance(manaboCourseId: string): Promise<AttendanceInfo[]> {
         // TODO: 将来的に手動での出席確認にも対応する
         return this.courseRepository.getClassEntry(manaboCourseId);

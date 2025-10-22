@@ -32,6 +32,9 @@ export interface AssignmentState {
     fetchAllClassAssignments: (timetable: TimetableData) => Promise<AssignmentData>;
 }
 
+/**
+ * 課題データを管理・取得するZustandストアを提供します。
+ */
 const useAssignment = create<AssignmentState>()(
     persist(
         immer((set, get) => ({
@@ -41,11 +44,19 @@ const useAssignment = create<AssignmentState>()(
 
             assignmentService: assignmentServiceInstance,
 
+            /**
+             * 保存している課題データを初期化します。
+             */
             clear: () =>
                 set((state) => {
                     state.assignmentData = null;
                 }),
 
+            /**
+             * 指定した授業の課題一覧を取得します。
+             * @param classId Manaboの授業ID
+             * @returns 授業に紐づく課題情報
+             */
             fetchClassAssignments: async (classId: string) => {
                 set((state) => {
                     state.loading = true;
@@ -71,6 +82,11 @@ const useAssignment = create<AssignmentState>()(
                 }
             },
 
+            /**
+             * 時間割に含まれる全授業の課題を一括取得します。
+             * @param timetable 時間割データ
+             * @returns 授業IDをキーとした課題情報
+             */
             fetchAllClassAssignments: async (timetable: TimetableData) => {
                 set((state) => {
                     state.loading = true;
@@ -96,6 +112,11 @@ const useAssignment = create<AssignmentState>()(
         {
             name: "assignment-storage",
             version: 0,
+            /**
+             * 永続化に含める状態のサブセットを選択します。
+             * @param state 現在のストア状態
+             * @returns 保存対象の部分状態
+             */
             partialize: (state) => ({
                 lastFetch: state.lastFetch,
                 assignmentData: state.assignmentData,

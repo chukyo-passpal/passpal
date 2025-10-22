@@ -13,6 +13,12 @@ export class AlboProvider extends abstractChukyoProvider {
     protected retryAuthDelayMs = 200;
     protected retryAuthDelayRandomMs = 300;
 
+    /**
+     * AlboポータルにGETリクエストを送り、必要に応じて再認証を行います。
+     * @param path リクエスト先のパス
+     * @returns 応答ボディのテキスト
+     * @throws ExpiredSessionError 再試行してもセッションが復旧しない場合
+     */
     public async get(path: string): Promise<string> {
         for (let attempt = 0; attempt <= this.retryAuthCount; attempt++) {
             const response = await httpClient(`${this.baseUrl}${path}`, {
@@ -34,6 +40,10 @@ export class AlboProvider extends abstractChukyoProvider {
         throw new ExpiredSessionError();
     }
 
+    /**
+     * 再認証前にランダムな遅延を挟み、連続リクエストを緩和します。
+     * @returns 遅延完了後に解決するPromise
+     */
     private async waitForRetryDelay(): Promise<void> {
         const baseDelay = this.retryAuthDelayMs;
         const randomDelay = Math.floor(Math.random() * this.retryAuthDelayRandomMs);
@@ -41,6 +51,11 @@ export class AlboProvider extends abstractChukyoProvider {
         return new Promise((resolve) => setTimeout(resolve, totalDelay));
     }
 
+    /**
+     * レスポンスの内容からセッションが有効かどうかを判定します。
+     * @param responseText 判定対象のHTML文字列
+     * @returns 有効ならtrue、無効ならfalse
+     */
     private isSessionValid(responseText: string): boolean {
         // セッションが無効な場合、Alboは特定のタイトルのページを返す
         return !responseText.includes("<title>Missing cookie</title>");

@@ -17,7 +17,7 @@ export default function CourseDetail() {
 
     const [courseInfo, setCourseInfo] = React.useState<CourseInfo | null>(null);
 
-    // useCourseからコースデータを取得
+    // useCourseから授業データを取得
     useEffect(() => {
         (async () => {
             if (courseId) {
@@ -49,7 +49,7 @@ export default function CourseDetail() {
         return { present, absent, late, rate, status };
     }, [courseInfo]);
 
-    // コースが見つからない場合
+    // 授業が見つからない場合
     if (!courseInfo) {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>

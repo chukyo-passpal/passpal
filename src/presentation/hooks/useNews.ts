@@ -16,6 +16,9 @@ export interface NewsState {
     refetch: () => Promise<NewsData>;
 }
 
+/**
+ * ニュース情報を保持・更新するZustandストアを提供します。
+ */
 const useNews = create<NewsState>()(
     persist(
         immer((set, get) => ({
@@ -25,12 +28,19 @@ const useNews = create<NewsState>()(
 
             newsService: newsServiceInstance,
 
+            /**
+             * 保存しているニュースの状態を初期化します。
+             */
             clear: () =>
                 set((state) => {
                     state.lastFetch = null;
                     state.newsData = null;
                 }),
 
+            /**
+             * リモートからニュースを再取得します。
+             * @returns 最新のニュースデータ
+             */
             refetch: async () => {
                 set((state) => {
                     state.loading = true;

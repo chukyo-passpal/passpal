@@ -8,6 +8,11 @@ export class NewsRepository {
     private readonly manaboProvider: ManaboProvider;
     private readonly alboProvider: AlboProvider;
 
+    /**
+     * リポジトリを初期化します。
+     * @param manaboProvider Manaboプロバイダー
+     * @param alboProvider Alboプロバイダー
+     */
     constructor({
         manaboProvider = manaboProviderInstance,
         alboProvider = alboProviderInstance,
@@ -16,7 +21,11 @@ export class NewsRepository {
         this.alboProvider = alboProvider;
     }
 
-    // マナボニュース取得
+    /**
+     * Manaboから最新ニュース一覧を取得します。
+     * @returns ニュース一覧の解析結果
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getManaboNews() {
         const response = await this.manaboProvider.post(
             "/",
@@ -34,7 +43,11 @@ export class NewsRepository {
         }
     }
 
-    // アルボニュース取得
+    /**
+     * Alboから最新ニュース一覧を取得します。
+     * @returns ドメイン変換済みのニュース一覧
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getAlboNews() {
         const response = await this.alboProvider.get("/uniprove_pt/portal/_ns:YXJldHJvLXN0dWRlbnQtMTAwMDN8ZDI_");
         const dto = parser.parseCubicsPtNews(response);

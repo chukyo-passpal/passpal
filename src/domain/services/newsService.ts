@@ -8,10 +8,18 @@ export interface NewsService {
 export class IntegratedNewsService implements NewsService {
     protected readonly newsRepository: NewsRepository;
 
+    /**
+     * ニュースサービスを初期化します。
+     * @param newsRepository ニュース取得に利用するリポジトリ
+     */
     constructor(newsRepository = newsRepositoryInstance) {
         this.newsRepository = newsRepository;
     }
 
+    /**
+     * ニュース情報を取得し、ドメインモデルへまとめます。
+     * @returns ニュースデータ
+     */
     public async getNews(): Promise<NewsData> {
         const alboNews = await this.newsRepository.getAlboNews();
         return {

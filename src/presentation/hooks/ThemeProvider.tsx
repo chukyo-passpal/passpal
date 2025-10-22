@@ -29,6 +29,11 @@ interface ThemeProviderProps {
     initialColorMode?: ColorMode;
 }
 
+/**
+ * アプリ全体へテーマとカラーモード制御を提供するコンテキストプロバイダーです。
+ * @param props 子要素と初期カラーモード設定
+ * @returns テーマコンテキストをラップした要素
+ */
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, initialColorMode = "auto" }) => {
     const systemColorScheme = useColorScheme();
     const [colorMode, setColorMode] = useState<ColorMode>(initialColorMode);
@@ -48,6 +53,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, initialC
     }, [isDark, currentTheme.colors.background.primary]);
 
     // Toggle between light and dark modes
+    /**
+     * カラーモードを順番に切り替えます。
+     */
     const toggleColorMode = () => {
         setColorMode((prev) => {
             if (prev === "auto") return "dark";
@@ -73,6 +81,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children, initialC
 };
 
 // Hook to use theme in components
+/**
+ * テーマコンテキストへアクセスするためのフックです。
+ * @returns 現在のテーマとカラーモード制御
+ * @throws Error ThemeProvider配下以外で呼び出された場合
+ */
 export const useTheme = (): ThemeContextValue => {
     const context = useContext(ThemeContext);
     if (!context) {
@@ -82,7 +95,17 @@ export const useTheme = (): ThemeContextValue => {
 };
 
 // Higher-order component for theme access
+/**
+ * コンポーネントへテーマプロップを注入する高階コンポーネントです。
+ * @param Component テーマプロップを受け取るコンポーネント
+ * @returns テーマを注入したコンポーネント
+ */
 export const withTheme = <P extends object>(Component: React.ComponentType<P & { theme: Theme }>) => {
+    /**
+     * テーマを注入したラッパーコンポーネントです。
+     * @param props ラップ対象のコンポーネントへ渡されるプロパティ
+     * @returns テーマプロップを付与したコンポーネント
+     */
     const ThemedComponent = (props: P) => {
         const { theme } = useTheme();
         return <Component {...props} theme={theme} />;

@@ -16,6 +16,9 @@ export interface MailState {
     refetch: (page?: number) => Promise<MailData>;
 }
 
+/**
+ * メールデータを保持・取得するZustandストアを提供します。
+ */
 const useMail = create<MailState>()(
     persist(
         immer((set, get) => ({
@@ -25,11 +28,19 @@ const useMail = create<MailState>()(
 
             mailService: mailServiceInstance,
 
+            /**
+             * 保存しているメールデータを初期化します。
+             */
             clear: () =>
                 set((state) => {
                     state.mailData = null;
                 }),
 
+            /**
+             * 指定ページのメール一覧を取得します。
+             * @param page 取得するページ番号（初期値は1）
+             * @returns 最新のメールデータ
+             */
             refetch: async (page: number = 1) => {
                 set((state) => {
                     state.loading = true;

@@ -43,7 +43,7 @@ export const WithRightIcon: Story = {
 
 export const WithBothIcons: Story = {
     args: {
-        title: "コース詳細",
+        title: "授業詳細",
         leftIcon: "chevron-left",
         rightIcon: "refresh-cw",
         onLeftPress: () => console.log("Back pressed"),

@@ -31,6 +31,9 @@ export interface authState {
     cubicsCredentials?: CookieCredentials;
 }
 
+/**
+ * 認証や利用規約、各サービスのCookieを管理するZustandストアを提供します。
+ */
 const useAuth = create<authState>()(
     persist(
         immer((set) => ({
@@ -40,10 +43,18 @@ const useAuth = create<authState>()(
 
             authService: authServiceInstance,
 
+            /**
+             * 認証情報を保存し、サインイン状態にします。
+             * @param studentId 学籍番号
+             * @param cuIdPass CU-IDパスワード
+             */
             signIn: (studentId, cuIdPass) =>
                 set((state) => {
                     state.user = { studentId, cuIdPass };
                 }),
+            /**
+             * 全認証情報をクリアし、サインアウトします。
+             */
             signOut: () =>
                 set((state) => {
                     state.user = null;
@@ -52,15 +63,26 @@ const useAuth = create<authState>()(
                     state.manaboCredentials = undefined;
                     state.alboCredentials = undefined;
                 }),
+            /**
+             * 利用規約に同意した状態を保存します。
+             */
             acceptTerms: () =>
                 set((state) => {
                     state.isTermsAccepted = true;
                 }),
 
+            /**
+             * Firebaseユーザー情報を更新します。
+             * @param user Firebaseユーザー
+             */
             setFirebaseUser: (user) =>
                 set((state) => {
                     state.firebaseUser = user;
                 }),
+            /**
+             * FirebaseユーザーのIDトークンを更新します。
+             * @param idToken 更新後のIDトークン
+             */
             setFirebaseIdToken: (idToken) =>
                 set((state) => {
                     if (state.firebaseUser?.idToken) {
@@ -68,19 +90,34 @@ const useAuth = create<authState>()(
                     }
                 }),
 
+            /**
+             * Manabo用のCookie資格情報を保存します。
+             * @param cookies 保存するCookie
+             */
             setManaboCookie: (cookies) =>
                 set((state) => {
                     state.manaboCredentials = { cookies, lastRefreshedAt: new Date() };
                 }),
+            /**
+             * Albo用のCookie資格情報を保存します。
+             * @param cookies 保存するCookie
+             */
             setAlboCookie: (cookies) =>
                 set((state) => {
                     state.alboCredentials = { cookies, lastRefreshedAt: new Date() };
                 }),
+            /**
+             * Cubics用のCookie資格情報を保存します。
+             * @param cookies 保存するCookie
+             */
             setCubicsCookie: (cookies) =>
                 set((state) => {
                     state.cubicsCredentials = { cookies, lastRefreshedAt: new Date() };
                 }),
 
+            /**
+             * キャッシュとしてクリアできる情報を消します。
+             */
             purgeCache: () =>
                 set((state) => {
                     state.manaboCredentials = undefined;

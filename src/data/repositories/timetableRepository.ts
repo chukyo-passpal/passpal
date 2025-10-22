@@ -8,6 +8,11 @@ export class TimetableRepository {
     private readonly manaboProvider: ManaboProvider;
     private readonly cubicsProvider: CubicsProvider;
 
+    /**
+     * リポジトリを初期化します。
+     * @param manaboProvider Manaboプロバイダー
+     * @param cubicsProvider Cubicsプロバイダー
+     */
     constructor({
         manaboProvider = manaboProviderInstance,
         cubicsProvider = cubicsProviderInstance,
@@ -17,6 +22,11 @@ export class TimetableRepository {
     }
 
     // マナボ時間割取得
+    /**
+     * Manaboから時間割を取得します。
+     * @returns ドメイン変換済みの時間割データ
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getManaboTimetable() {
         const response = await this.manaboProvider.post(
             "/",
@@ -35,6 +45,11 @@ export class TimetableRepository {
     }
 
     // キュービックス時間割取得
+    /**
+     * Cubicsから時間割を取得します。
+     * @returns ドメイン変換済みの時間割データ
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getCubicsTimetable() {
         const response = await this.cubicsProvider.get("/unias/UnSSOLoginControl2?REQ_ACTION_DO=/ARF010.do&REQ_PRFR_MNU_ID=MNUIDSTD0103");
 

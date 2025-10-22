@@ -14,16 +14,29 @@ export abstract class abstractChukyoProvider {
     protected credentialsRottenTime: number = 25 * 60 * 1000; // 25分
 
     private _auth: authState | undefined;
+    /**
+     * プロバイダーが利用する認証ストアへのget
+     * @throws NotSetError 認証ストアが設定されていない場合
+     */
     protected get auth() {
         if (!this._auth) {
             throw new NotSetError({ cause: new Error("ChukyoProviderにauthStateが設定されていません") });
         }
         return this._auth;
     }
+    /**
+     * 認証関連の状態ストアをセットします。
+     * @param auth 認証状態を管理するストア
+     */
     public setAuthStore(auth: authState) {
         this._auth = auth;
     }
 
+    /**
+     * サービスごとのクッキー保存メソッドを呼び出します。
+     * @param cookies 保存するクッキー
+     * @param service クッキーを紐づけるサービス種別
+     */
     private async setCredentialCookies(cookies: Cookies, service: CUService) {
         switch (service) {
             case "manabo":
@@ -40,6 +53,11 @@ export abstract class abstractChukyoProvider {
         }
     }
 
+    /**
+     * サービスに対応する最新のクッキー資格情報を取得します。
+     * @param service 参照したいサービス種別
+     * @returns クッキー資格情報または未設定の場合はundefined
+     */
     private async getCredentialCookies(service: CUService): Promise<CookieCredentials | undefined> {
         switch (service) {
             case "manabo":
@@ -53,12 +71,22 @@ export abstract class abstractChukyoProvider {
         }
     }
 
+    /**
+     * クッキーのキーに基づき保存対象かどうかを判定します。
+     * @param key 判定対象のクッキーキー
+     * @returns 保存すべき場合はtrue、除外すべき場合はfalse
+     */
     private shouldSaveCookie(key: string): boolean {
         if (key.startsWith("AWSALB")) return false;
         if (key.startsWith("_opensaml_req_ss")) return false;
         return true;
     }
 
+    /**
+     * ユーザー情報をもとにShibboleth認証を行い、利用可能なクッキーを返します。
+     * @param user 認証に利用するユーザー情報
+     * @returns 認証後に利用可能なクッキー集合
+     */
     protected async authentication(user: UserData): Promise<Cookies> {
         const { studentId, cuIdPass } = user;
 
@@ -88,6 +116,11 @@ export abstract class abstractChukyoProvider {
         return cleanedCookies;
     }
 
+    /**
+     * 有効期限内のクッキーを取得し、必要に応じて再認証を実行します。
+     * @returns HTTPヘッダー用に整形されたクッキー文字列
+     * @throws NotSetError ユーザー情報が未設定の場合
+     */
     protected async getAuthedCookie() {
         if (!this.auth.user) {
             throw new NotSetError({ cause: new Error("ユーザー情報が設定されていません") });

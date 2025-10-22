@@ -1,14 +1,12 @@
-/**
- * PassPal Theme System
- * Main theme configuration combining all design tokens
- * Supports both light and dark modes
- */
-
 import { darkColors, lightColors } from "../presentation/tokens/colors";
 import { spacing } from "../presentation/tokens/spacing";
 import { typography } from "../presentation/tokens/typography";
 
-// Create theme based on color mode
+/**
+ * 指定されたカラーモードに応じてPassPalのテーマ構成を生成します。
+ * @param mode 使用するカラーモード（`light` または `dark`）
+ * @returns 色・タイポグラフィ・スペーシングを含むテーマ定義
+ */
 export const createTheme = (mode: "light" | "dark" = "light") => {
     const colors = mode === "dark" ? darkColors : lightColors;
 
@@ -81,7 +79,5 @@ export const createTheme = (mode: "light" | "dark" = "light") => {
     } as const;
 };
 
-// Default theme (light mode for backward compatibility)
 export const theme = createTheme("light");
-
 export type Theme = ReturnType<typeof createTheme>;

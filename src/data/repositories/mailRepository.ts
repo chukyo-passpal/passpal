@@ -6,11 +6,20 @@ import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ
 export class MailRepository {
     private readonly manaboProvider: ManaboProvider;
 
+    /**
+     * リポジトリを初期化します。
+     * @param manaboProvider Manaboプロバイダーの差し替え用インスタンス
+     */
     constructor({ manaboProvider = manaboProviderInstance }: { manaboProvider?: ManaboProvider } = {}) {
         this.manaboProvider = manaboProvider;
     }
 
-    // 受信メール一覧取得
+    /**
+     * 受信メールの一覧を取得します。
+     * @param page 取得するページ番号（初期値は1）
+     * @returns ドメイン変換済みの受信メール一覧
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getReceivedMailList(page: number = 1) {
         const response = await this.manaboProvider.post(
             "/",
@@ -28,7 +37,12 @@ export class MailRepository {
         }
     }
 
-    // 送信メール一覧取得
+    /**
+     * 送信済みメールの一覧を取得します。
+     * @param page 取得するページ番号（初期値は1）
+     * @returns 送信メールの解析結果
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getSentMailList(page: number = 1) {
         const response = await this.manaboProvider.post(
             "/",
@@ -47,7 +61,12 @@ export class MailRepository {
         }
     }
 
-    // メール詳細取得
+    /**
+     * 指定したメールの詳細を取得します。
+     * @param mailId メールID
+     * @returns メール詳細の解析結果
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getMailDetail(mailId: string) {
         const response = await this.manaboProvider.get(`/?mail_id=${mailId}&action=glexa_modal_mail_view&_=${Date.now()}`);
         const dto = parser.parseManaboMailView(response);
@@ -59,7 +78,11 @@ export class MailRepository {
         }
     }
 
-    // メール送信フォーム取得
+    /**
+     * メール作成フォームの情報を取得します。
+     * @returns メール送信フォームの解析結果
+     * @throws ParseError 解析に失敗した場合
+     */
     public async getMailSendForm() {
         const response = await this.manaboProvider.post(
             "",
@@ -76,8 +99,13 @@ export class MailRepository {
         }
     }
 
-    // メール宛先検索
-    public async getMailMemberSearchHtml(query: string) {
+    /**
+     * メール宛先を検索します。
+     * @param query 検索クエリ
+     * @returns 検索結果の解析データ
+     * @throws ParseError 解析に失敗した場合
+     */
+    public async getMailMember(query: string) {
         const response = await this.manaboProvider.post(
             "/",
             "application/x-www-form-urlencoded",

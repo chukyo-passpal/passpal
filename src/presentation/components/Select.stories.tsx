@@ -66,8 +66,8 @@ export const WithValue: Story = {
 export const WithGroupLabel: Story = {
     args: {
         items: courseItems,
-        placeholder: "コースを選択",
-        groupLabel: "履修コース",
+        placeholder: "授業を選択",
+        groupLabel: "履修授業",
     },
 };
 
@@ -92,7 +92,7 @@ const InteractiveComponent = () => {
 
     return (
         <View style={{ gap: 16 }}>
-            <Select items={courseItems} value={value} onValueChange={setValue} placeholder="コースを選択してください" groupLabel="履修コース" />
+            <Select items={courseItems} value={value} onValueChange={setValue} placeholder="授業を選択してください" groupLabel="履修授業" />
             {value && (
                 <View style={{ padding: 16, backgroundColor: "#f0f0f0", borderRadius: 8 }}>
                     <View>選択された値: {value}</View>
@@ -116,7 +116,7 @@ const MultipleSelectsComponent = () => {
 
     return (
         <View style={{ gap: 16 }}>
-            <Select items={courseItems} value={course} onValueChange={setCourse} placeholder="コースを選択" groupLabel="履修コース" />
+            <Select items={courseItems} value={course} onValueChange={setCourse} placeholder="授業を選択" groupLabel="履修授業" />
             <Select items={periodItems} value={period} onValueChange={setPeriod} placeholder="時限を選択" groupLabel="時限" />
         </View>
     );
