@@ -3,6 +3,7 @@
 # build output
 *.ipa
 *.apk
+licenses.json
 
 # dependencies
 node_modules/

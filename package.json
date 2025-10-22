@@ -10,7 +10,9 @@
         "storybook-generate": "sb-rn-get-stories",
         "prebuild": "expo prebuild --clean",
         "build:android": "eas build -p android --profile development --local",
-        "build:ios": "eas build -p ios --profile development --local"
+        "build:ios": "eas build -p ios --profile development --local",
+        "license:update": "bun run license-checker --production --direct --json --out ./licenses.json && bun run scripts/generate-license.ts",
+        "license:summary": "bun run license-checker --production --direct --summary"
     },
     "dependencies": {
         "@chukyo-passpal/web_parser": "^0.3.0",
@@ -80,6 +82,7 @@
         "babel-loader": "8.4.1",
         "eslint": "^9.25.0",
         "eslint-config-expo": "~10.0.0",
+        "license-checker": "^25.0.1",
         "react-native-svg": "15.14.0",
         "storybook": "9.1.12",
         "typescript": "~5.9.2"

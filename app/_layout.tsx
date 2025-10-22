@@ -76,6 +76,8 @@ function RootLayoutNav() {
                 <Stack.Screen name="settings" />
             </Stack.Protected>
 
+            <Stack.Screen name="license" />
+
             {/* Storybook画面（デバッグモード時のみ） */}
             <Stack.Protected guard={__DEV__}>
                 <Stack.Screen name="storybook" />

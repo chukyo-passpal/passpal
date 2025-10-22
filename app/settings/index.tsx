@@ -54,7 +54,9 @@ export default function Settings() {
 
     const handleAboutPassPal = () => {};
 
-    const handleLicenseInfo = () => {};
+    const handleLicenseInfo = () => {
+        router.push("/license");
+    };
 
     return (
         <View
