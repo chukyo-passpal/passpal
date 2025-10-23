@@ -3,7 +3,17 @@ import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { ExpiredSessionError } from "../../errors/AuthError";
 import { abstractChukyoProvider } from "./abstractChukyoProvider";
 
-export class AlboProvider extends abstractChukyoProvider {
+export interface AlboProvider {
+    /**
+     * AlboポータルにGETリクエストを送り、必要に応じて再認証を行います。
+     * @param path リクエスト先のパス
+     * @returns 応答ボディのテキスト
+     * @throws ExpiredSessionError 再試行してもセッションが復旧しない場合
+     */
+    get(path: string): Promise<string>;
+}
+
+export class IntegratedAlboProvider extends abstractChukyoProvider implements AlboProvider {
     protected baseUrl = "https://cubics-pt-out.mng.chukyo-u.ac.jp";
     protected authEnterPath = "/uniprove_pt/UnLoginControl";
     protected authGoalPath = "/uniprove_pt/portal";
@@ -13,12 +23,6 @@ export class AlboProvider extends abstractChukyoProvider {
     protected retryAuthDelayMs = 200;
     protected retryAuthDelayRandomMs = 300;
 
-    /**
-     * AlboポータルにGETリクエストを送り、必要に応じて再認証を行います。
-     * @param path リクエスト先のパス
-     * @returns 応答ボディのテキスト
-     * @throws ExpiredSessionError 再試行してもセッションが復旧しない場合
-     */
     public async get(path: string): Promise<string> {
         for (let attempt = 0; attempt <= this.retryAuthCount; attempt++) {
             const response = await httpClient(`${this.baseUrl}${path}`, {
@@ -62,5 +66,5 @@ export class AlboProvider extends abstractChukyoProvider {
     }
 }
 
-const alboProviderInstance = new AlboProvider();
+const alboProviderInstance = new IntegratedAlboProvider();
 export default alboProviderInstance;

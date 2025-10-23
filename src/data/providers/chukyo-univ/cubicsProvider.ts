@@ -3,7 +3,17 @@ import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { ExpiredSessionError } from "../../errors/AuthError";
 import { abstractChukyoProvider } from "./abstractChukyoProvider";
 
-export class CubicsProvider extends abstractChukyoProvider {
+export interface CubicsProvider {
+    /**
+     * CubicsポータルにGETリクエストを送り、必要に応じて再認証を実行します。
+     * @param path リクエスト先のパス
+     * @returns 応答本文のテキスト
+     * @throws ExpiredSessionError セッション再取得に失敗した場合
+     */
+    get(path: string): Promise<string>;
+}
+
+export class IntegratedCubicsProvider extends abstractChukyoProvider implements CubicsProvider {
     protected baseUrl = "https://cubics-as-out.mng.chukyo-u.ac.jp";
     protected authEnterPath = "/unias/UnSSOLoginControl2";
     protected authGoalPath = "/unias/UnSSOLoginControl2";
@@ -13,12 +23,6 @@ export class CubicsProvider extends abstractChukyoProvider {
     protected retryAuthDelayMs = 200;
     protected retryAuthDelayRandomMs = 300;
 
-    /**
-     * CubicsポータルにGETリクエストを送り、必要に応じて再認証を実行します。
-     * @param path リクエスト先のパス
-     * @returns 応答本文のテキスト
-     * @throws ExpiredSessionError セッション再取得に失敗した場合
-     */
     public async get(path: string): Promise<string> {
         for (let attempt = 0; attempt <= this.retryAuthCount; attempt++) {
             const response = await httpClient(`${this.baseUrl}${path}`, {
@@ -65,5 +69,5 @@ export class CubicsProvider extends abstractChukyoProvider {
     }
 }
 
-const cubicsProviderInstance = new CubicsProvider();
+const cubicsProviderInstance = new IntegratedCubicsProvider();
 export default cubicsProviderInstance;
