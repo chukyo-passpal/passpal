@@ -4,7 +4,7 @@
     "": {
       "name": "passpal",
       "dependencies": {
-        "@chukyo-passpal/web_parser": "^0.3.0",
+        "@chukyo-passpal/web_parser": "^0.3.1",
         "@expo/vector-icons": "^15.0.2",
         "@praha/error-factory": "^1.2.1",
         "@react-native-community/netinfo": "11.4.1",
@@ -271,7 +271,7 @@
 
     "@babel/types": ["@babel/types@7.28.4", "", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.27.1" } }, "sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q=="],
 
-    "@chukyo-passpal/web_parser": ["@chukyo-passpal/web_parser@0.3.0", "", { "dependencies": { "css-select": "^6.0.0", "htmlparser2": "^10.0.0", "zod": "^4.1.12" }, "peerDependencies": { "typescript": "^5" } }, "sha512-7NYHul1/QjsD5aTXKgjYN/T/33GR5JWi4bCp8pIjhdgZ8c/Ftn6MG84FG2fOszWIiOJCo3AX6TrWGZuDvOwyUw=="],
+    "@chukyo-passpal/web_parser": ["@chukyo-passpal/web_parser@0.3.1", "", { "dependencies": { "css-select": "^6.0.0", "htmlparser2": "^10.0.0", "zod": "^4.1.12" }, "peerDependencies": { "typescript": "^5" } }, "sha512-g6ENdiHs866ju4A4l+9/8Raj1DYR9FYm7DJ69xE0qcP2MTee3pVpRR+6mBVuQBuFp4HhQ+st47VvW+OV07dgXA=="],
 
     "@egjs/hammerjs": ["@egjs/hammerjs@2.0.17", "", { "dependencies": { "@types/hammerjs": "^2.0.36" } }, "sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A=="],
 

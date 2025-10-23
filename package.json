@@ -15,7 +15,7 @@
         "license:summary": "bun run license-checker --production --direct --summary"
     },
     "dependencies": {
-        "@chukyo-passpal/web_parser": "^0.3.0",
+        "@chukyo-passpal/web_parser": "^0.3.1",
         "@expo/vector-icons": "^15.0.2",
         "@praha/error-factory": "^1.2.1",
         "@react-native-community/netinfo": "11.4.1",
