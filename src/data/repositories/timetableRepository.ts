@@ -1,10 +1,28 @@
+import { TimetableData } from "@/src/domain/models/timetable";
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
 import { cubicsTimetableToDomain, manaboTimetableToDomain } from "../mappers/timetableMapper";
 import cubicsProviderInstance, { CubicsProvider } from "../providers/chukyo-univ/cubicsProvider";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
-export class TimetableRepository {
+export interface TimetableRepository {
+    // マナボ時間割取得
+    /**
+     * Manaboから時間割を取得します。
+     * @returns ドメイン変換済みの時間割データ
+     * @throws ParseError 解析に失敗した場合
+     */
+    getManaboTimetable(): Promise<TimetableData>;
+
+    /**
+     * Cubicsから時間割を取得します。
+     * @returns ドメイン変換済みの時間割データ
+     * @throws ParseError 解析に失敗した場合
+     */
+    getCubicsTimetable(): Promise<TimetableData>;
+}
+
+export class IntegratedTimetableRepository implements TimetableRepository {
     private readonly manaboProvider: ManaboProvider;
     private readonly cubicsProvider: CubicsProvider;
 
@@ -21,7 +39,6 @@ export class TimetableRepository {
         this.cubicsProvider = cubicsProvider;
     }
 
-    // マナボ時間割取得
     /**
      * Manaboから時間割を取得します。
      * @returns ドメイン変換済みの時間割データ
@@ -44,7 +61,6 @@ export class TimetableRepository {
         }
     }
 
-    // キュービックス時間割取得
     /**
      * Cubicsから時間割を取得します。
      * @returns ドメイン変換済みの時間割データ
@@ -62,5 +78,5 @@ export class TimetableRepository {
     }
 }
 
-const timetableRepositoryInstance = new TimetableRepository();
+const timetableRepositoryInstance = new IntegratedTimetableRepository();
 export default timetableRepositoryInstance;

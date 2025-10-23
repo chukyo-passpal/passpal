@@ -1,9 +1,83 @@
+import { CourseDetailInfo, CourseNewsInfo, ManaboContentInfo, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/course";
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
 import { classDirectoryToDomain, classNewsToDomain, courseSyllabusToDomain, entryToDomain, manaboContentToDomain } from "../mappers/courseMapper";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
-export class CourseRepository {
+export interface CourseRepository {
+    /**
+     * 指定した授業のお知らせ一覧を取得します。
+     * @param classId 授業ID
+     * @param directoryId ディレクトリID（初期値は`0`）
+     * @returns ドメイン変換済みのお知らせデータ
+     * @throws ParseError 解析に失敗した場合
+     */
+    getClassNews(classId: string, directoryId?: string): Promise<CourseNewsInfo[]>;
+
+    /**
+     * 指定授業のシラバス情報を取得します。
+     * @param classId 授業ID
+     * @returns ドメイン変換済みのシラバスデータ
+     * @throws ParseError 解析に失敗した場合
+     */
+    getClassSyllabus(classId: string): Promise<CourseDetailInfo>;
+
+    /**
+     * 授業の出席状況を取得します。
+     * @param classId 授業ID
+     * @returns ドメイン変換済みの出席情報
+     * @throws ParseError 解析に失敗した場合
+     */
+    getClassEntry(classId: string): Promise<PortalRecordedAttendance[]>;
+
+    /**
+     * 授業内のコンテンツディレクトリ一覧を取得します。
+     * @param classId 授業ID
+     * @param directoryId ディレクトリID（初期値は`0`）
+     * @returns ドメイン変換済みのディレクトリ情報
+     * @throws ParseError 解析に失敗した場合
+     */
+    getClassDirectory(classId: string, directoryId?: string): Promise<ManaboDirectoryInfo>;
+
+    /**
+     * 授業の教材コンテンツを取得します。
+     * @param classId 授業ID
+     * @param directoryId ディレクトリID
+     * @param viewType 取得する表示モード（任意）
+     * @returns ドメイン変換済みのコンテンツ情報
+     * @throws ParseError 解析に失敗した場合
+     */
+    getClassContent(classId: string, directoryId: string, viewType?: string): Promise<ManaboContentInfo[]>;
+
+    /**
+     * 指定授業に出席フォームが存在するか確認します。
+     * @param classId 授業ID
+     * @returns 出席フォーム有無を示す解析結果
+     * @throws ParseError 解析に失敗した場合
+     */
+    getEntryExist(classId: string): Promise<parser.ManaboEntryResponseDTO>;
+
+    /**
+     * 指定授業の出席フォーム詳細を取得します。
+     * @param classId 授業ID
+     * @returns 出席フォームの解析結果
+     * @throws ParseError 解析に失敗した場合
+     */
+    getEntryForm(classId: string): Promise<parser.ManaboEntryFormDTO>;
+
+    /**
+     * 出席フォームを送信して出席登録を行います。
+     * @param classId 授業ID
+     * @param directoryId ディレクトリID
+     * @param entryId 出席ID
+     * @param uniqueId 一意識別子
+     * @returns 出席送信の結果オブジェクト
+     * @throws ParseError 解析に失敗した場合
+     */
+    submitEntry(classId: string, directoryId: string, entryId: string, uniqueId: string): Promise<parser.ManaboEntryResponseDTO>;
+}
+
+export class IntegratedCourseRepository implements CourseRepository {
     private readonly manaboProvider: ManaboProvider;
 
     /**
@@ -14,13 +88,6 @@ export class CourseRepository {
         this.manaboProvider = manaboProvider;
     }
 
-    /**
-     * 指定した授業のお知らせ一覧を取得します。
-     * @param classId 授業ID
-     * @param directoryId ディレクトリID（初期値は`0`）
-     * @returns ドメイン変換済みのお知らせデータ
-     * @throws ParseError 解析に失敗した場合
-     */
     public async getClassNews(classId: string, directoryId: string = "0") {
         const response = await this.manaboProvider.post(
             "/",
@@ -39,12 +106,6 @@ export class CourseRepository {
         }
     }
 
-    /**
-     * 指定授業のシラバス情報を取得します。
-     * @param classId 授業ID
-     * @returns ドメイン変換済みのシラバスデータ
-     * @throws ParseError 解析に失敗した場合
-     */
     public async getClassSyllabus(classId: string) {
         const response = await this.manaboProvider.post(
             "/",
@@ -62,12 +123,6 @@ export class CourseRepository {
         }
     }
 
-    /**
-     * 授業の出席状況を取得します。
-     * @param classId 授業ID
-     * @returns ドメイン変換済みの出席情報
-     * @throws ParseError 解析に失敗した場合
-     */
     public async getClassEntry(classId: string) {
         const response = await this.manaboProvider.post(
             "/",
@@ -85,13 +140,6 @@ export class CourseRepository {
         }
     }
 
-    /**
-     * 授業内のコンテンツディレクトリ一覧を取得します。
-     * @param classId 授業ID
-     * @param directoryId ディレクトリID（初期値は`0`）
-     * @returns ドメイン変換済みのディレクトリ情報
-     * @throws ParseError 解析に失敗した場合
-     */
     public async getClassDirectory(classId: string, directoryId: string = "0") {
         const response = await this.manaboProvider.post(
             "/",
@@ -111,14 +159,6 @@ export class CourseRepository {
         }
     }
 
-    /**
-     * 授業の教材コンテンツを取得します。
-     * @param classId 授業ID
-     * @param directoryId ディレクトリID
-     * @param viewType 取得する表示モード（任意）
-     * @returns ドメイン変換済みのコンテンツ情報
-     * @throws ParseError 解析に失敗した場合
-     */
     public async getClassContent(classId: string, directoryId: string, viewType?: string) {
         let searchParams = new URLSearchParams({
             class_id: classId,
@@ -139,12 +179,6 @@ export class CourseRepository {
         }
     }
 
-    /**
-     * 指定授業に出席フォームが存在するか確認します。
-     * @param classId 授業ID
-     * @returns 出席フォーム有無を示す解析結果
-     * @throws ParseError 解析に失敗した場合
-     */
     public async getEntryExist(classId: string) {
         const response = await this.manaboProvider.post(
             "/",
@@ -164,12 +198,6 @@ export class CourseRepository {
         }
     }
 
-    /**
-     * 指定授業の出席フォーム詳細を取得します。
-     * @param classId 授業ID
-     * @returns 出席フォームの解析結果
-     * @throws ParseError 解析に失敗した場合
-     */
     public async getEntryForm(classId: string) {
         const response = await this.manaboProvider.get(`/?class_id=${classId}&action=glexa_modal_entry_form&_=${Date.now()}`);
         const dto = parser.parseManaboEntryForm(response);
@@ -181,15 +209,6 @@ export class CourseRepository {
         }
     }
 
-    /**
-     * 出席フォームを送信して出席登録を行います。
-     * @param classId 授業ID
-     * @param directoryId ディレクトリID
-     * @param entryId 出席ID
-     * @param uniqueId 一意識別子
-     * @returns 出席送信の結果オブジェクト
-     * @throws ParseError 解析に失敗した場合
-     */
     public async submitEntry(classId: string, directoryId: string, entryId: string, uniqueId: string) {
         const response = await this.manaboProvider.get(
             `/?action=glexa_modal_entry_form_accept&class_id=${classId}&directory_id=${directoryId}&entry_id=${entryId}&uniqid=${uniqueId}&_=${Date.now()}`
@@ -204,5 +223,5 @@ export class CourseRepository {
     }
 }
 
-const courseRepositoryInstance = new CourseRepository();
+const courseRepositoryInstance = new IntegratedCourseRepository();
 export default courseRepositoryInstance;

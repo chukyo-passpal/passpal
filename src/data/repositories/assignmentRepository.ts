@@ -2,17 +2,7 @@ import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
-export class AssignmentRepository {
-    private readonly manaboProvider: ManaboProvider;
-
-    /**
-     * リポジトリを初期化します。
-     * @param manaboProvider Manaboプロバイダーの差し替え用インスタンス
-     */
-    constructor({ manaboProvider = manaboProviderInstance }: { manaboProvider?: ManaboProvider } = {}) {
-        this.manaboProvider = manaboProvider;
-    }
-
+export interface AssignmentRepository {
     /**
      * クイズ結果をManaboから取得します。
      * @param pluginId プラグインID
@@ -25,6 +15,28 @@ export class AssignmentRepository {
      * @returns クイズ結果のドメインデータ
      * @throws ParseError 解析に失敗した場合
      */
+    getClassQuizResult(
+        pluginId: string,
+        classId: string,
+        id: string,
+        directoryId: string,
+        attendId: string,
+        result?: string,
+        page?: number
+    ): Promise<parser.ManaboClassQuizResultDTO>;
+}
+
+export class IntegratedAssignmentRepository implements AssignmentRepository {
+    private readonly manaboProvider: ManaboProvider;
+
+    /**
+     * リポジトリを初期化します。
+     * @param manaboProvider Manaboプロバイダーの差し替え用インスタンス
+     */
+    constructor({ manaboProvider = manaboProviderInstance }: { manaboProvider?: ManaboProvider } = {}) {
+        this.manaboProvider = manaboProvider;
+    }
+
     public async getClassQuizResult(
         pluginId: string,
         classId: string,
@@ -46,5 +58,5 @@ export class AssignmentRepository {
     }
 }
 
-const assignmentRepositoryInstance = new AssignmentRepository();
+const assignmentRepositoryInstance = new IntegratedAssignmentRepository();
 export default assignmentRepositoryInstance;
