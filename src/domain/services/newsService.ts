@@ -2,6 +2,10 @@ import newsRepositoryInstance, { NewsRepository } from "@/src/data/repositories/
 import { NewsData } from "../models/news";
 
 export interface NewsService {
+    /**
+     * ニュース情報を取得し、ドメインモデルへまとめます。
+     * @returns ニュースデータ
+     */
     getNews(): Promise<NewsData>;
 }
 
@@ -16,10 +20,6 @@ export class IntegratedNewsService implements NewsService {
         this.newsRepository = newsRepository;
     }
 
-    /**
-     * ニュース情報を取得し、ドメインモデルへまとめます。
-     * @returns ニュースデータ
-     */
     public async getNews(): Promise<NewsData> {
         const alboNews = await this.newsRepository.getAlboNews();
         return {

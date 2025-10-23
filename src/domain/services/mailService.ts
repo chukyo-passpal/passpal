@@ -2,6 +2,11 @@ import mailRepositoryInstance, { MailRepository } from "@/src/data/repositories/
 import { MailData } from "../models/mail";
 
 export interface MailService {
+    /**
+     * 指定ページのメール一覧を取得します。
+     * @param page 取得したいページ番号（初期値は1）
+     * @returns メールデータ
+     */
     getMails(page?: number): Promise<MailData>;
 }
 
@@ -16,11 +21,6 @@ export class IntegratedMailService implements MailService {
         this.mailRepository = mailRepository;
     }
 
-    /**
-     * 指定ページのメール一覧を取得します。
-     * @param page 取得したいページ番号（初期値は1）
-     * @returns メールデータ
-     */
     public async getMails(page: number = 1): Promise<MailData> {
         return { manaboMails: await this.mailRepository.getReceivedMailList(page) };
     }

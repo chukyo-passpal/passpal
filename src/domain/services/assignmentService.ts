@@ -4,8 +4,25 @@ import { ManaboDirectoryInfo } from "../models/course";
 import { TimetableData } from "../models/timetable";
 
 export interface AssignmentService {
+    /**
+     * 指定した授業のディレクトリ構成を取得します。
+     * @param manaboCourseId Manaboの授業ID
+     * @returns ディレクトリ情報
+     */
     getDirectory(manaboCourseId: string): Promise<ManaboDirectoryInfo>;
+
+    /**
+     * 指定した授業に紐づく課題一覧を取得します。
+     * @param manaboCourseId Manaboの授業ID
+     * @returns 課題情報の配列
+     */
     getAssignments(manaboCourseId: string): Promise<AssignmentInfo[]>;
+
+    /**
+     * 時間割に含まれる全授業の課題情報をまとめて取得します。
+     * @param timetable 時間割データ
+     * @returns 授業IDをキーとした課題情報
+     */
     getAllAssignments(timetable: TimetableData): Promise<AssignmentData>;
 }
 
@@ -20,20 +37,10 @@ export class IntegratedAssignmentService implements AssignmentService {
         this.courseRepository = courseRepository;
     }
 
-    /**
-     * 指定した授業のディレクトリ構成を取得します。
-     * @param manaboCourseId Manaboの授業ID
-     * @returns ディレクトリ情報
-     */
     public async getDirectory(manaboCourseId: string): Promise<ManaboDirectoryInfo> {
         return this.courseRepository.getClassDirectory(manaboCourseId);
     }
 
-    /**
-     * 指定した授業に紐づく課題一覧を取得します。
-     * @param manaboCourseId Manaboの授業ID
-     * @returns 課題情報の配列
-     */
     public async getAssignments(manaboCourseId: string): Promise<AssignmentInfo[]> {
         const directories = await this.getDirectory(manaboCourseId);
 
@@ -57,11 +64,6 @@ export class IntegratedAssignmentService implements AssignmentService {
         return assignment;
     }
 
-    /**
-     * 時間割に含まれる全授業の課題情報をまとめて取得します。
-     * @param timetable 時間割データ
-     * @returns 授業IDをキーとした課題情報
-     */
     public async getAllAssignments(timetable: TimetableData): Promise<AssignmentData> {
         let courseIds: string[] = [];
         for (const days of Object.keys(timetable.timetable) as (keyof typeof timetable.timetable)[]) {

@@ -5,7 +5,18 @@ import { AttendanceInfo, CourseData, CourseInfo } from "../models/course";
 import { TimetableData } from "../models/timetable";
 
 export interface CourseService {
+    /**
+     * 授業の詳細情報を取得し、最新の授業情報へ更新します。
+     * @param course 更新対象の授業情報
+     * @returns 取得した詳細を含む授業情報
+     */
     updateCourseInfo(course: CourseInfo): Promise<CourseInfo>;
+
+    /**
+     * 時間割データから授業情報を構築します。
+     * @param timetableData 基になる時間割データ
+     * @returns 構築された授業データ
+     */
     buildCourseInfoFromTimetable(timetableData: TimetableData): CourseData;
 }
 
@@ -20,11 +31,6 @@ export class IntegratedCourseService implements CourseService {
         this.courseRepository = courseRepository;
     }
 
-    /**
-     * 授業の詳細情報を取得し、最新の授業情報へ更新します。
-     * @param course 更新対象の授業情報
-     * @returns 取得した詳細を含む授業情報
-     */
     public async updateCourseInfo(course: CourseInfo): Promise<CourseInfo> {
         const attendanceLog = await this.getAttendance(course.info.manaboCourseId);
         const news = await this.courseRepository.getClassNews(course.info.manaboCourseId);
@@ -38,11 +44,6 @@ export class IntegratedCourseService implements CourseService {
         };
     }
 
-    /**
-     * 時間割データから授業情報を構築します。
-     * @param timetableData 基になる時間割データ
-     * @returns 構築された授業データ
-     */
     public buildCourseInfoFromTimetable(timetableData: TimetableData): CourseData {
         // manaboCourseIdをキーとするマップで授業を管理
         const courseMap = new Map<string, CourseInfo>();

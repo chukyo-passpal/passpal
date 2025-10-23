@@ -1,4 +1,4 @@
-import { TimetableRepository } from "@/src/data/repositories/timetableRepository";
+import timetableRepositoryInstance, { TimetableRepository } from "@/src/data/repositories/timetableRepository";
 import { Campus } from "../constants/chukyo-univ";
 import { Period } from "../constants/period";
 import { Weekday } from "../constants/week";
@@ -14,10 +14,28 @@ function pt(time: string): Date {
 }
 
 export interface TimetableService {
-    getTimetable(): Promise<TimetableData>;
-    getShouldDisplayWeekdays(timetable: TimetableData): Weekday[];
-    getShouldDisplayPeriods(timetable: TimetableData, campus: Campus): Period[];
     periodData: PeriodData;
+
+    /**
+     * ManaboとCubicsの時間割を取得し、マージした結果を返します。
+     * @returns マージ済みの時間割データ
+     */
+    getTimetable(): Promise<TimetableData>;
+
+    /**
+     * 時間割に基づいて表示すべき曜日を算出します。
+     * @param Timetable 判定対象の時間割
+     * @returns 表示対象の曜日配列
+     */
+    getShouldDisplayWeekdays(timetable: TimetableData): Weekday[];
+
+    /**
+     * 表示すべき時限を算出します。
+     * @param timetable 判定対象の時間割
+     * @param campus 対象キャンパス
+     * @returns 表示する時限リスト
+     */
+    getShouldDisplayPeriods(timetable: TimetableData, campus: Campus): Period[];
 }
 
 export class IntegratedTimetableService implements TimetableService {
@@ -62,14 +80,10 @@ export class IntegratedTimetableService implements TimetableService {
      * サービスを初期化し、時間割リポジトリを設定します。
      * @param timetableRepository 時間割取得に利用するリポジトリ
      */
-    constructor(timetableRepository: TimetableRepository = new TimetableRepository()) {
+    constructor(timetableRepository: TimetableRepository = timetableRepositoryInstance) {
         this.timetableRepository = timetableRepository;
     }
 
-    /**
-     * ManaboとCubicsの時間割を取得し、マージした結果を返します。
-     * @returns マージ済みの時間割データ
-     */
     public async getTimetable(): Promise<TimetableData> {
         const manaboTimetable = await this.timetableRepository.getManaboTimetable();
         const cubicsTimetable = await this.timetableRepository.getCubicsTimetable();
@@ -80,11 +94,6 @@ export class IntegratedTimetableService implements TimetableService {
         return mergedTimetable;
     }
 
-    /**
-     * 時間割に基づいて表示すべき曜日を算出します。
-     * @param Timetable 判定対象の時間割
-     * @returns 表示対象の曜日配列
-     */
     public getShouldDisplayWeekdays(Timetable: TimetableData): Weekday[] {
         const shouldDisplay: Weekday[] = ["月", "火", "水", "木", "金"];
 
@@ -101,12 +110,6 @@ export class IntegratedTimetableService implements TimetableService {
         return shouldDisplay;
     }
 
-    /**
-     * 表示すべき時限を算出します。
-     * @param timetable 判定対象の時間割
-     * @param campus 対象キャンパス
-     * @returns 表示する時限リスト
-     */
     public getShouldDisplayPeriods(timetable: TimetableData, campus: Campus): Period[] {
         // TODO: ちゃんと実装する
         return ["1", "2", "3", "4", "5"];
