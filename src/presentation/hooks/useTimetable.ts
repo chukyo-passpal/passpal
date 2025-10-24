@@ -86,7 +86,22 @@ const useTimetable = create<TimetableState>()(
                 lastFetch: state.lastFetch,
                 timetableData: state.timetableData,
             }),
-            storage: createJSONStorage(() => AsyncStorage),
+            storage: createJSONStorage(() => AsyncStorage, {
+                replacer: (key, value) => {
+                    // DateをISO文字列に変換して保存
+                    if (value instanceof Date) {
+                        return value.toISOString();
+                    }
+                    return value;
+                },
+                reviver: (key, value) => {
+                    // ISO文字列をDateに変換して復元
+                    if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/.test(value)) {
+                        return new Date(value);
+                    }
+                    return value;
+                },
+            }),
             migrate: (persistedState: any, version: number) => {
                 // 将来的なマイグレーション処理
                 // version 0 からのマイグレーション例:

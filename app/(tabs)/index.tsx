@@ -15,8 +15,8 @@ import { Linking, ScrollView, View } from "react-native";
 export default function HomeScreen() {
     const { theme } = useTheme();
     const router = useRouter();
-    const { newsData, refetch: refetchNews, loading: loadingNews } = useNews();
-    const { mailData, refetch: refetchMail, loading: mailLoading } = useMail();
+    const { newsData, refetch: refetchNews, loading: loadingNews, lastFetch: newsLastFetch } = useNews();
+    const { mailData, refetch: refetchMail, loading: mailLoading, lastFetch: mailLastFetch } = useMail();
 
     const handleOpenALBO = () => {
         Linking.openURL("https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/UnLoginControl");
@@ -29,6 +29,24 @@ export default function HomeScreen() {
     const handleOpenSettings = () => {
         router.push("/settings");
     };
+
+    // メールの最終取得日が12時間以上前 | null && ローディング中でない場合は再取得
+    React.useEffect(() => {
+        if (mailLoading) return;
+        const now = new Date();
+        if (!mailLastFetch || now.getTime() - mailLastFetch.getTime() > 12 * 60 * 60 * 1000) {
+            refetchMail();
+        }
+    }, [mailLastFetch, mailLoading, refetchMail]);
+
+    // ニュースの最終取得日が12時間以上前 | null && ローディング中でない場合は再取得
+    React.useEffect(() => {
+        if (loadingNews) return;
+        const now = new Date();
+        if (!newsLastFetch || now.getTime() - newsLastFetch.getTime() > 12 * 60 * 60 * 1000) {
+            refetchNews();
+        }
+    }, [newsLastFetch, loadingNews, refetchNews]);
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>

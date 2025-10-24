@@ -24,7 +24,7 @@ export default function TimetableScreen() {
     const [selectedDay, setSelectedDay] = useState(0); // 月曜日 = 0
     const { campus, initTimetableViewMode } = useSetting();
     const [timetableViewMode, setTimetableViewMode] = useState<TimetableViewMode>(initTimetableViewMode);
-    const { timetableData, loading } = useTimetable();
+    const { timetableData, loading, lastFetch, refetch } = useTimetable();
 
     const tService = timetableServiceInstance;
     const periodData = tService.periodData[campus];
@@ -47,6 +47,13 @@ export default function TimetableScreen() {
     const handleTouchClass = (manaboCourseId: string) => {
         router.push(`/course/${manaboCourseId}`);
     };
+
+    // 時間割の取得がされていない && 時間割が存在しない && ローディング中でない場合に取得
+    React.useEffect(() => {
+        if (!lastFetch && !timetableData && !loading) {
+            refetch();
+        }
+    }, [lastFetch, timetableData, loading, refetch]);
 
     // ローディング中の表示
     if (loading && !timetableData) {
