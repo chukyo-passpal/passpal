@@ -1,16 +1,20 @@
-import { AssignmentPriority, AssignmentStatus } from "@/src/domain/constants/assignment";
+import { ManaboContentData } from "./course";
 
-export interface AssignmentInfo {
-    id: string;
-    title: string;
-    directory: string;
-    status: AssignmentStatus;
-    startDate?: Date;
-    dueDate?: Date;
-    priority?: AssignmentPriority;
-    manaboUrl?: string;
+type ClassId = string;
+type DirectoryId = string;
+
+export interface AssignmentDirectoryData {
+    directoryId: DirectoryId;
+    directoryName: string;
+    contents: ManaboContentData[];
 }
 
-export type AssignmentData = {
-    [courseId: string]: AssignmentInfo[];
-};
+export interface AssignmentClassData {
+    classId: ClassId;
+    className: string;
+    directories: Record<DirectoryId, AssignmentDirectoryData>;
+}
+
+export interface AssignmentInfo {
+    classes: Record<ClassId, AssignmentClassData>;
+}

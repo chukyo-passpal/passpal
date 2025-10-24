@@ -1,5 +1,5 @@
 import courseRepositoryInstance, { CourseRepository } from "@/src/data/repositories/courseRepository";
-import { AssignmentData, AssignmentInfo } from "../models/assignment";
+import { AssignmentClassData, AssignmentDirectoryData, AssignmentInfo } from "../models/assignment";
 import { ManaboDirectoryInfo } from "../models/course";
 import { TimetableData } from "../models/timetable";
 
@@ -16,14 +16,14 @@ export interface AssignmentService {
      * @param manaboCourseId Manaboの授業ID
      * @returns 課題情報の配列
      */
-    getAssignments(manaboCourseId: string): Promise<AssignmentInfo[]>;
+    getAssignments(manaboCourseId: string): Promise<AssignmentClassData>;
 
     /**
      * 時間割に含まれる全授業の課題情報をまとめて取得します。
      * @param timetable 時間割データ
      * @returns 授業IDをキーとした課題情報
      */
-    getAllAssignments(timetable: TimetableData): Promise<AssignmentData>;
+    getAllAssignments(timetable: TimetableData): Promise<AssignmentInfo>;
 }
 
 export class IntegratedAssignmentService implements AssignmentService {
@@ -41,30 +41,34 @@ export class IntegratedAssignmentService implements AssignmentService {
         return this.courseRepository.getClassDirectory(manaboCourseId);
     }
 
-    public async getAssignments(manaboCourseId: string): Promise<AssignmentInfo[]> {
+    public async getAssignments(manaboCourseId: string): Promise<AssignmentClassData> {
         const directories = await this.getDirectory(manaboCourseId);
 
-        const assignment: AssignmentInfo[] = [];
+        const assignment: AssignmentDirectoryData[] = [];
 
         for (const directory of directories.directories) {
             const contents = await this.courseRepository.getClassContent(manaboCourseId, directory.directoryId);
 
-            assignment.push(
-                ...contents.map(
-                    (e): AssignmentInfo => ({
-                        id: e.contentId,
-                        title: e.title,
-                        directory: directory.title,
-                        status: "not-started",
-                    })
-                )
-            );
+            assignment.push({
+                directoryId: directory.directoryId,
+                directoryName: directory.title,
+                contents: contents,
+            });
         }
 
-        return assignment;
+        const directoriesRecord: Record<string, AssignmentDirectoryData> = {};
+        assignment.forEach((dir) => {
+            directoriesRecord[dir.directoryId] = dir;
+        });
+
+        return {
+            classId: manaboCourseId,
+            className: directories.className,
+            directories: directoriesRecord,
+        };
     }
 
-    public async getAllAssignments(timetable: TimetableData): Promise<AssignmentData> {
+    public async getAllAssignments(timetable: TimetableData): Promise<AssignmentInfo> {
         let courseIds: string[] = [];
         for (const days of Object.keys(timetable.timetable) as (keyof typeof timetable.timetable)[]) {
             for (const periodKey of Object.keys(timetable.timetable[days])) {
@@ -77,13 +81,20 @@ export class IntegratedAssignmentService implements AssignmentService {
         // 重複を排除
         courseIds = Array.from(new Set(courseIds)).filter((id) => id !== "");
 
-        const assignmentData: AssignmentData = {};
+        const assignmentData: AssignmentClassData[] = [];
 
         for (const courseId of courseIds) {
-            assignmentData[courseId] = await this.getAssignments(courseId);
+            assignmentData.push(await this.getAssignments(courseId));
         }
 
-        return assignmentData;
+        const assignmentDataRecord: Record<string, AssignmentClassData> = {};
+        assignmentData.forEach((cls) => {
+            assignmentDataRecord[cls.classId] = cls;
+        });
+
+        return {
+            classes: assignmentDataRecord,
+        };
     }
 }
 

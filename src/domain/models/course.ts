@@ -69,9 +69,44 @@ export interface ManaboDirectoryInfo {
 }
 
 /* Manaboの授業コンテンツ */
-export interface ManaboContentInfo {
-    contentId: string;
-    title: string;
-    type: string;
-    body: string;
+export interface ManaboBaseContentData {
+    type: "file" | "report";
+    isDone: boolean;
+    duration: {
+        publish: {
+            start?: Date;
+            end?: Date;
+        };
+        deadline: {
+            start?: Date;
+            end?: Date;
+        };
+    };
 }
+
+export interface ManaboFileContentData extends ManaboBaseContentData {
+    type: "file";
+
+    comment: string;
+    files: {
+        fileName: string;
+        href: string;
+        icon: string;
+    }[];
+}
+
+export interface ManaboReportContentData extends ManaboBaseContentData {
+    type: "report";
+
+    title: string;
+    description: string;
+    contentId: string;
+    reportType: string;
+    isExpired: boolean;
+    actions: {
+        title: string;
+        href: string;
+    }[];
+}
+
+export type ManaboContentData = ManaboFileContentData | ManaboReportContentData;

@@ -19,7 +19,20 @@ export default function CourseAssignments() {
     const courseInfo = courseData?.courses[courseId || ""];
 
     // この授業の課題のみを取得
-    const assignments = assignmentData?.[courseId || ""];
+    const classData = assignmentData?.classes[courseId || ""];
+
+    // ディレクトリ内のコンテンツを配列に変換
+    const assignments = useMemo(() => {
+        if (!classData?.directories) return [];
+
+        return Object.values(classData.directories).flatMap((directory) =>
+            directory.contents.map((content) => ({
+                ...content,
+                directoryId: directory.directoryId,
+                directoryName: directory.directoryName,
+            }))
+        );
+    }, [classData]);
 
     // 初回読み込み
     useEffect(() => {
@@ -42,76 +55,33 @@ export default function CourseAssignments() {
         }
     };
 
-    // 課題のステータスを更新
-    const handleUpdateAssignmentStatus = (assignmentId: string, status: string) => {
-        // 課題のステータスを更新する処理を実装
-    };
-
-    // ステータスの色を取得
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case "completed":
-                return theme.colors.status.success;
-            case "in-progress":
-                return theme.colors.status.warning;
-            case "not-started":
-                return theme.colors.status.error;
-            default:
-                return theme.colors.text.secondary;
+    // コンテンツのタイトルを取得
+    const getContentTitle = (content: (typeof assignments)[number]) => {
+        if (content.type === "report") {
+            return content.title;
+        } else {
+            return content.comment || "ファイル";
         }
     };
 
-    // ステータスのラベルを取得
-    const getStatusLabel = (status: string) => {
-        switch (status) {
-            case "completed":
-                return "完了";
-            case "in-progress":
-                return "進行中";
-            case "not-started":
-                return "未開始";
-            default:
-                return status;
-        }
+    // コンテンツのステータス色を取得
+    const getStatusColor = (isDone: boolean) => {
+        return isDone ? theme.colors.status.success : theme.colors.status.warning;
     };
 
-    // 優先度の色を取得
-    const getPriorityColor = (priority?: string) => {
-        switch (priority) {
-            case "high":
-                return theme.colors.status.error;
-            case "medium":
-                return theme.colors.status.warning;
-            case "low":
-                return theme.colors.status.info;
-            default:
-                return theme.colors.text.secondary;
-        }
-    };
-
-    // 優先度のラベルを取得
-    const getPriorityLabel = (priority?: string) => {
-        switch (priority) {
-            case "high":
-                return "高";
-            case "medium":
-                return "中";
-            case "low":
-                return "低";
-            default:
-                return "なし";
-        }
+    // コンテンツのステータスラベルを取得
+    const getStatusLabel = (isDone: boolean) => {
+        return isDone ? "完了" : "未完了";
     };
 
     // 課題の統計
     const stats = useMemo(() => {
-        const total = assignments?.length || 0;
-        const completed = assignments?.filter((a) => a.status === "completed").length || 0;
-        const inProgress = assignments?.filter((a) => a.status === "in-progress").length || 0;
-        const notStarted = assignments?.filter((a) => a.status === "not-started").length || 0;
-        const overdue = assignments ? assignments.filter((a) => a.dueDate && a.dueDate < new Date() && a.status !== "completed").length : 0;
+        const total = assignments.length;
+        const completed = assignments.filter((a) => a.isDone).length;
+        const notCompleted = assignments.filter((a) => !a.isDone).length;
+        const overdue = assignments.filter((a) => a.duration.deadline.end && a.duration.deadline.end < new Date() && !a.isDone).length;
 
-        return { total, completed, inProgress, notStarted, overdue };
+        return { total, completed, notCompleted, overdue };
     }, [assignments]);
 
     // 授業が見つからない場合
@@ -178,18 +148,10 @@ export default function CourseAssignments() {
                         </View>
                         <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color={theme.colors.status.warning}>
-                                {stats.inProgress}
+                                {stats.notCompleted}
                             </Typography>
                             <Typography variant="caption" color={theme.colors.text.secondary}>
-                                進行中
-                            </Typography>
-                        </View>
-                        <View style={{ alignItems: "center", gap: 4 }}>
-                            <Typography variant="h2" color={theme.colors.status.error}>
-                                {stats.notStarted}
-                            </Typography>
-                            <Typography variant="caption" color={theme.colors.text.secondary}>
-                                未開始
+                                未完了
                             </Typography>
                         </View>
                     </View>
@@ -241,24 +203,35 @@ export default function CourseAssignments() {
                             </Typography>
                         </View>
 
-                        {assignments?.map((assignment) => {
-                            const isOverdue = assignment.dueDate && assignment.dueDate < new Date() && assignment.status !== "completed";
+                        {assignments.map((assignment, index) => {
+                            const dueDate = assignment.duration.deadline.end;
+                            const isOverdue = dueDate && dueDate < new Date() && !assignment.isDone;
+                            const contentTitle = getContentTitle(assignment);
+                            const manaboUrl =
+                                assignment.type === "report"
+                                    ? assignment.actions.find((a) => a.href)?.href
+                                    : assignment.type === "file"
+                                    ? assignment.files[0]?.href
+                                    : undefined;
 
                             return (
                                 <Card
-                                    key={assignment.id}
+                                    key={`${assignment.directoryId}-${index}`}
                                     variant="default"
                                     style={{
                                         gap: 12,
                                         borderLeftWidth: 4,
-                                        borderLeftColor: isOverdue ? theme.colors.status.error : getPriorityColor(assignment.priority),
+                                        borderLeftColor: isOverdue ? theme.colors.status.error : theme.colors.primary.main,
                                     }}
                                 >
                                     {/* タイトルとステータス */}
                                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
                                         <View style={{ flex: 1 }}>
                                             <Typography variant="label" color={theme.colors.text.primary}>
-                                                {assignment.title}
+                                                {contentTitle}
+                                            </Typography>
+                                            <Typography variant="caption" color={theme.colors.text.secondary} style={{ marginTop: 4 }}>
+                                                {assignment.directoryName}
                                             </Typography>
                                         </View>
                                         <View
@@ -266,22 +239,22 @@ export default function CourseAssignments() {
                                                 paddingHorizontal: 8,
                                                 paddingVertical: 4,
                                                 borderRadius: 4,
-                                                backgroundColor: getStatusColor(assignment.status) + "20",
+                                                backgroundColor: getStatusColor(assignment.isDone) + "20",
                                             }}
                                         >
-                                            <Typography variant="caption" color={getStatusColor(assignment.status)}>
-                                                {getStatusLabel(assignment.status)}
+                                            <Typography variant="caption" color={getStatusColor(assignment.isDone)}>
+                                                {getStatusLabel(assignment.isDone)}
                                             </Typography>
                                         </View>
                                     </View>
 
                                     {/* 期限 */}
-                                    {assignment.dueDate && (
+                                    {dueDate && (
                                         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
                                             <Icon name="calendar" size={16} color={isOverdue ? theme.colors.status.error : theme.colors.text.secondary} />
                                             <Typography variant="bodySmall" color={isOverdue ? theme.colors.status.error : theme.colors.text.secondary}>
-                                                期限: {assignment.dueDate.toLocaleDateString("ja-JP")}{" "}
-                                                {assignment.dueDate.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })}
+                                                期限: {dueDate.toLocaleDateString("ja-JP")}{" "}
+                                                {dueDate.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })}
                                             </Typography>
                                             {isOverdue && (
                                                 <View
@@ -300,22 +273,35 @@ export default function CourseAssignments() {
                                         </View>
                                     )}
 
-                                    {/* 優先度 */}
-                                    {assignment.priority && (
-                                        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                            <Icon name="flag" size={16} color={getPriorityColor(assignment.priority)} />
-                                            <Typography variant="bodySmall" color={getPriorityColor(assignment.priority)}>
-                                                優先度: {getPriorityLabel(assignment.priority)}
+                                    {/* レポートの説明 */}
+                                    {assignment.type === "report" && assignment.description && (
+                                        <View style={{ gap: 4 }}>
+                                            <Typography variant="bodySmall" color={theme.colors.text.secondary}>
+                                                {assignment.description}
                                             </Typography>
+                                        </View>
+                                    )}
+
+                                    {/* ファイル一覧 */}
+                                    {assignment.type === "file" && assignment.files.length > 0 && (
+                                        <View style={{ gap: 4 }}>
+                                            {assignment.files.map((file, fileIndex) => (
+                                                <View key={fileIndex} style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+                                                    <Icon name="clipboard-list" size={14} color={theme.colors.text.secondary} />
+                                                    <Typography variant="caption" color={theme.colors.text.secondary}>
+                                                        {file.fileName}
+                                                    </Typography>
+                                                </View>
+                                            ))}
                                         </View>
                                     )}
 
                                     {/* アクションボタン */}
                                     <View style={{ flexDirection: "row", gap: 8, marginTop: 8 }}>
                                         {/* MaNaBoで開く */}
-                                        {assignment.manaboUrl && (
+                                        {manaboUrl && (
                                             <TouchableOpacity
-                                                onPress={() => handleOpenInManabo(assignment.manaboUrl)}
+                                                onPress={() => handleOpenInManabo(manaboUrl)}
                                                 style={{
                                                     flex: 1,
                                                     flexDirection: "row",
@@ -331,29 +317,6 @@ export default function CourseAssignments() {
                                                 <Icon name="arrow-left-right" size={16} color={theme.colors.background.primary} />
                                                 <Typography variant="label" color={theme.colors.background.primary}>
                                                     MaNaBoで開く
-                                                </Typography>
-                                            </TouchableOpacity>
-                                        )}
-
-                                        {/* ステータス変更 */}
-                                        {assignment.status !== "completed" && (
-                                            <TouchableOpacity
-                                                onPress={() => handleUpdateAssignmentStatus(assignment.id, "completed")}
-                                                style={{
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    justifyContent: "center",
-                                                    paddingVertical: 8,
-                                                    paddingHorizontal: 12,
-                                                    borderRadius: 6,
-                                                    borderWidth: 1,
-                                                    borderColor: theme.colors.status.success,
-                                                    gap: 6,
-                                                }}
-                                            >
-                                                <Icon name="check" size={16} color={theme.colors.status.success} />
-                                                <Typography variant="label" color={theme.colors.status.success}>
-                                                    完了
                                                 </Typography>
                                             </TouchableOpacity>
                                         )}

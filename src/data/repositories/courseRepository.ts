@@ -1,4 +1,4 @@
-import { CourseDetailInfo, CourseNewsInfo, ManaboContentInfo, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/course";
+import { CourseDetailInfo, CourseNewsInfo, ManaboContentData, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/course";
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
 import { classDirectoryToDomain, classNewsToDomain, courseSyllabusToDomain, entryToDomain, manaboContentToDomain } from "../mappers/courseMapper";
@@ -47,7 +47,7 @@ export interface CourseRepository {
      * @returns ドメイン変換済みのコンテンツ情報
      * @throws ParseError 解析に失敗した場合
      */
-    getClassContent(classId: string, directoryId: string, viewType?: string): Promise<ManaboContentInfo[]>;
+    getClassContent(classId: string, directoryId: string, viewType?: string): Promise<ManaboContentData[]>;
 
     /**
      * 指定授業に出席フォームが存在するか確認します。

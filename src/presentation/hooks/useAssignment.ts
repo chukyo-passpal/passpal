@@ -1,4 +1,4 @@
-import { AssignmentData, AssignmentInfo } from "@/src/domain/models/assignment";
+import { AssignmentClassData, AssignmentInfo } from "@/src/domain/models/assignment";
 import { TimetableData } from "@/src/domain/models/timetable";
 import assignmentServiceInstance, { AssignmentService } from "@/src/domain/services/assignmentService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,7 +11,7 @@ import { immer } from "zustand/middleware/immer";
  */
 export interface AssignmentState {
     lastFetch: Date | null;
-    assignmentData: AssignmentData | null;
+    assignmentData: AssignmentInfo | null;
     loading: boolean;
 
     assignmentService: AssignmentService;
@@ -24,12 +24,12 @@ export interface AssignmentState {
     /**
      * 単一授業の課題を取得
      */
-    fetchClassAssignments: (classId: string) => Promise<AssignmentInfo[]>;
+    fetchClassAssignments: (classId: string) => Promise<AssignmentClassData>;
 
     /**
      * 複数授業の課題を取得
      */
-    fetchAllClassAssignments: (timetable: TimetableData) => Promise<AssignmentData>;
+    fetchAllClassAssignments: (timetable: TimetableData) => Promise<AssignmentInfo>;
 }
 
 /**
@@ -65,11 +65,16 @@ const useAssignment = create<AssignmentState>()(
                 try {
                     const data = await get().assignmentService.getAssignments(classId);
                     set((state) => {
-                        // 既存の課題データがある場合はマージ
+                        // データがない時に作る
                         if (!state.assignmentData) {
-                            state.assignmentData = {};
+                            state.assignmentData = { classes: {} };
                         }
-                        state.assignmentData[classId] = data;
+                        if (!state.assignmentData?.classes) {
+                            state.assignmentData.classes = {};
+                        }
+
+                        state.assignmentData.classes[classId] = data;
+
                         state.loading = false;
                         state.lastFetch = new Date();
                     });
