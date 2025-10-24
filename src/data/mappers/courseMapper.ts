@@ -123,7 +123,6 @@ function parseJapaneseDatetimeRange(input: string): {
  * @returns コンテンツ情報の配列
  */
 export function manaboContentToDomain(data: parser.ManaboClassContentDTO): ManaboContentData[] {
-    console.log(data);
     return data.contents.map((content) => {
         // 期限の計算
         let duration: {
