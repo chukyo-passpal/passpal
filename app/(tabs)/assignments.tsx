@@ -4,12 +4,13 @@ import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
+import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import React from "react";
-import { ActivityIndicator, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
 // 課題の型定義
 type Assignment = {
@@ -24,10 +25,13 @@ type Assignment = {
     dueDate?: Date;
 };
 
+type FilterType = "all" | "not-started" | "completed" | "expired";
+
 export default function Assignments() {
     const { theme } = useTheme();
     const { timetableData } = useTimetable();
     const { assignmentData, loading, fetchAllClassAssignments } = useAssignment();
+    const [filter, setFilter] = React.useState<FilterType>("not-started");
 
     const handleRefresh = () => {
         if (loading) return;
@@ -35,7 +39,10 @@ export default function Assignments() {
         fetchAllClassAssignments(timetableData);
     };
 
-    const handleTouch = (classId: string, directoryId: string, contentId: string) => {};
+    const handleTouch = (classId: string, directoryId: string, contentId: string) => {
+        const url = `https://manabo.cnc.chukyo-u.ac.jp/class/${classId}/`;
+        Linking.openURL(url);
+    };
 
     let flattedAssignments: Assignment[] = [];
     for (const cls in assignmentData?.classes) {
@@ -51,8 +58,8 @@ export default function Assignments() {
                         directoryId: dirData.directoryId,
                         contentId: cont.contentId,
 
-                        title: clsData.className,
-                        subtitle: cont.title,
+                        title: cont.title,
+                        subtitle: `${clsData.className} - ${dirData.directoryName}`,
                         status: assignmentServiceInstance.getStatus(cont),
                         publishDate: cont.duration.publish.end,
                         dueDate: cont.duration.deadline.end,
@@ -60,6 +67,37 @@ export default function Assignments() {
                 });
         }
     }
+
+    // ソート処理（締切日時 ?? 公開日時で昇順）
+    flattedAssignments.sort((a, b) => {
+        const dateA = a.dueDate ?? a.publishDate;
+        const dateB = b.dueDate ?? b.publishDate;
+
+        if (!dateA && !dateB) return 0;
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+
+        return dateA.getTime() - dateB.getTime();
+    });
+
+    // フィルタリング処理
+    const filteredAssignments = flattedAssignments.filter((assignment) => {
+        if (filter === "all") return true;
+        return assignment.status === filter;
+    });
+
+    const getFilterLabel = (filterType: FilterType): string => {
+        switch (filterType) {
+            case "all":
+                return "すべて";
+            case "not-started":
+                return "未着手";
+            case "completed":
+                return "完了";
+            case "expired":
+                return "期限切れ";
+        }
+    };
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
@@ -73,39 +111,52 @@ export default function Assignments() {
                         課題を読み込み中...
                     </Typography>
                 </View>
-            ) : flattedAssignments.length === 0 ? (
+            ) : filteredAssignments.length === 0 ? (
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
                     <Icon name="clipboard-list" size={48} color={theme.colors.text.secondary} />
                     <Typography variant="body" style={{ marginTop: 16 }} color={theme.colors.text.secondary}>
-                        課題はありません
+                        {filter === "all" ? "課題はありません" : `${getFilterLabel(filter)}の課題はありません`}
                     </Typography>
                     <Button variant="text" style={{ marginTop: 16 }} onPress={handleRefresh}>
                         更新する
                     </Button>
                 </View>
             ) : (
-                <ScrollView
-                    style={{
-                        flex: 1,
-                        paddingHorizontal: 20,
-                    }}
-                    contentContainerStyle={{
-                        gap: 16,
-                        paddingBottom: 24,
-                    }}
-                    refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[theme.colors.primary.main]} />}
-                >
-                    {flattedAssignments?.map((a) => {
-                        // 元の課題データを取得してmanaboUrlを渡す
-                        return (
-                            <AssignmentCard
-                                key={`${a.classId},${a.directoryId}${a.subtitle}`}
-                                assignment={a}
-                                handleTouch={() => handleTouch(a.classId, a.directoryId, a.contentId)}
-                            />
-                        );
-                    })}
-                </ScrollView>
+                <View style={{ flex: 1, gap: 16 }}>
+                    {/* フィルターボタン */}
+                    <View style={{ paddingHorizontal: 20, alignItems: "flex-end" }}>
+                        <Select
+                            value={filter}
+                            onValueChange={(value) => setFilter(value as FilterType)}
+                            items={[
+                                { label: "未着手", value: "not-started" },
+                                { label: "完了", value: "completed" },
+                                { label: "期限切れ", value: "expired" },
+                                { label: "すべて", value: "all" },
+                            ]}
+                        />
+                    </View>
+
+                    <ScrollView
+                        style={{ paddingHorizontal: 20 }}
+                        contentContainerStyle={{
+                            gap: 16,
+                            paddingBottom: 24,
+                        }}
+                        refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[theme.colors.primary.main]} />}
+                    >
+                        {filteredAssignments?.map((a) => {
+                            // 元の課題データを取得してmanaboUrlを渡す
+                            return (
+                                <AssignmentCard
+                                    key={`${a.classId},${a.directoryId}${a.title}`}
+                                    assignment={a}
+                                    handleTouch={() => handleTouch(a.classId, a.directoryId, a.contentId)}
+                                />
+                            );
+                        })}
+                    </ScrollView>
+                </View>
             )}
         </View>
     );
@@ -198,7 +249,11 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: Assignment; h
                         justifyContent: "space-between",
                     }}
                 >
-                    <View></View>
+                    <View>
+                        <Typography variant="body" style={{ fontSize: 16 }}>
+                            Manaboで開く
+                        </Typography>
+                    </View>
                     <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                 </View>
             </Card>
