@@ -7,7 +7,7 @@ import useAuth from "@/src/presentation/hooks/useAuth";
 import { Checkbox } from "expo-checkbox";
 import { router } from "expo-router";
 import React, { useState } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Step3() {
     const { acceptTerms } = useAuth();
@@ -22,11 +22,11 @@ export default function Step3() {
     };
 
     const handleClickTerms = () => {
-        // 利用規約のリンクを開く処理を実装
+        Linking.openURL("https://chukyo-passpal.app/term");
     };
 
     const handleClickPrivacy = () => {
-        // プライバシーポリシーのリンクを開く処理を実装
+        Linking.openURL("https://chukyo-passpal.app/policy");
     };
 
     return (
