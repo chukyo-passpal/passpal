@@ -88,6 +88,10 @@ export default function HomeScreen() {
                         flexDirection: "row",
                         gap: theme.spacing.md,
                         marginBottom: theme.spacing.lg,
+
+                        // TODO: 機能が完成したら表示
+                        height: 0,
+                        opacity: 0,
                     }}
                 >
                     {/* Next Class Card */}
