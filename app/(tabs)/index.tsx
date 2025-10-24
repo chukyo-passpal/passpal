@@ -65,22 +65,26 @@ export default function HomeScreen() {
                     おかえりなさい!
                 </Typography>
 
-                <Button
-                    variant="text"
-                    onPress={() => {
-                        refetchNews();
-                    }}
-                >
-                    refetch news
-                </Button>
-                <Button
-                    variant="text"
-                    onPress={() => {
-                        refetchMail();
-                    }}
-                >
-                    refetch mail
-                </Button>
+                {__DEV__ && (
+                    <>
+                        <Button
+                            variant="text"
+                            onPress={() => {
+                                refetchNews();
+                            }}
+                        >
+                            refetch news
+                        </Button>
+                        <Button
+                            variant="text"
+                            onPress={() => {
+                                refetchMail();
+                            }}
+                        >
+                            refetch mail
+                        </Button>
+                    </>
+                )}
 
                 {/* Info Cards Row */}
                 <View
