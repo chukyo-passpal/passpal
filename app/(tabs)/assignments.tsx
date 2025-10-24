@@ -1,4 +1,6 @@
-import { AssignmentInfo } from "@/src/domain/models/assignment";
+import { AssignmentStatus } from "@/src/domain/constants/assignment";
+import assignmentServiceInstance from "@/src/domain/services/assignmentService";
+import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -11,18 +13,15 @@ import { ActivityIndicator, RefreshControl, ScrollView, TouchableOpacity, View }
 
 // 課題の型定義
 type Assignment = {
-    id: string;
+    classId: string;
+    directoryId: string;
+    contentId: string;
+
     title: string;
     subtitle: string;
-    status: "in-progress" | "completed" | "upcoming";
-    startDate: string;
-    dueDate: string;
-    priority?: "high" | "medium" | "low";
-    statusLabel: string;
-    statusColor: string;
-    statusBgColor: string;
-    actionLabel: string;
-    actionColor: string;
+    status: AssignmentStatus;
+    publishDate?: Date;
+    dueDate?: Date;
 };
 
 export default function Assignments() {
@@ -30,14 +29,37 @@ export default function Assignments() {
     const { timetableData } = useTimetable();
     const { assignmentData, loading, fetchAllClassAssignments } = useAssignment();
 
-    const flattedAssignments: AssignmentInfo[] = assignmentData ? Object.values(assignmentData).flat() : [];
-
     const handleRefresh = () => {
+        if (loading) return;
         if (!timetableData) return;
         fetchAllClassAssignments(timetableData);
     };
 
-    const handleTouch = (assignmentId: string, manaboUrl?: string) => {};
+    const handleTouch = (classId: string, directoryId: string, contentId: string) => {};
+
+    let flattedAssignments: Assignment[] = [];
+    for (const cls in assignmentData?.classes) {
+        const clsData = assignmentData.classes[cls];
+        for (const dir in clsData.directories) {
+            const dirData = clsData.directories[dir];
+
+            dirData.contents
+                .filter((e) => e.type === "report")
+                .forEach((cont) => {
+                    flattedAssignments.push({
+                        classId: clsData.classId,
+                        directoryId: dirData.directoryId,
+                        contentId: cont.contentId,
+
+                        title: clsData.className,
+                        subtitle: cont.title,
+                        status: assignmentServiceInstance.getStatus(cont),
+                        publishDate: cont.duration.publish.end,
+                        dueDate: cont.duration.deadline.end,
+                    });
+                });
+        }
+    }
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
@@ -57,6 +79,9 @@ export default function Assignments() {
                     <Typography variant="body" style={{ marginTop: 16 }} color={theme.colors.text.secondary}>
                         課題はありません
                     </Typography>
+                    <Button variant="text" style={{ marginTop: 16 }} onPress={handleRefresh}>
+                        更新する
+                    </Button>
                 </View>
             ) : (
                 <ScrollView
@@ -70,10 +95,14 @@ export default function Assignments() {
                     }}
                     refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[theme.colors.primary.main]} />}
                 >
-                    {flattedAssignments?.map((assignment: any) => {
+                    {flattedAssignments?.map((a) => {
                         // 元の課題データを取得してmanaboUrlを渡す
                         return (
-                            <AssignmentCard key={assignment.id} assignment={assignment} handleTouch={() => handleTouch(assignment.id, assignment.manaboUrl)} />
+                            <AssignmentCard
+                                key={`${a.classId},${a.directoryId}${a.subtitle}`}
+                                assignment={a}
+                                handleTouch={() => handleTouch(a.classId, a.directoryId, a.contentId)}
+                            />
                         );
                     })}
                 </ScrollView>
@@ -85,6 +114,21 @@ export default function Assignments() {
 // 課題カードコンポーネント
 function AssignmentCard({ assignment, handleTouch }: { assignment: Assignment; handleTouch: () => void }) {
     const { theme } = useTheme();
+
+    const formatDate = (date?: Date): string => {
+        if (!date) return "無し";
+        const year = date.getFullYear();
+        const nowYear = new Date().getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+
+        if (year !== nowYear) {
+            return `${year}年${month}月${day}日 ${hours}:${minutes}`;
+        }
+        return `${month}月${day}日 ${hours}:${minutes}`;
+    };
 
     return (
         <TouchableOpacity activeOpacity={0.8} onPress={handleTouch}>
@@ -105,14 +149,14 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: Assignment; h
                     </View>
                     <View
                         style={{
-                            backgroundColor: assignment.statusBgColor,
+                            backgroundColor: assignmentServiceInstance.getStatusBGColor(assignment.status, theme),
                             paddingHorizontal: 12,
                             paddingVertical: 6,
                             borderRadius: 16,
                         }}
                     >
-                        <Typography variant="caption" color={assignment.statusColor}>
-                            {assignment.statusLabel}
+                        <Typography variant="caption" color={assignmentServiceInstance.getStatusColor(assignment.status, theme)}>
+                            {assignmentServiceInstance.getStatusLabel(assignment.status)}
                         </Typography>
                     </View>
                 </View>
@@ -124,12 +168,12 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: Assignment; h
                 <View style={{ flexDirection: "row", gap: 24 }}>
                     <View style={{ flex: 1, gap: 4 }}>
                         <Typography variant="caption" color={theme.colors.text.secondary}>
-                            開始日時
+                            公開期限
                         </Typography>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
                             <Icon name="calendar" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="body" style={{ fontSize: 16 }}>
-                                {assignment.startDate}
+                                {formatDate(assignment.publishDate)}
                             </Typography>
                         </View>
                     </View>
@@ -140,7 +184,7 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: Assignment; h
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
                             <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="body" style={{ fontSize: 16 }}>
-                                {assignment.dueDate}
+                                {formatDate(assignment.dueDate)}
                             </Typography>
                         </View>
                     </View>
@@ -154,12 +198,7 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: Assignment; h
                         justifyContent: "space-between",
                     }}
                 >
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                        <Icon name="calendar" size={16} color={assignment.actionColor} />
-                        <Typography variant="bodySmall" color={assignment.actionColor}>
-                            {assignment.actionLabel}
-                        </Typography>
-                    </View>
+                    <View></View>
                     <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                 </View>
             </Card>

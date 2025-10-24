@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const ASSIGNMENT_STATUSES = ["not-started", "in-progress", "completed"] as const;
+export const ASSIGNMENT_STATUSES = ["not-started", "completed", "expired"] as const;
 export const AssignmentSchema = z.literal(ASSIGNMENT_STATUSES);
 export type AssignmentStatus = (typeof ASSIGNMENT_STATUSES)[number];
 

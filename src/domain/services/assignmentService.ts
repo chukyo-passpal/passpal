@@ -1,6 +1,8 @@
 import courseRepositoryInstance, { CourseRepository } from "@/src/data/repositories/courseRepository";
+import { Theme } from "@/src/utils/theme";
+import { AssignmentStatus } from "../constants/assignment";
 import { AssignmentClassData, AssignmentDirectoryData, AssignmentInfo } from "../models/assignment";
-import { ManaboDirectoryInfo } from "../models/course";
+import { ManaboDirectoryInfo, ManaboReportContentData } from "../models/course";
 import { TimetableData } from "../models/timetable";
 
 export interface AssignmentService {
@@ -24,6 +26,36 @@ export interface AssignmentService {
      * @returns 授業IDをキーとした課題情報
      */
     getAllAssignments(timetable: TimetableData): Promise<AssignmentInfo>;
+
+    /**
+     * コンテンツのステータスを取得
+     * @param content コンテンツデータ
+     * @returns コンテンツのステータス
+     */
+    getStatus(content: ManaboReportContentData): AssignmentStatus;
+
+    /**
+     * コンテンツのステータス色を取得
+     * @param status コンテンツの完了状態
+     * @param theme テーマ情報
+     * @returns ステータス色の文字列
+     */
+    getStatusColor(status: AssignmentStatus, theme: Theme): string;
+
+    /**
+     * コンテンツのステータス背景色を取得
+     * @param status コンテンツの完了状態
+     * @param theme テーマ情報
+     * @returns ステータス背景色の文字列
+     */
+    getStatusBGColor(status: AssignmentStatus, theme: Theme): string;
+
+    /**
+     * コンテンツのステータスの文字列を取得
+     * @param status コンテンツの完了状態
+     * @returns ステータスラベルの文字列
+     */
+    getStatusLabel(status: AssignmentStatus): string;
 }
 
 export class IntegratedAssignmentService implements AssignmentService {
@@ -96,6 +128,43 @@ export class IntegratedAssignmentService implements AssignmentService {
             classes: assignmentDataRecord,
         };
     }
+
+    public getStatus = (content: ManaboReportContentData): AssignmentStatus => {
+        if (content.isDone) {
+            return "completed";
+        } else if (content.isExpired) {
+            return "expired";
+        } else {
+            return "not-started";
+        }
+    };
+
+    public getStatusColor = (status: AssignmentStatus, theme: Theme) => {
+        switch (status) {
+            case "not-started":
+                return theme.colors.status.warning;
+            case "completed":
+                return theme.colors.status.success;
+            case "expired":
+                return theme.colors.status.error;
+        }
+    };
+
+    public getStatusBGColor = (status: AssignmentStatus, theme: Theme) => {
+        return this.getStatusColor(status, theme) + "20";
+    };
+
+    // コンテンツのステータスラベルを取得
+    public getStatusLabel = (status: AssignmentStatus) => {
+        switch (status) {
+            case "not-started":
+                return "未着手";
+            case "completed":
+                return "完了";
+            case "expired":
+                return "期限切れ";
+        }
+    };
 }
 
 const assignmentServiceInstance = new IntegratedAssignmentService();
