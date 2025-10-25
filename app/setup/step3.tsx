@@ -92,19 +92,6 @@ export default function Step3() {
                                         </Typography>
                                     </View>
                                 </View>
-
-                                {/* Bus Feature */}
-                                <View style={{ flexDirection: "row", gap: 16, alignItems: "flex-start" }}>
-                                    <Icon name="bus" size={24} color={theme.colors.primary.main} />
-                                    <View style={{ flex: 1, gap: 4 }}>
-                                        <Typography variant="label" color={theme.colors.primary.main}>
-                                            バス時刻表
-                                        </Typography>
-                                        <Typography variant="caption" color={theme.colors.text.secondary}>
-                                            通学に便利なバスの発着時刻をいつでもチェック。
-                                        </Typography>
-                                    </View>
-                                </View>
                             </View>
                         </Card>
                     </View>

@@ -43,14 +43,6 @@ export default function TabLayout() {
                     tabBarIcon: ({ color, size }) => <Icon name="clipboard-list" size={size} color={color} />,
                 }}
             />
-            <Tabs.Screen
-                name="transport"
-                options={{
-                    href: null, // Hide from tab bar
-                    title: "時刻表",
-                    tabBarIcon: ({ color, size }) => <Icon name="bus" size={size} color={color} />,
-                }}
-            />
         </Tabs>
     );
 }

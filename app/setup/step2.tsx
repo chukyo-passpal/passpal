@@ -72,19 +72,13 @@ export default function Index() {
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
                             <Icon name="calendar" size={24} color={theme.colors.primary.main} />
                             <Typography variant="body" color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
-                                課題提出期限のお知らせ
+                                課題提出期限のお知らせ（未実装）
                             </Typography>
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
                             <Icon name="clock" size={24} color={theme.colors.primary.main} />
                             <Typography variant="body" color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
                                 授業開始時間のお知らせ（未実装）
-                            </Typography>
-                        </View>
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
-                            <Icon name="bus" size={24} color={theme.colors.primary.main} />
-                            <Typography variant="body" color={theme.colors.primary.main} style={{ fontWeight: "500" }}>
-                                バスの出発時刻お知らせ（未実装）
                             </Typography>
                         </View>
                     </Card>
