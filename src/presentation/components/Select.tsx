@@ -71,7 +71,7 @@ export const Select: React.FC<SelectProps> = ({
                 </TamaguiSelect.Trigger>
             )}
 
-            <Adapt when="maxMd" platform="touch">
+            <Adapt platform="touch">
                 <Sheet native={native} modal dismissOnSnapToBottom animation="medium" snapPoints={[40, 40]}>
                     <Sheet.Frame>
                         <Sheet.ScrollView>

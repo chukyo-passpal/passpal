@@ -155,7 +155,7 @@ export default function Settings() {
                                                     fontWeight: "600",
                                                 }}
                                             >
-                                                StoryBookを開く
+                                                トーストを表示
                                             </Typography>
                                         </View>
                                         <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
