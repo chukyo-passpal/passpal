@@ -1,3 +1,4 @@
+import authServiceInstance from "@/src/domain/services/authService";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
@@ -11,8 +12,8 @@ export default function Login() {
 
     const { setFirebaseUser } = useAuth();
 
-    const allowedDomain = "m.chukyo-u.ac.jp";
-    const webClientId = "106090766697496251493";
+    const allowedDomain = authServiceInstance.allowedMailDomain;
+    const webClientId = authServiceInstance.webClientId;
 
     GoogleSignin.configure({
         hostedDomain: allowedDomain,

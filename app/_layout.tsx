@@ -1,24 +1,24 @@
 import ShibbolethWebView, { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
-import alboProviderInstance from "@/src/data/providers/chukyo-univ/alboProvider";
-import cubicsProviderInstance from "@/src/data/providers/chukyo-univ/cubicsProvider";
-import manaboProviderInstance from "@/src/data/providers/chukyo-univ/manaboProvider";
 import { ThemeProvider, useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useAppInit from "@/src/presentation/hooks/useAppInit";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import { tamaguiConfig } from "@/tamagui.config";
-import { Stack } from "expo-router";
+import { SplashScreen, Stack } from "expo-router";
 import { useEffect, useRef } from "react";
 import { TamaguiProvider } from "tamagui";
 
 export default function RootLayout() {
-    const { authService } = useAuth();
-    alboProviderInstance.setAuthStore(useAuth());
-    manaboProviderInstance.setAuthStore(useAuth());
-    cubicsProviderInstance.setAuthStore(useAuth());
-
+    // App初期化処理
     const shibRef = useRef<shibbolethWebViewRef>(null);
+    const isReady = useAppInit(shibRef);
     useEffect(() => {
-        if (shibRef.current) authService.setChukyoShibbolethAuthFunction(shibRef.current.auth);
-    }, [authService]);
+        if (isReady) {
+            SplashScreen.hide();
+        }
+    }, [isReady]);
+    if (!isReady) {
+        return null;
+    }
 
     return (
         <ThemeProvider>
@@ -76,6 +76,7 @@ function RootLayoutNav() {
                 <Stack.Screen name="settings" />
             </Stack.Protected>
 
+            {/* ライセンス画面 */}
             <Stack.Screen name="license" />
 
             {/* Storybook画面（デバッグモード時のみ） */}

@@ -1,8 +1,18 @@
 import { shibbolethWebViewAuthFunction } from "@/src/data/clients/chukyoShibboleth";
-import manaboProviderInstance from "@/src/data/providers/chukyo-univ/manaboProvider";
+import authRepositoryInstance from "@/src/data/repositories/authRepository";
 import { NotSetError } from "../errors/serviceError";
 
 export interface AuthService {
+    /**
+     * Googleサインインで許可するメールドメイン
+     */
+    readonly allowedMailDomain: string;
+
+    /**
+     * Googleサインイン時に使用するFirebase Admin SDKのWebクライアントID
+    */
+    readonly webClientId: string;
+
     /**
      * Shibboleth認証を実行し、Cookieを取得します。
      *
@@ -20,7 +30,7 @@ export interface AuthService {
     setChukyoShibbolethAuthFunction: (func: shibbolethWebViewAuthFunction) => void;
 
     /**
-     * 指定した資格情報でManaboの認証テストを実行します。
+     * 指定した資格情報で認証テストを実行します。
      * @param studentId 学籍番号
      * @param cuIdPass CU-IDのパスワード
      * @returns 認証成功可否のPromise
@@ -31,14 +41,21 @@ export interface AuthService {
 export class IntegratedAuthService implements AuthService {
     protected chukyoShibbolethAuth?: shibbolethWebViewAuthFunction;
     protected shibAuthQueue: Promise<void> = Promise.resolve();
-    protected manaboProvider = manaboProviderInstance;
+    protected authRepository = authRepositoryInstance;
+
+    public get allowedMailDomain(): string {
+        return this.authRepository.allowedMailDomain;
+    }
+    public get webClientId(): string {
+        return this.authRepository.webClientId;
+    }
 
     public setChukyoShibbolethAuthFunction = (func: shibbolethWebViewAuthFunction) => {
         this.chukyoShibbolethAuth = func;
     };
 
     public authTest(studentId: string, cuIdPass: string): Promise<boolean> {
-        return this.manaboProvider.authTest(studentId, cuIdPass);
+        return this.authRepository.authTest(studentId, cuIdPass);
     }
 
     public shibAuth = (...params: Parameters<shibbolethWebViewAuthFunction>): ReturnType<shibbolethWebViewAuthFunction> => {
