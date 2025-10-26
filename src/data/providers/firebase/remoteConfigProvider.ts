@@ -1,4 +1,4 @@
-import remoteConfig from "@react-native-firebase/remote-config";
+import { fetchAndActivate, getRemoteConfig, setDefaults } from "@react-native-firebase/remote-config";
 
 export interface RemoteConfigProvider {
     /**
@@ -9,7 +9,9 @@ export interface RemoteConfigProvider {
 
 export class IntegratedRemoteConfigProvider implements RemoteConfigProvider {
     async fetchRemoteConfig(): Promise<void> {
-        await remoteConfig().setDefaults({
+        const remoteConfig = getRemoteConfig();
+
+        await setDefaults(remoteConfig, {
             // admin
             maintenanceMode: false,
             minimumVersion: "0.0.0",
@@ -19,7 +21,7 @@ export class IntegratedRemoteConfigProvider implements RemoteConfigProvider {
             webClientId: "106090766697496251493",
         });
 
-        const fetchedRemotely = await remoteConfig().fetchAndActivate();
+        const fetchedRemotely = await fetchAndActivate(remoteConfig);
         if (fetchedRemotely) {
             console.log("[Firebase Remote Config] Configs were retrieved from the backend and activated.");
         } else {

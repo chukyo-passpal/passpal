@@ -1,4 +1,4 @@
-import remoteConfig from "@react-native-firebase/remote-config";
+import { getRemoteConfig, getValue } from "@react-native-firebase/remote-config";
 
 export interface AdminRepository {
     /**
@@ -14,11 +14,11 @@ export interface AdminRepository {
 
 export class IntegratedAdminRepository implements AdminRepository {
     get maintenanceMode(): boolean {
-        return remoteConfig().getValue("maintenanceMode").asBoolean();
+        return getValue(getRemoteConfig(), "maintenanceMode").asBoolean();
     }
 
     get minimumVersion(): string {
-        return remoteConfig().getValue("minimumVersion").asString();
+        return getValue(getRemoteConfig(), "minimumVersion").asString();
     }
 }
 

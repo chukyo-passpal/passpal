@@ -1,4 +1,4 @@
-import remoteConfig from "@react-native-firebase/remote-config";
+import { getRemoteConfig, getValue } from "@react-native-firebase/remote-config";
 import manaboProviderInstance from "../providers/chukyo-univ/manaboProvider";
 
 export interface AuthRepository {
@@ -25,11 +25,11 @@ export class IntegratedAuthRepository implements AuthRepository {
     private manaboProvider = manaboProviderInstance;
 
     get allowedMailDomain(): string {
-        return remoteConfig().getValue("allowedMailDomain").asString();
+        return getValue(getRemoteConfig(), "allowedMailDomain").asString();
     }
 
     get webClientId(): string {
-        return remoteConfig().getValue("webClientId").asString();
+        return getValue(getRemoteConfig(), "webClientId").asString();
     }
 
     public authTest(studentId: string, cuIdPass: string): Promise<boolean> {
