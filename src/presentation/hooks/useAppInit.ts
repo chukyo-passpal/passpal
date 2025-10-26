@@ -2,8 +2,7 @@ import { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
 import alboProviderInstance from "@/src/data/providers/chukyo-univ/alboProvider";
 import cubicsProviderInstance from "@/src/data/providers/chukyo-univ/cubicsProvider";
 import manaboProviderInstance from "@/src/data/providers/chukyo-univ/manaboProvider";
-import eventServiceInstance from "@/src/domain/services/eventService";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useAuth from "./useAuth";
 
 export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef | null>) {
@@ -18,14 +17,4 @@ export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef
     useEffect(() => {
         if (shibRef.current) authService.setChukyoShibbolethAuthFunction(shibRef.current.auth);
     }, [authService, shibRef]);
-
-    /* アプリ初期化処理の完了状態を管理 */
-    const [isReady, setIsReady] = useState(false);
-
-    // eventServiceのappInitを実行、完了したらisReadyをtrueにする
-    eventServiceInstance.appInit().finally(() => {
-        setIsReady(true);
-    });
-
-    return isReady;
 }
