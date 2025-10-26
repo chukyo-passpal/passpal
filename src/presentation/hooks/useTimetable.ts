@@ -1,6 +1,6 @@
 import { Period } from "@/src/domain/constants/period";
 import { Weekday } from "@/src/domain/constants/week";
-import { TimetableCourseInfo, TimetableData } from "@/src/domain/models/timetable";
+import { TimetableClassInfo, TimetableData } from "@/src/domain/models/timetable";
 import timetableServiceInstance, { TimetableService } from "@/src/domain/services/timetableService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
@@ -15,7 +15,7 @@ export interface TimetableState {
     timetableService: TimetableService;
 
     clear: () => void;
-    setCourse: (day: Weekday, period: Period, courseInfo: TimetableCourseInfo | null) => void;
+    setClass: (day: Weekday, period: Period, classInfo: TimetableClassInfo | null) => void;
     refetch: () => Promise<TimetableData>;
 }
 
@@ -44,12 +44,12 @@ const useTimetable = create<TimetableState>()(
              * 指定した曜日・時限の授業情報を更新します。
              * @param day 曜日
              * @param period 時限
-             * @param courseInfo 設定する授業情報
+             * @param classInfo 設定する授業情報
              */
-            setCourse: (day, period, courseInfo) =>
+            setClass: (day, period, classInfo) =>
                 set((state) => {
                     if (!state.timetableData) return;
-                    state.timetableData.timetable[day][period] = courseInfo;
+                    state.timetableData.timetable[day][period] = classInfo;
                 }),
 
             /**

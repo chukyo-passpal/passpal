@@ -6,7 +6,7 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
-import useCourse from "@/src/presentation/hooks/useCourse";
+import useClass from "@/src/presentation/hooks/useClass";
 import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
@@ -22,14 +22,14 @@ export default function Settings() {
     const { refetch: refetchTimetable, clear: clearTimetable } = useTimetable();
     const { clear: clearMail } = useMail();
     const { clear: clearNews } = useNews();
-    const { clear: clearCourse, setFromTimetable } = useCourse();
+    const { clear: clearClass, setFromTimetable } = useClass();
     const { clear: clearAssignment } = useAssignment();
 
     const handleLogout = () => {
         clearTimetable();
         clearMail();
         clearNews();
-        clearCourse();
+        clearClass();
         clearAssignment();
 
         resetSettings();
@@ -41,7 +41,7 @@ export default function Settings() {
         purgeAuthCache();
         clearMail();
         clearNews();
-        clearCourse();
+        clearClass();
         clearAssignment();
         alert("キャッシュを削除しました");
     };

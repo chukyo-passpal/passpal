@@ -1,5 +1,5 @@
-import { AttendanceStatus } from "@/src/domain/constants/course";
-import { CourseDetailInfo, CourseNewsInfo, ManaboContentData, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/course";
+import { AttendanceStatus } from "@/src/domain/constants/class";
+import { ClassDetailInfo, ClassNewsInfo, ManaboContentData, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/class";
 import * as parser from "@chukyo-passpal/web_parser";
 
 /**
@@ -47,7 +47,7 @@ export function entryToDomain(data: parser.ManaboClassEntryDTO): PortalRecordedA
  * @param data 授業お知らせDTO
  * @returns 授業ニュースの配列
  */
-export function classNewsToDomain(data: parser.ManaboClassNewsDTO): CourseNewsInfo[] {
+export function classNewsToDomain(data: parser.ManaboClassNewsDTO): ClassNewsInfo[] {
     return data.items.map((row) => {
         return {
             title: row.title,
@@ -61,7 +61,7 @@ export function classNewsToDomain(data: parser.ManaboClassNewsDTO): CourseNewsIn
  * @param data シラバスDTO
  * @returns 授業詳細情報
  */
-export function courseSyllabusToDomain(data: parser.ManaboClassSyllabusDTO): CourseDetailInfo {
+export function classSyllabusToDomain(data: parser.ManaboClassSyllabusDTO): ClassDetailInfo {
     return {
         evaluationCriteria: data.evaluation.map((item) => ({
             item: item.type,

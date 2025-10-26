@@ -1,11 +1,11 @@
-import { AttendanceStatus } from "@/src/domain/constants/course";
+import { AttendanceStatus } from "@/src/domain/constants/class";
 import { Period } from "@/src/domain/constants/period";
 import { Weekday } from "@/src/domain/constants/week";
 
 /* 授業についての情報 */
-export interface CourseBasicInfo {
-    manaboCourseId: string; // MaNaBo上の授業ID
-    cubicsCourseId: string; // CUBICS上の授業ID
+export interface ClassBasicInfo {
+    manaboClassId: string; // MaNaBo上の授業ID
+    cubicsClassId: string; // CUBICS上の授業ID
     name: string;
     room: string;
     teacher: string;
@@ -16,16 +16,16 @@ export interface CourseBasicInfo {
     }[];
 }
 
-export interface CourseCriteria {
+export interface ClassCriteria {
     item: string; // 評価項目
     weight: string; // 配点
 }
 
-export interface CourseDetailInfo {
-    evaluationCriteria: CourseCriteria[]; // 評価基準
+export interface ClassDetailInfo {
+    evaluationCriteria: ClassCriteria[]; // 評価基準
 }
 
-export interface CourseNewsInfo {
+export interface ClassNewsInfo {
     title: string;
     body: string;
 }
@@ -44,17 +44,17 @@ export interface PortalRecordedAttendance {
 
 export type AttendanceInfo = UserRegisteredAttendance | PortalRecordedAttendance;
 
-export interface CourseInfo {
-    info: CourseBasicInfo;
+export interface ClassInfo {
+    info: ClassBasicInfo;
     attendanceLog: AttendanceInfo[];
-    news: CourseNewsInfo[];
-    detail?: CourseDetailInfo;
+    news: ClassNewsInfo[];
+    detail?: ClassDetailInfo;
 }
 
-export type CourseData = {
+export type ClassData = {
     semester: string;
-    courses: {
-        [manaboCourseId: string]: CourseInfo;
+    classs: {
+        [manaboClassId: string]: ClassInfo;
     };
 };
 

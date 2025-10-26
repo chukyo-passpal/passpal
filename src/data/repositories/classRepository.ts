@@ -1,10 +1,10 @@
-import { CourseDetailInfo, CourseNewsInfo, ManaboContentData, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/course";
+import { ClassDetailInfo, ClassNewsInfo, ManaboContentData, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/class";
 import * as parser from "@chukyo-passpal/web_parser";
 import { ParseError } from "../errors/ParseError";
-import { classDirectoryToDomain, classNewsToDomain, courseSyllabusToDomain, entryToDomain, manaboContentToDomain } from "../mappers/courseMapper";
+import { classDirectoryToDomain, classNewsToDomain, classSyllabusToDomain, entryToDomain, manaboContentToDomain } from "../mappers/classMapper";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
-export interface CourseRepository {
+export interface ClassRepository {
     /**
      * 指定した授業のお知らせ一覧を取得します。
      * @param classId 授業ID
@@ -12,7 +12,7 @@ export interface CourseRepository {
      * @returns ドメイン変換済みのお知らせデータ
      * @throws ParseError 解析に失敗した場合
      */
-    getClassNews(classId: string, directoryId?: string): Promise<CourseNewsInfo[]>;
+    getClassNews(classId: string, directoryId?: string): Promise<ClassNewsInfo[]>;
 
     /**
      * 指定授業のシラバス情報を取得します。
@@ -20,7 +20,7 @@ export interface CourseRepository {
      * @returns ドメイン変換済みのシラバスデータ
      * @throws ParseError 解析に失敗した場合
      */
-    getClassSyllabus(classId: string): Promise<CourseDetailInfo>;
+    getClassSyllabus(classId: string): Promise<ClassDetailInfo>;
 
     /**
      * 授業の出席状況を取得します。
@@ -77,7 +77,7 @@ export interface CourseRepository {
     submitEntry(classId: string, directoryId: string, entryId: string, uniqueId: string): Promise<parser.ManaboEntryResponseDTO>;
 }
 
-export class IntegratedCourseRepository implements CourseRepository {
+export class IntegratedClassRepository implements ClassRepository {
     private readonly manaboProvider: ManaboProvider;
 
     /**
@@ -117,7 +117,7 @@ export class IntegratedCourseRepository implements CourseRepository {
         );
         const dto = parser.parseManaboClassSyllabus(response);
         if (dto.success) {
-            return courseSyllabusToDomain(dto.data);
+            return classSyllabusToDomain(dto.data);
         } else {
             throw new ParseError({ cause: dto.error });
         }
@@ -223,5 +223,5 @@ export class IntegratedCourseRepository implements CourseRepository {
     }
 }
 
-const courseRepositoryInstance = new IntegratedCourseRepository();
-export default courseRepositoryInstance;
+const classRepositoryInstance = new IntegratedClassRepository();
+export default classRepositoryInstance;

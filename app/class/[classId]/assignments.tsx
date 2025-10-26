@@ -4,47 +4,47 @@ import { Icon } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
-import useCourse from "@/src/presentation/hooks/useCourse";
+import useClass from "@/src/presentation/hooks/useClass";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo } from "react";
 import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
-export default function CourseAssignments() {
+export default function ClassAssignments() {
     const { theme } = useTheme();
-    const { courseId } = useLocalSearchParams<{ courseId: string }>();
-    const { courseData } = useCourse();
+    const { classId } = useLocalSearchParams<{ classId: string }>();
+    const { classData } = useClass();
     const { loading, assignmentData, fetchClassAssignments } = useAssignment();
 
     // 授業情報を取得
-    const courseInfo = courseData?.courses[courseId || ""];
+    const classInfo = classData?.classs[classId || ""];
 
     // この授業の課題のみを取得
-    const classData = assignmentData?.classes[courseId || ""];
+    const classAssignmentInfo = assignmentData?.classes[classId || ""];
 
     // ディレクトリ内のコンテンツを配列に変換
     const assignments = useMemo(() => {
-        if (!classData?.directories) return [];
+        if (!classAssignmentInfo?.directories) return [];
 
-        return Object.values(classData.directories).flatMap((directory) =>
+        return Object.values(classAssignmentInfo.directories).flatMap((directory) =>
             directory.contents.map((content) => ({
                 ...content,
                 directoryId: directory.directoryId,
                 directoryName: directory.directoryName,
             }))
         );
-    }, [classData]);
+    }, [classAssignmentInfo]);
 
     // 初回読み込み
     useEffect(() => {
-        if (courseId && courseInfo) {
-            fetchClassAssignments(courseId);
+        if (classId && classInfo) {
+            fetchClassAssignments(classId);
         }
-    }, [courseId, courseInfo, fetchClassAssignments]);
+    }, [classId, classInfo, fetchClassAssignments]);
 
     // 課題を更新
     const handleRefresh = () => {
-        if (courseId && courseInfo) {
-            fetchClassAssignments(courseId);
+        if (classId && classInfo) {
+            fetchClassAssignments(classId);
         }
     };
 
@@ -85,7 +85,7 @@ export default function CourseAssignments() {
     }, [assignments]);
 
     // 授業が見つからない場合
-    if (!courseInfo) {
+    if (!classInfo) {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
                 <Header title="課題一覧" shownBackButton />
@@ -110,12 +110,12 @@ export default function CourseAssignments() {
                 {/* 授業情報ヘッダー */}
                 <Card variant="feature" style={{ gap: 12 }}>
                     <Typography variant="h2" color={theme.colors.primary.main}>
-                        {courseInfo.info.name}
+                        {classInfo.info.name}
                     </Typography>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                         <Icon name="user" size={16} color={theme.colors.text.secondary} />
                         <Typography variant="bodySmall" color={theme.colors.text.secondary}>
-                            {courseInfo.info.teacher}
+                            {classInfo.info.teacher}
                         </Typography>
                     </View>
                 </Card>

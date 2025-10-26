@@ -1,41 +1,41 @@
-import { CourseData, CourseInfo } from "@/src/domain/models/course";
+import { ClassData, ClassInfo } from "@/src/domain/models/class";
 import { TimetableData } from "@/src/domain/models/timetable";
-import courseServiceInstance, { CourseService } from "@/src/domain/services/courseService";
+import classServiceInstance, { ClassService } from "@/src/domain/services/classService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-export interface CourseState {
+export interface ClassState {
     lastFetch: Date | null;
-    courseData: CourseData | null;
+    classData: ClassData | null;
     loading: boolean;
 
-    courseService: CourseService;
+    classService: ClassService;
 
     clear: () => void;
     setFromTimetable: (timetableData: TimetableData) => TimetableData;
-    refetchCourseInfo: (manaboCourseId: string) => Promise<CourseInfo>;
+    refetchClassInfo: (manaboClassId: string) => Promise<ClassInfo>;
 }
 
 /**
  * 授業関連の状態を保持するZustandストアを提供します。
  */
-const useCourse = create<CourseState>()(
+const useClass = create<ClassState>()(
     persist(
         immer((set, get) => ({
             lastFetch: null,
-            courseData: null,
+            classData: null,
             loading: false,
 
-            courseService: courseServiceInstance,
+            classService: classServiceInstance,
 
             /**
              * 保存している授業データをリセットします。
              */
             clear: () =>
                 set((state) => {
-                    state.courseData = null;
+                    state.classData = null;
                 }),
 
             /**
@@ -45,34 +45,34 @@ const useCourse = create<CourseState>()(
              */
             setFromTimetable: (timetableData: TimetableData) => {
                 set((state) => {
-                    state.courseData = get().courseService.buildCourseInfoFromTimetable(timetableData);
+                    state.classData = get().classService.buildClassInfoFromTimetable(timetableData);
                 });
                 return timetableData;
             },
 
             /**
              * 指定した授業の詳細情報を再取得します。
-             * @param manaboCourseId Manaboの授業ID
+             * @param manaboClassId Manaboの授業ID
              * @returns 更新された授業情報
              */
-            refetchCourseInfo: async (manaboCourseId: string) => {
-                const nowCourseData = get().courseData;
-                if (!nowCourseData) {
-                    throw new Error("Course data is not set.");
+            refetchClassInfo: async (manaboClassId: string) => {
+                const nowClassData = get().classData;
+                if (!nowClassData) {
+                    throw new Error("Class data is not set.");
                 }
                 set((state) => {
                     state.loading = true;
                 });
                 try {
-                    const courseData = await get().courseService.updateCourseInfo(nowCourseData.courses[manaboCourseId]);
+                    const classData = await get().classService.updateClassInfo(nowClassData.classs[manaboClassId]);
                     set((state) => {
-                        if (state.courseData) {
-                            state.courseData.courses[manaboCourseId] = courseData;
+                        if (state.classData) {
+                            state.classData.classs[manaboClassId] = classData;
                             state.loading = false;
                             state.lastFetch = new Date();
                         }
                     });
-                    return courseData;
+                    return classData;
                 } catch (err) {
                     set((state) => {
                         state.loading = false;
@@ -82,11 +82,11 @@ const useCourse = create<CourseState>()(
             },
         })),
         {
-            name: "course-storage",
+            name: "class-storage",
             version: 0,
             partialize: (state) => ({
                 lastFetch: state.lastFetch,
-                courseData: state.courseData,
+                classData: state.classData,
             }),
             storage: createJSONStorage(() => AsyncStorage, {
                 replacer: (key, value) => {
@@ -110,10 +110,10 @@ const useCourse = create<CourseState>()(
                 // if (version === 0) {
                 //     persistedState.newField = defaultValue;
                 // }
-                return persistedState as CourseState;
+                return persistedState as ClassState;
             },
         }
     )
 );
 
-export default useCourse;
+export default useClass;

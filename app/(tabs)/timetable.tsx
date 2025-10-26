@@ -44,8 +44,8 @@ export default function TimetableScreen() {
         setTimetableViewMode(newMode);
     };
 
-    const handleTouchClass = (manaboCourseId: string) => {
-        router.push(`/course/${manaboCourseId}`);
+    const handleTouchClass = (manaboClassId: string) => {
+        router.push(`/class/${manaboClassId}`);
     };
 
     // 時間割の取得がされていない && 時間割が存在しない && ローディング中でない場合に取得
@@ -131,7 +131,7 @@ export default function TimetableScreen() {
                                 {/* 授業カード */}
                                 {classInfo ? (
                                     <TouchableOpacity
-                                        onPress={() => handleTouchClass(classInfo.manaboCourseId)}
+                                        onPress={() => handleTouchClass(classInfo.manaboClassId)}
                                         activeOpacity={0.8}
                                         style={{
                                             flex: 1,
@@ -293,7 +293,7 @@ export default function TimetableScreen() {
                                                             backgroundColor: theme.colors.ui.classCard,
                                                         }}
                                                         activeOpacity={0.8}
-                                                        onPress={() => handleTouchClass(classInfo.manaboCourseId)}
+                                                        onPress={() => handleTouchClass(classInfo.manaboClassId)}
                                                     >
                                                         <View
                                                             style={{

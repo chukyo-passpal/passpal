@@ -33,11 +33,11 @@ const basicItems: SelectItem[] = [
     { label: "オプション 3", value: "3" },
 ];
 
-const courseItems: SelectItem[] = [
-    { label: "情報システム概論 I", value: "course1" },
-    { label: "プログラミング基礎", value: "course2" },
-    { label: "データベース", value: "course3" },
-    { label: "ネットワーク基礎", value: "course4" },
+const classItems: SelectItem[] = [
+    { label: "情報システム概論 I", value: "class1" },
+    { label: "プログラミング基礎", value: "class2" },
+    { label: "データベース", value: "class3" },
+    { label: "ネットワーク基礎", value: "class4" },
 ];
 
 const periodItems: SelectItem[] = [
@@ -65,7 +65,7 @@ export const WithValue: Story = {
 
 export const WithGroupLabel: Story = {
     args: {
-        items: courseItems,
+        items: classItems,
         placeholder: "授業を選択",
         groupLabel: "履修授業",
     },
@@ -92,7 +92,7 @@ const InteractiveComponent = () => {
 
     return (
         <View style={{ gap: 16 }}>
-            <Select items={courseItems} value={value} onValueChange={setValue} placeholder="授業を選択してください" groupLabel="履修授業" />
+            <Select items={classItems} value={value} onValueChange={setValue} placeholder="授業を選択してください" groupLabel="履修授業" />
             {value && (
                 <View style={{ padding: 16, backgroundColor: "#f0f0f0", borderRadius: 8 }}>
                     <View>選択された値: {value}</View>
@@ -111,12 +111,12 @@ export const Interactive: Story = {
 };
 
 const MultipleSelectsComponent = () => {
-    const [course, setCourse] = useState<string>("");
+    const [classData, setClassData] = useState<string>("");
     const [period, setPeriod] = useState<string>("");
 
     return (
         <View style={{ gap: 16 }}>
-            <Select items={courseItems} value={course} onValueChange={setCourse} placeholder="授業を選択" groupLabel="履修授業" />
+            <Select items={classItems} value={classData} onValueChange={setClassData} placeholder="授業を選択" groupLabel="履修授業" />
             <Select items={periodItems} value={period} onValueChange={setPeriod} placeholder="時限を選択" groupLabel="時限" />
         </View>
     );

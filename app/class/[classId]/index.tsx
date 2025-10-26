@@ -1,42 +1,42 @@
-import { CourseInfo } from "@/src/domain/models/course";
+import { ClassInfo } from "@/src/domain/models/class";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import useCourse from "@/src/presentation/hooks/useCourse";
+import useClass from "@/src/presentation/hooks/useClass";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
 
-export default function CourseDetail() {
+export default function ClassDetail() {
     const { theme } = useTheme();
     const router = useRouter();
-    const { courseId } = useLocalSearchParams<{ courseId: string }>();
-    const { refetchCourseInfo } = useCourse();
+    const { classId } = useLocalSearchParams<{ classId: string }>();
+    const { refetchClassInfo } = useClass();
 
-    const [courseInfo, setCourseInfo] = React.useState<CourseInfo | null>(null);
+    const [classInfo, setClassInfo] = React.useState<ClassInfo | null>(null);
 
-    // useCourseから授業データを取得
+    // useClassから授業データを取得
     useEffect(() => {
         (async () => {
-            if (courseId) {
-                const course = await refetchCourseInfo(courseId);
-                setCourseInfo(course);
+            if (classId) {
+                const fetchedClass = await refetchClassInfo(classId);
+                setClassInfo(fetchedClass);
             }
         })();
-    }, [courseId, refetchCourseInfo]);
+    }, [classId, refetchClassInfo]);
 
     // 出席情報を集計
     const attendanceStats = useMemo(() => {
-        if (!courseInfo?.attendanceLog) {
+        if (!classInfo?.attendanceLog) {
             return { present: 0, absent: 0, late: 0, rate: 0, status: "データがありません" };
         }
 
-        const present = courseInfo.attendanceLog.filter((log) => log.status === "present").length;
-        const absent = courseInfo.attendanceLog.filter((log) => log.status === "absent").length;
-        const late = courseInfo.attendanceLog.filter((log) => log.status === "late/early").length;
-        const total = courseInfo.attendanceLog.length;
+        const present = classInfo.attendanceLog.filter((log) => log.status === "present").length;
+        const absent = classInfo.attendanceLog.filter((log) => log.status === "absent").length;
+        const late = classInfo.attendanceLog.filter((log) => log.status === "late/early").length;
+        const total = classInfo.attendanceLog.length;
         const rate = total > 0 ? Math.round((present / total) * 100 * 10) / 10 : 0;
 
         let status = "データがありません";
@@ -47,10 +47,10 @@ export default function CourseDetail() {
         }
 
         return { present, absent, late, rate, status };
-    }, [courseInfo]);
+    }, [classInfo]);
 
     // 授業が見つからない場合
-    if (!courseInfo) {
+    if (!classInfo) {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
                 <Header title="授業詳細" shownBackButton />
@@ -63,10 +63,10 @@ export default function CourseDetail() {
         );
     }
 
-    const { info, detail, news } = courseInfo;
+    const { info, detail, news } = classInfo;
     const schedule = info.timetableDate.map((td) => `${td.weekday} ${td.period}限`).join(", ");
 
-    const finalCourseData = {
+    const finalClassData = {
         title: info.name,
         schedule: schedule,
         room: info.room,
@@ -85,7 +85,7 @@ export default function CourseDetail() {
                 <Card variant="feature" style={{ gap: 16 }}>
                     <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                         <Typography variant="h2" color={theme.colors.primary.main} style={{ flex: 1 }}>
-                            {finalCourseData.title}
+                            {finalClassData.title}
                         </Typography>
                         <Icon name="clipboard-list" size={24} color={theme.colors.primary.main} />
                     </View>
@@ -94,19 +94,19 @@ export default function CourseDetail() {
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                             <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
-                                {finalCourseData.schedule}
+                                {finalClassData.schedule}
                             </Typography>
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                             <Icon name="map-pin" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
-                                {finalCourseData.room}
+                                {finalClassData.room}
                             </Typography>
                         </View>
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                             <Icon name="user" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
-                                {finalCourseData.teacher}
+                                {finalClassData.teacher}
                             </Typography>
                         </View>
                     </View>
@@ -114,7 +114,7 @@ export default function CourseDetail() {
 
                 {/* Quick Actions */}
                 <TouchableOpacity
-                    onPress={() => router.push(`/course/${courseId}/assignments`)}
+                    onPress={() => router.push(`/class/${classId}/assignments`)}
                     style={{
                         flexDirection: "row",
                         alignItems: "center",
@@ -146,7 +146,7 @@ export default function CourseDetail() {
                     <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8 }}>
                         <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color={theme.colors.status.success}>
-                                {finalCourseData.attendance.present}
+                                {finalClassData.attendance.present}
                             </Typography>
                             <Typography variant="caption" color={theme.colors.text.secondary}>
                                 出席
@@ -154,7 +154,7 @@ export default function CourseDetail() {
                         </View>
                         <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color={theme.colors.status.error}>
-                                {finalCourseData.attendance.absent}
+                                {finalClassData.attendance.absent}
                             </Typography>
                             <Typography variant="caption" color={theme.colors.text.secondary}>
                                 欠席
@@ -162,7 +162,7 @@ export default function CourseDetail() {
                         </View>
                         <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color={theme.colors.status.warning}>
-                                {finalCourseData.attendance.late}
+                                {finalClassData.attendance.late}
                             </Typography>
                             <Typography variant="caption" color={theme.colors.text.secondary}>
                                 遅刻/早退
@@ -172,10 +172,10 @@ export default function CourseDetail() {
 
                     <View style={{ padding: 12, borderRadius: 8, alignItems: "center", gap: 4, backgroundColor: theme.colors.status.success + "20" }}>
                         <Typography variant="label" color={theme.colors.status.success}>
-                            出席率: {finalCourseData.attendance.rate}%
+                            出席率: {finalClassData.attendance.rate}%
                         </Typography>
                         <Typography variant="bodySmall" color={theme.colors.text.secondary}>
-                            {finalCourseData.attendance.status}
+                            {finalClassData.attendance.status}
                         </Typography>
                     </View>
                 </Card>
@@ -190,8 +190,8 @@ export default function CourseDetail() {
                     </View>
 
                     <View style={{ gap: 12 }}>
-                        {finalCourseData.announcements.length > 0 ? (
-                            finalCourseData.announcements.map((announcement, index) => (
+                        {finalClassData.announcements.length > 0 ? (
+                            finalClassData.announcements.map((announcement, index) => (
                                 <View key={index} style={{ padding: 16, borderRadius: 8, gap: 8, backgroundColor: theme.colors.background.secondary }}>
                                     <Typography variant="label" color={theme.colors.text.primary}>
                                         {announcement.title}
@@ -221,8 +221,8 @@ export default function CourseDetail() {
                     </View>
 
                     <View style={{ gap: 12 }}>
-                        {finalCourseData.grading.length > 0 ? (
-                            finalCourseData.grading.map((grade, index) => (
+                        {finalClassData.grading.length > 0 ? (
+                            finalClassData.grading.map((grade, index) => (
                                 <View
                                     key={index}
                                     style={{

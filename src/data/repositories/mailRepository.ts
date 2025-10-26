@@ -45,7 +45,7 @@ export interface MailRepository {
     getMailMember(query: string): Promise<parser.ManaboMailMemberDTO>;
 }
 
-export class IntegratedCourseRepositoryMailRepository implements MailRepository {
+export class IntegratedClassRepositoryMailRepository implements MailRepository {
     private readonly manaboProvider: ManaboProvider;
 
     /**
@@ -136,5 +136,5 @@ export class IntegratedCourseRepositoryMailRepository implements MailRepository 
     }
 }
 
-const mailRepositoryInstance = new IntegratedCourseRepositoryMailRepository();
+const mailRepositoryInstance = new IntegratedClassRepositoryMailRepository();
 export default mailRepositoryInstance;

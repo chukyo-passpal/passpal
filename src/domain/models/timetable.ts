@@ -9,9 +9,9 @@ export interface PeriodInfo {
     endTime: Date; // 授業の終了時間 例: 1920/1/1 11:00
 }
 
-export interface TimetableCourseInfo {
-    manaboCourseId: string; // MaNaBo上の授業ID
-    cubicsCourseId: string; // CUBICS上の授業ID
+export interface TimetableClassInfo {
+    manaboClassId: string; // MaNaBo上の授業ID
+    cubicsClassId: string; // CUBICS上の授業ID
     isCustomSchedule: boolean; // ユーザーがカスタムで追加した予定かどうか
     name: string; // 授業名
     room: string; // 教室
@@ -22,7 +22,7 @@ export interface TimetableCourseInfo {
 /* 時間割 */
 export type TimetableData = {
     semester: string;
-    timetable: Record<Weekday, Record<Period, TimetableCourseInfo | null>>;
+    timetable: Record<Weekday, Record<Period, TimetableClassInfo | null>>;
 };
 
 /* 時限情報 */

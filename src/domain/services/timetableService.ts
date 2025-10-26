@@ -128,7 +128,7 @@ export class IntegratedTimetableService implements TimetableService {
             for (const period of Object.keys(mergedTimetable[day]) as (keyof (typeof mergedTimetable)[typeof day])[]) {
                 if (mergedTimetable[day][period] !== null) {
                     const cubicsEntry = cubics.timetable[day][period];
-                    mergedTimetable[day][period].cubicsCourseId = cubicsEntry?.cubicsCourseId || "";
+                    mergedTimetable[day][period].cubicsClassId = cubicsEntry?.cubicsClassId || "";
                     mergedTimetable[day][period].room = cubicsEntry?.room || "";
                 }
             }

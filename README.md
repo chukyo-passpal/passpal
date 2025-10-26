@@ -7,7 +7,7 @@ PassPal は中京大学向けの学修ハブアプリです。ALBO や MaNaBo �
 - ホームダッシュボード: ALBO の重要なお知らせ、MaNaBo の未読メール、利用頻度の高い外部リンクをまとめて表示
 - 課題一覧: 授業ごとの課題を取得し、締切・進捗ラベル付きでカード表示
 - 時間割ビュー: 日／週表示を切り替え可能。授業カードから詳細画面へ遷移し、MaNaBo 授業にディープリンク
-- 授業詳細: 授業の資料・課題・お知らせを授業単位で整理（`app/course/[courseId]`）
+- 授業詳細: 授業の資料・課題・お知らせを授業単位で整理（`app/class/[classId]`）
 - 設定画面: キャンパス切り替え、時間割の初期表示モード設定、キャッシュ削除、再ログイン、Storybook へのショートカット
 
 ## アーキテクチャのポイント
@@ -61,7 +61,7 @@ PassPal は中京大学向けの学修ハブアプリです。ALBO や MaNaBo �
 ```text
 app/                  Expo Router の画面定義
 	(tabs)/             ホーム・課題・時間割などのタブ
-	course/[courseId]/  授業詳細へのスタック遷移
+	class/[classId]/  授業詳細へのスタック遷移
 	login/, setup/      認証フローと初期設定ウィザード
 .rnstorybook/         React Native Storybook 設定一式
 src/

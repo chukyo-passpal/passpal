@@ -68,8 +68,8 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
             }
 
             tbl.timetable[weekday.data][period.data] = {
-                manaboCourseId: classId,
-                cubicsCourseId: "",
+                manaboClassId: classId,
+                cubicsClassId: "",
                 isCustomSchedule: false,
                 name: s.className ?? "",
                 room: "",
@@ -123,8 +123,8 @@ export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): Time
             const weekday = days[index];
 
             tbl.timetable[weekday][period.data] = {
-                manaboCourseId: "",
-                cubicsCourseId: s.lessonCode ?? "",
+                manaboClassId: "",
+                cubicsClassId: s.lessonCode ?? "",
                 isCustomSchedule: false,
                 name: s.subject ?? "",
                 room: s.classroom ?? "",

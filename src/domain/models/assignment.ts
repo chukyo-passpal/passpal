@@ -1,4 +1,4 @@
-import { ManaboContentData } from "./course";
+import { ManaboContentData } from "./class";
 
 type ClassId = string;
 type DirectoryId = string;
