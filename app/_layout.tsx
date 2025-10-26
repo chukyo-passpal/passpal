@@ -1,5 +1,6 @@
 import ShibbolethWebView, { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
 import adminRepositoryInstance from "@/src/data/repositories/adminRepository";
+import { Toast } from "@/src/presentation/components/Toast";
 import { ThemeProvider, useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAppInit from "@/src/presentation/hooks/useAppInit";
 import useAuth from "@/src/presentation/hooks/useAuth";
@@ -37,6 +38,7 @@ function TamaguiProviderWrapper({ children }: { children?: React.ReactNode }) {
     return (
         <TamaguiProvider config={tamaguiConfig} defaultTheme={isDark ? "dark" : "light"}>
             {children}
+            <Toast />
         </TamaguiProvider>
     );
 }

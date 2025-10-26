@@ -11,12 +11,14 @@ import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
+import { useToast } from "@/src/presentation/hooks/useToast";
 import * as Application from "expo-application";
 import { router } from "expo-router";
 import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Settings() {
     const { theme } = useTheme();
+    const toast = useToast();
     const { user, signOut, purgeCache: purgeAuthCache } = useAuth();
     const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode, reset: resetSettings } = useSetting();
     const { refetch: refetchTimetable, clear: clearTimetable } = useTimetable();
@@ -102,6 +104,37 @@ export default function Settings() {
                                 <TouchableOpacity
                                     onPress={() => {
                                         router.push("/storybook");
+                                    }}
+                                    activeOpacity={0.7}
+                                >
+                                    <Card
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            padding: theme.spacing.md,
+                                            height: 56,
+                                        }}
+                                    >
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <Typography
+                                                variant="body"
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: "600",
+                                                }}
+                                            >
+                                                StoryBookを開く
+                                            </Typography>
+                                        </View>
+                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+                                    </Card>
+                                </TouchableOpacity>
+
+                                {/* Toast Item */}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        toast.success("これは成功のトーストです");
                                     }}
                                     activeOpacity={0.7}
                                 >
