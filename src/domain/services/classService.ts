@@ -92,14 +92,14 @@ export class IntegratedClassService implements ClassService {
         }
 
         // ClassData形式で返す
-        const classs: { [manaboClassId: string]: ClassInfo } = {};
+        const classes: { [manaboClassId: string]: ClassInfo } = {};
         for (const [manaboClassId, classInfo] of classMap.entries()) {
-            classs[manaboClassId] = classInfo;
+            classes[manaboClassId] = classInfo;
         }
 
         return {
             semester: timetableData.semester,
-            classs,
+            classes,
         };
     }
 

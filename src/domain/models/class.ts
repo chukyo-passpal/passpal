@@ -53,7 +53,7 @@ export interface ClassInfo {
 
 export type ClassData = {
     semester: string;
-    classs: {
+    classes: {
         [manaboClassId: string]: ClassInfo;
     };
 };

@@ -16,7 +16,7 @@ export default function ClassAssignments() {
     const { loading, assignmentData, fetchClassAssignments } = useAssignment();
 
     // 授業情報を取得
-    const classInfo = classData?.classs[classId || ""];
+    const classInfo = classData?.classes[classId || ""];
 
     // この授業の課題のみを取得
     const classAssignmentInfo = assignmentData?.classes[classId || ""];

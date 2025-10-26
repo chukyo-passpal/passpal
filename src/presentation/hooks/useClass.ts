@@ -64,10 +64,10 @@ const useClass = create<ClassState>()(
                     state.loading = true;
                 });
                 try {
-                    const classData = await get().classService.updateClassInfo(nowClassData.classs[manaboClassId]);
+                    const classData = await get().classService.updateClassInfo(nowClassData.classes[manaboClassId]);
                     set((state) => {
                         if (state.classData) {
-                            state.classData.classs[manaboClassId] = classData;
+                            state.classData.classes[manaboClassId] = classData;
                             state.loading = false;
                             state.lastFetch = new Date();
                         }
