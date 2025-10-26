@@ -53,11 +53,11 @@ export default function Settings() {
     };
 
     const handleFeedback = () => {
-        Linking.openURL("https://docs.google.com/forms/d/e/1FAIpQLSeu7t-Z3PgwvG0aKY4XCSz160FyjE03SNUyu7Qhq11F_2Z_Dg/viewform?usp=dialog");
+        Linking.openURL("https://chukyo-passpal.app/feedback");
     };
 
-    const handleInquiry = () => {
-        Linking.openURL("https://docs.google.com/forms/d/e/1FAIpQLScnnbnSoIpNizG1gU_pDVuDq9GifE1EeevYd3-n4Uy1fGAQiw/viewform?usp=publish-editor");
+    const handleContact = () => {
+        Linking.openURL("https://chukyo-passpal.app/contact");
     };
 
     const handleLicenseInfo = () => {
@@ -493,7 +493,7 @@ export default function Settings() {
                             </Card>
                         </TouchableOpacity>
 
-                        <TouchableOpacity onPress={handleInquiry} activeOpacity={0.7}>
+                        <TouchableOpacity onPress={handleContact} activeOpacity={0.7}>
                             <Card
                                 style={{
                                     flexDirection: "row",
