@@ -50,11 +50,7 @@ function RootLayoutNav() {
     const isAuthenticated = Boolean(user !== null);
 
     if (adminRepositoryInstance.maintenanceMode) {
-        return (
-            <Stack>
-                <Stack.Screen name="maintenance" />
-            </Stack>
-        );
+        router.replace("/maintenance");
     }
 
     return (
@@ -94,6 +90,9 @@ function RootLayoutNav() {
             <Stack.Protected guard={__DEV__}>
                 <Stack.Screen name="storybook" />
             </Stack.Protected>
+
+            {/* メンテナンス画面 */}
+            <Stack.Screen name="maintenance" />
         </Stack>
     );
 }

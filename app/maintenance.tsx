@@ -20,6 +20,9 @@ export default function MaintenanceScreen() {
         >
             <Icon name="construction" size={64} color={theme.colors.primary.main} />
             <Typography variant="h1">メンテナンス中</Typography>
+            <Typography variant="body" style={{ textAlign: "center", color: theme.colors.text.secondary }}>
+                現在、システムのメンテナンスを行っております。しばらくしてから再度アクセスしてください。
+            </Typography>
         </View>
     );
 }
