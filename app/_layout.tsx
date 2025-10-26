@@ -1,4 +1,5 @@
 import ShibbolethWebView, { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
+import adminRepositoryInstance from "@/src/data/repositories/adminRepository";
 import { ThemeProvider, useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAppInit from "@/src/presentation/hooks/useAppInit";
 import useAuth from "@/src/presentation/hooks/useAuth";
@@ -45,6 +46,14 @@ function RootLayoutNav() {
     const { theme } = useTheme();
 
     const isAuthenticated = Boolean(user !== null);
+
+    if (adminRepositoryInstance.maintenanceMode) {
+        return (
+            <Stack>
+                <Stack.Screen name="maintenance" />
+            </Stack>
+        );
+    }
 
     return (
         <Stack
