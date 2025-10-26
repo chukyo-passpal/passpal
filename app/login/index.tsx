@@ -114,7 +114,7 @@ export default function Login() {
                         </View>
                     </View>
 
-                    <TouchableOpacity activeOpacity={0.7} onPress={signIn}>
+                    <TouchableOpacity style={{ alignItems: "center" }} activeOpacity={0.7} onPress={signIn}>
                         <Image style={{ height: 50, objectFit: "contain" }} source={require("@/assets/images/google-sign-in.png")} />
                     </TouchableOpacity>
                 </View>

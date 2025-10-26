@@ -47,60 +47,62 @@ export default function Index() {
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary, padding: theme.spacing.lg }}>
             <ScrollView contentContainerStyle={{ justifyContent: "center", flex: 1 }} showsVerticalScrollIndicator={false}>
-                {/* Header Section */}
-                <View style={{ alignItems: "center", marginBottom: 40 }}>
-                    {/* Lock Icon Container */}
-                    <View
-                        style={{
-                            width: 80,
-                            height: 80,
-                            borderRadius: 40,
-                            backgroundColor: theme.colors.primary.main,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <Icon name="lock" size={32} color={theme.colors.neutral.white} />
+                <View style={{ maxWidth: 700, alignSelf: "center" }}>
+                    {/* Header Section */}
+                    <View style={{ alignItems: "center", marginBottom: 40 }}>
+                        {/* Lock Icon Container */}
+                        <View
+                            style={{
+                                width: 80,
+                                height: 80,
+                                borderRadius: 40,
+                                backgroundColor: theme.colors.primary.main,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <Icon name="lock" size={32} color={theme.colors.neutral.white} />
+                        </View>
+
+                        {/* Text Section */}
+                        <View style={{ alignItems: "center", marginTop: 32 }}>
+                            <Typography variant="h2" style={{ textAlign: "center", marginBottom: 16 }}>
+                                パスワードを入力
+                            </Typography>
+                            <Typography variant="body" style={{ textAlign: "center", color: theme.colors.text.secondary }}>
+                                CU_ID ({studentId}) のパスワードを入力してください。
+                            </Typography>
+                        </View>
                     </View>
 
-                    {/* Text Section */}
-                    <View style={{ alignItems: "center", marginTop: 32 }}>
-                        <Typography variant="h2" style={{ textAlign: "center", marginBottom: 16 }}>
-                            パスワードを入力
-                        </Typography>
-                        <Typography variant="body" style={{ textAlign: "center", color: theme.colors.text.secondary }}>
-                            CU_ID ({studentId}) のパスワードを入力してください。
-                        </Typography>
-                    </View>
-                </View>
+                    {/* Form Section */}
+                    <View style={{ marginBottom: 24 }}>
+                        <Input
+                            placeholder="パスワード"
+                            value={password}
+                            onChangeText={setPassword}
+                            isPassword={true}
+                            leftIcon={<Icon name="lock" size={20} color={theme.colors.text.secondary} />}
+                            containerStyle={{ marginBottom: 24 }}
+                            onSubmit={handleLogin}
+                            disabled={isLoading}
+                        />
 
-                {/* Form Section */}
-                <View style={{ marginBottom: 24 }}>
-                    <Input
-                        placeholder="パスワード"
-                        value={password}
-                        onChangeText={setPassword}
-                        isPassword={true}
-                        leftIcon={<Icon name="lock" size={20} color={theme.colors.text.secondary} />}
-                        containerStyle={{ marginBottom: 24 }}
-                        onSubmit={handleLogin}
-                        disabled={isLoading}
-                    />
-
-                    <Button variant="primary" fullWidth onPress={handleLogin} disabled={!isNextEnabled} loading={isLoading}>
-                        ログインして続ける
-                    </Button>
-                    {__DEV__ && (
-                        <Button variant="text" onPress={() => signIn(studentId, password)}>
-                            skip authentication
+                        <Button variant="primary" fullWidth onPress={handleLogin} disabled={!isNextEnabled} loading={isLoading}>
+                            ログインして続ける
                         </Button>
-                    )}
-                </View>
+                        {__DEV__ && (
+                            <Button variant="text" onPress={() => signIn(studentId, password)}>
+                                skip authentication
+                            </Button>
+                        )}
+                    </View>
 
-                {/* Back Button */}
-                <Button variant="text" onPress={handleBackToStudentId}>
-                    Google認証に戻る
-                </Button>
+                    {/* Back Button */}
+                    <Button variant="text" onPress={handleBackToStudentId}>
+                        Google認証に戻る
+                    </Button>
+                </View>
             </ScrollView>
         </View>
     );
