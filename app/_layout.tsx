@@ -5,7 +5,7 @@ import { ThemeProvider, useTheme } from "@/src/presentation/hooks/ThemeProvider"
 import useAppInit from "@/src/presentation/hooks/useAppInit";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import { tamaguiConfig } from "@/tamagui.config";
-import { SplashScreen, Stack } from "expo-router";
+import { router, SplashScreen, Stack } from "expo-router";
 import { useEffect, useRef } from "react";
 import { TamaguiProvider } from "tamagui";
 
