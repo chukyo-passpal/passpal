@@ -162,6 +162,99 @@ export default function Settings() {
                                         <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                                     </Card>
                                 </TouchableOpacity>
+
+                                {/* Error Item */}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        throw new Error("これはテスト用のエラーです");
+                                    }}
+                                    activeOpacity={0.7}
+                                >
+                                    <Card
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            padding: theme.spacing.md,
+                                            height: 56,
+                                        }}
+                                    >
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <Typography
+                                                variant="body"
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: "600",
+                                                }}
+                                            >
+                                                エラーを発生させる
+                                            </Typography>
+                                        </View>
+                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+                                    </Card>
+                                </TouchableOpacity>
+
+                                {/* Maintenance Screen */}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        router.push("/maintenance");
+                                    }}
+                                    activeOpacity={0.7}
+                                >
+                                    <Card
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            padding: theme.spacing.md,
+                                            height: 56,
+                                        }}
+                                    >
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <Typography
+                                                variant="body"
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: "600",
+                                                }}
+                                            >
+                                                メンテナンス画面を表示
+                                            </Typography>
+                                        </View>
+                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+                                    </Card>
+                                </TouchableOpacity>
+
+                                {/* Force update screen */}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        router.push("/force-update");
+                                    }}
+                                    activeOpacity={0.7}
+                                >
+                                    <Card
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            padding: theme.spacing.md,
+                                            height: 56,
+                                        }}
+                                    >
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <Typography
+                                                variant="body"
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: "600",
+                                                }}
+                                            >
+                                                強制アップデート画面を表示
+                                            </Typography>
+                                        </View>
+                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+                                    </Card>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </>
