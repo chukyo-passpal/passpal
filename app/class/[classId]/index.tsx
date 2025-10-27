@@ -5,6 +5,7 @@ import { Icon } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useClass from "@/src/presentation/hooks/useClass";
+import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo } from "react";
 import { ScrollView, TouchableOpacity, View } from "react-native";
@@ -13,6 +14,7 @@ export default function ClassDetail() {
     const { theme } = useTheme();
     const router = useRouter();
     const { classId } = useLocalSearchParams<{ classId: string }>();
+    const { timetableData } = useTimetable();
     const { refetchClassInfo } = useClass();
 
     const [classInfo, setClassInfo] = React.useState<ClassInfo | null>(null);
@@ -20,12 +22,12 @@ export default function ClassDetail() {
     // useClassから授業データを取得
     useEffect(() => {
         (async () => {
-            if (classId) {
-                const fetchedClass = await refetchClassInfo(classId);
+            if (classId && timetableData) {
+                const fetchedClass = await refetchClassInfo(timetableData, classId);
                 setClassInfo(fetchedClass);
             }
         })();
-    }, [classId, refetchClassInfo]);
+    }, [classId, refetchClassInfo, timetableData]);
 
     // 出席情報を集計
     const attendanceStats = useMemo(() => {

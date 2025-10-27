@@ -1,8 +1,9 @@
 import classRepositoryInstance, { ClassRepository } from "@/src/data/repositories/classRepository";
 import { Period } from "../constants/period";
 import { Weekday } from "../constants/week";
+import { DataBuildError } from "../errors/serviceError";
 import { AttendanceInfo, ClassData, ClassInfo } from "../models/class";
-import { TimetableData } from "../models/timetable";
+import { TimetableClassInfo, TimetableData } from "../models/timetable";
 
 export interface ClassService {
     /**
@@ -13,11 +14,16 @@ export interface ClassService {
     updateClassInfo(classInfo: ClassInfo): Promise<ClassInfo>;
 
     /**
+     * 新しく授業情報を取得し、構築します。
+     */
+    fetchAndBuildClassInfo(classId: string, timetable: TimetableData): Promise<ClassInfo>;
+
+    /**
      * 時間割データから授業情報を構築します。
      * @param timetableData 基になる時間割データ
      * @returns 構築された授業データ
      */
-    buildClassInfoFromTimetable(timetableData: TimetableData): ClassData;
+    buildClassDataFromTimetable(timetableData: TimetableData): ClassData;
 }
 
 export class IntegratedClassService implements ClassService {
@@ -44,7 +50,26 @@ export class IntegratedClassService implements ClassService {
         };
     }
 
-    public buildClassInfoFromTimetable(timetableData: TimetableData): ClassData {
+    public async fetchAndBuildClassInfo(classId: string, timetable: TimetableData): Promise<ClassInfo> {
+        const classData = this.buildClassDataFromTimetable(timetable);
+        const classInfo = classData.classes[classId];
+        if (!classInfo) {
+            throw new DataBuildError();
+        }
+
+        const info = classInfo.info;
+        const attendanceLog = await this.getAttendance(classId);
+        const news = await this.classRepository.getClassNews(classId);
+        const detail = await this.classRepository.getClassSyllabus(classId);
+        return {
+            info,
+            attendanceLog,
+            news,
+            detail,
+        };
+    }
+
+    public buildClassDataFromTimetable(timetableData: TimetableData): ClassData {
         // manaboClassIdをキーとするマップで授業を管理
         const classMap = new Map<string, ClassInfo>();
 
@@ -68,23 +93,7 @@ export class IntegratedClassService implements ClassService {
                         });
                     } else {
                         // 新しい授業として追加
-                        const classInfo: ClassInfo = {
-                            info: {
-                                manaboClassId: classTimetable.manaboClassId,
-                                cubicsClassId: classTimetable.cubicsClassId,
-                                name: classTimetable.name,
-                                room: classTimetable.room,
-                                teacher: classTimetable.teacher,
-                                timetableDate: [
-                                    {
-                                        weekday: weekdayKey,
-                                        period: periodKey,
-                                    },
-                                ],
-                            },
-                            attendanceLog: [],
-                            news: [],
-                        };
+                        const classInfo = this.buildClassInfoFromTimetableClassInfo(classTimetable, weekdayKey, periodKey);
                         classMap.set(classTimetable.manaboClassId, classInfo);
                     }
                 }
@@ -100,6 +109,26 @@ export class IntegratedClassService implements ClassService {
         return {
             semester: timetableData.semester,
             classes,
+        };
+    }
+
+    private buildClassInfoFromTimetableClassInfo(info: TimetableClassInfo, weekday: Weekday, period: Period): ClassInfo {
+        return {
+            info: {
+                manaboClassId: info.manaboClassId,
+                cubicsClassId: info.cubicsClassId,
+                name: info.name,
+                room: info.room,
+                teacher: info.teacher,
+                timetableDate: [
+                    {
+                        weekday: weekday,
+                        period: period,
+                    },
+                ],
+            },
+            attendanceLog: [],
+            news: [],
         };
     }
 

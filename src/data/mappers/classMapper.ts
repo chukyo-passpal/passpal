@@ -91,16 +91,17 @@ function parseJapaneseDatetimeRange(input: string): {
     // 「～」または「〜」で区切る
     const [startPart, endPart] = input.split(/[～〜]/).map((s) => s.trim());
 
-    const parsePart = (part: string): string | null => {
+    const parsePart = (part: string | undefined): string | null => {
+        if (!part) return null;
         const match = dateTimeRegex.exec(part);
         if (!match) return null;
 
         const [, yearStr, monthStr, dayStr, hourStr, minuteStr] = match;
         const year = yearStr ? parseInt(yearStr, 10) : currentYear;
-        const month = parseInt(monthStr, 10);
-        const day = parseInt(dayStr, 10);
-        const hour = parseInt(hourStr, 10);
-        const minute = parseInt(minuteStr, 10);
+        const month = monthStr ? parseInt(monthStr, 10) : 1;
+        const day = dayStr ? parseInt(dayStr, 10) : 1;
+        const hour = hourStr ? parseInt(hourStr, 10) : 0;
+        const minute = minuteStr ? parseInt(minuteStr, 10) : 0;
 
         // ISO8601形式の文字列に変換
         const iso = new Date(year, month - 1, day, hour, minute).toISOString();

@@ -11,7 +11,7 @@ import { MapError } from "../errors/MapError";
  */
 function extractClassId(path: string): string {
     const match = path.match(/\/class\/(\d+)\//);
-    return match ? match[1] : "";
+    return match ? match[1] ?? "" : "";
 }
 
 /**
@@ -121,6 +121,9 @@ export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): Time
                 return;
             }
             const weekday = days[index];
+            if (!weekday) {
+                throw new MapError();
+            }
 
             tbl.timetable[weekday][period.data] = {
                 manaboClassId: "",

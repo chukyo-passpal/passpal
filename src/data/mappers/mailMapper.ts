@@ -3,7 +3,7 @@ import * as parser from "@chukyo-passpal/web_parser";
 
 /**
  * 日本語表記の日付文字列をDateオブジェクトへ変換します。
- * 
+ *
  * 入力例: 2025年6月20日(金) 12:26
  * @param value 変換対象の日付文字列
  * @returns 解析されたDateオブジェクト
@@ -27,6 +27,10 @@ function parseJapaneseReceivedAt(value: string): Date {
     const [hour = 0, minute = 0, second = 0] = (timePart ?? "").split(":").map(Number);
 
     if ([year, month, day, hour, minute, second].some((component) => Number.isNaN(component))) {
+        return new Date(value);
+    }
+
+    if (!year || !month || !day) {
         return new Date(value);
     }
 

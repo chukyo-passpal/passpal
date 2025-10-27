@@ -81,7 +81,7 @@ const ShibbolethWebViewBase: ForwardRefRenderFunction<shibbolethWebViewRef, obje
                 }
                 isProcessingRef.current = true;
 
-                let timeoutId: number;
+                let timeoutId: NodeJS.Timeout;
                 await new Promise((res, rej) => {
                     // WebViewに認証情報を渡し、ログイン処理完了の指示が来るのを待つ
                     setAuthResolve(() => res);

@@ -45,10 +45,13 @@ export default function Assignments() {
     };
 
     let flattedAssignments: Assignment[] = [];
-    for (const cls in assignmentData?.classes) {
-        const clsData = assignmentData.classes[cls];
+    const classes = assignmentData?.classes ?? {};
+    for (const cls in classes) {
+        const clsData = classes[cls];
+        if (!clsData) continue;
         for (const dir in clsData.directories) {
             const dirData = clsData.directories[dir];
+            if (!dirData) continue;
 
             dirData.contents
                 .filter((e) => e.type === "report")

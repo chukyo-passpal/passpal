@@ -15,7 +15,7 @@ export interface ClassState {
 
     clear: () => void;
     setFromTimetable: (timetableData: TimetableData) => TimetableData;
-    refetchClassInfo: (manaboClassId: string) => Promise<ClassInfo>;
+    refetchClassInfo: (timetableData: TimetableData, manaboClassId: string) => Promise<ClassInfo>;
 }
 
 /**
@@ -45,7 +45,7 @@ const useClass = create<ClassState>()(
              */
             setFromTimetable: (timetableData: TimetableData) => {
                 set((state) => {
-                    state.classData = get().classService.buildClassInfoFromTimetable(timetableData);
+                    state.classData = get().classService.buildClassDataFromTimetable(timetableData);
                 });
                 return timetableData;
             },
@@ -55,7 +55,7 @@ const useClass = create<ClassState>()(
              * @param manaboClassId Manaboの授業ID
              * @returns 更新された授業情報
              */
-            refetchClassInfo: async (manaboClassId: string) => {
+            refetchClassInfo: async (timetableData: TimetableData, manaboClassId: string) => {
                 let nowClassData = get().classData;
                 if (!nowClassData) {
                     nowClassData = { semester: "", classes: {} };
@@ -64,15 +64,21 @@ const useClass = create<ClassState>()(
                     state.loading = true;
                 });
                 try {
-                    const classData = await get().classService.updateClassInfo(nowClassData.classes[manaboClassId]);
+                    const oldClassInfo = nowClassData.classes[manaboClassId];
+                    let newClassInfo: ClassInfo;
+                    if (oldClassInfo) {
+                        newClassInfo = await get().classService.updateClassInfo(oldClassInfo);
+                    } else {
+                        newClassInfo = await get().classService.fetchAndBuildClassInfo(manaboClassId, timetableData);
+                    }
                     set((state) => {
                         if (state.classData) {
-                            state.classData.classes[manaboClassId] = classData;
+                            state.classData.classes[manaboClassId] = newClassInfo;
                             state.loading = false;
                             state.lastFetch = new Date();
                         }
                     });
-                    return classData;
+                    return newClassInfo;
                 } catch (err) {
                     set((state) => {
                         state.loading = false;
