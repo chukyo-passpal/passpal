@@ -1,12 +1,12 @@
 import ShibbolethWebView, { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
-import adminRepositoryInstance from "@/src/data/repositories/adminRepository";
+import appServiceInstance from "@/src/domain/services/appService";
 import eventServiceInstance from "@/src/domain/services/eventService";
 import { Toast } from "@/src/presentation/components/Toast";
 import { ThemeProvider, useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAppInit from "@/src/presentation/hooks/useAppInit";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import { tamaguiConfig } from "@/tamagui.config";
-import { router, Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useRef } from "react";
 import { TamaguiProvider } from "tamagui";
 
@@ -40,12 +40,26 @@ function TamaguiProviderWrapper({ children }: { children?: React.ReactNode }) {
 function RootLayoutNav() {
     const { user, isTermsAccepted } = useAuth();
     const { theme } = useTheme();
+    const router = useRouter();
 
     const isAuthenticated = Boolean(user !== null);
 
-    if (adminRepositoryInstance.maintenanceMode) {
-        router.replace("/maintenance");
-    }
+    // すぐにやるとios版でrouteが設定されておらずエラーを吐くことがあるため仕方なくsetTimeoutする
+    setTimeout(() => {
+        if (appServiceInstance.maintenanceMode) {
+            if (router.canDismiss()) {
+                router.dismissAll();
+            }
+            router.replace("/maintenance");
+        }
+
+        if (appServiceInstance.isNeededUpdate()) {
+            if (router.canDismiss()) {
+                router.dismissAll();
+            }
+            router.replace("/force-update");
+        }
+    }, 10);
 
     return (
         <Stack
@@ -61,6 +75,12 @@ function RootLayoutNav() {
                 },
             }}
         >
+            {/* メンテナンス画面 */}
+            <Stack.Screen name="maintenance" />
+
+            {/* 強制アップデート画面 */}
+            <Stack.Screen name="force-update" />
+
             {/* 認証画面 */}
             <Stack.Protected guard={!isAuthenticated}>
                 <Stack.Screen name="login" />
@@ -84,9 +104,6 @@ function RootLayoutNav() {
             <Stack.Protected guard={__DEV__}>
                 <Stack.Screen name="storybook" />
             </Stack.Protected>
-
-            {/* メンテナンス画面 */}
-            <Stack.Screen name="maintenance" />
         </Stack>
     );
 }
