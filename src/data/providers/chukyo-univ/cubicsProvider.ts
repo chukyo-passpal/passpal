@@ -1,5 +1,6 @@
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
+import { CUBICS_URLS } from "@/src/utils/urls";
 import { ExpiredSessionError } from "../../errors/AuthError";
 import { abstractChukyoProvider } from "./abstractChukyoProvider";
 
@@ -14,7 +15,7 @@ export interface CubicsProvider {
 }
 
 export class IntegratedCubicsProvider extends abstractChukyoProvider implements CubicsProvider {
-    protected baseUrl = "https://cubics-as-out.mng.chukyo-u.ac.jp";
+    protected baseUrl = CUBICS_URLS.base;
     protected authEnterPath = "/unias/UnSSOLoginControl2";
     protected authGoalPath = "/unias/UnSSOLoginControl2";
     protected serviceName: CUService = "cubics";

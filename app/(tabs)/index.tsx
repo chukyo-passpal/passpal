@@ -8,6 +8,7 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
+import { ALBO_URLS, MANABO_URLS } from "@/src/utils/urls";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Linking, ScrollView, View } from "react-native";
@@ -19,11 +20,11 @@ export default function HomeScreen() {
     const { mailData, refetch: refetchMail, loading: mailLoading, lastFetch: mailLastFetch } = useMail();
 
     const handleOpenALBO = () => {
-        Linking.openURL("https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/UnLoginControl");
+        Linking.openURL(ALBO_URLS.login);
     };
 
     const handleOpenMaNaBo = () => {
-        Linking.openURL("https://manabo.cnc.chukyo-u.ac.jp/auth/shibboleth/");
+        Linking.openURL(MANABO_URLS.auth);
     };
 
     const handleOpenSettings = () => {

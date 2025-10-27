@@ -12,6 +12,7 @@ import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useToast } from "@/src/presentation/hooks/useToast";
+import { PASSPAL_URLS } from "@/src/utils/urls";
 import * as Application from "expo-application";
 import { router } from "expo-router";
 import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
@@ -55,11 +56,11 @@ export default function Settings() {
     };
 
     const handleFeedback = () => {
-        Linking.openURL("https://chukyo-passpal.app/feedback");
+        Linking.openURL(PASSPAL_URLS.feedback);
     };
 
     const handleContact = () => {
-        Linking.openURL("https://chukyo-passpal.app/contact");
+        Linking.openURL(PASSPAL_URLS.contact);
     };
 
     const handleLicenseInfo = () => {

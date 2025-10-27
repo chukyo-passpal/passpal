@@ -1,5 +1,6 @@
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
+import { MANABO_URLS } from "@/src/utils/urls";
 import { abstractChukyoProvider } from "./abstractChukyoProvider";
 
 export interface ManaboProvider {
@@ -28,7 +29,7 @@ export interface ManaboProvider {
 }
 
 export class IntegratedManaboProvider extends abstractChukyoProvider implements ManaboProvider {
-    protected baseUrl = "https://manabo.cnc.chukyo-u.ac.jp";
+    protected baseUrl = MANABO_URLS.base;
     protected authEnterPath = "/auth/shibboleth/";
     protected authGoalPath = "/auth/shibboleth/";
     protected serviceName: CUService = "manabo";

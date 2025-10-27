@@ -9,6 +9,7 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
+import { getManaboClassUrl } from "@/src/utils/urls";
 import React from "react";
 import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
@@ -40,7 +41,7 @@ export default function Assignments() {
     };
 
     const handleTouch = (classId: string, directoryId: string, contentId: string) => {
-        const url = `https://manabo.cnc.chukyo-u.ac.jp/class/${classId}/`;
+        const url = getManaboClassUrl(classId);
         Linking.openURL(url);
     };
 
