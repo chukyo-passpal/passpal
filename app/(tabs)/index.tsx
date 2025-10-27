@@ -125,7 +125,7 @@ export default function HomeScreen() {
                                 読み込み中...
                             </Typography>
                         ) : newsData?.alboNews && newsData.alboNews.length > 0 ? (
-                            newsData.alboNews.map((news, index) => <AlboNewsComponent key={index} newsItem={news} />)
+                            newsData.alboNews.map((news, index) => <AlboNewsComponent key={index} newsItem={news} />).slice(0, 3)
                         ) : (
                             <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
                                 現在お知らせはないです。
