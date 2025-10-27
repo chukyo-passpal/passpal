@@ -75,12 +75,6 @@ function RootLayoutNav() {
                 },
             }}
         >
-            {/* メンテナンス画面 */}
-            <Stack.Screen name="maintenance" />
-
-            {/* 強制アップデート画面 */}
-            <Stack.Screen name="force-update" />
-
             {/* 認証画面 */}
             <Stack.Protected guard={!isAuthenticated}>
                 <Stack.Screen name="login" />
@@ -104,6 +98,12 @@ function RootLayoutNav() {
             <Stack.Protected guard={__DEV__}>
                 <Stack.Screen name="storybook" />
             </Stack.Protected>
+
+            {/* メンテナンス画面 */}
+            <Stack.Screen name="maintenance" />
+
+            {/* 強制アップデート画面 */}
+            <Stack.Screen name="force-update" />
         </Stack>
     );
 }
