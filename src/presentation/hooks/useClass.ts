@@ -56,9 +56,9 @@ const useClass = create<ClassState>()(
              * @returns 更新された授業情報
              */
             refetchClassInfo: async (manaboClassId: string) => {
-                const nowClassData = get().classData;
+                let nowClassData = get().classData;
                 if (!nowClassData) {
-                    throw new Error("Class data is not set.");
+                    nowClassData = { semester: "", classes: {} };
                 }
                 set((state) => {
                     state.loading = true;
