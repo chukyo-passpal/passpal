@@ -2,17 +2,14 @@ import appServiceInstance from "@/src/domain/services/appService";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import { getStoreUrl } from "@/src/utils/urls";
 import { Linking, Platform, Pressable, View } from "react-native";
 
 export default function ForceUpdateScreen() {
     const { theme } = useTheme();
 
     const handleUpdate = () => {
-        const storeUrl =
-            Platform.OS === "ios"
-                ? "https://apps.apple.com/app/id YOUR_APP_ID" // TODO: 実際のApp Store URLに置き換える
-                : "https://play.google.com/store/apps/details?id=app.chukyopasspal.passpal";
-
+        const storeUrl = getStoreUrl(Platform.OS === "ios" ? "ios" : "android");
         Linking.openURL(storeUrl);
     };
 

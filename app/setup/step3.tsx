@@ -4,6 +4,7 @@ import { Icon } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
+import { PASSPAL_URLS } from "@/src/utils/urls";
 import { Checkbox } from "expo-checkbox";
 import { router } from "expo-router";
 import React, { useState } from "react";
@@ -22,11 +23,11 @@ export default function Step3() {
     };
 
     const handleClickTerms = () => {
-        Linking.openURL("https://chukyo-passpal.app/term");
+        Linking.openURL(PASSPAL_URLS.terms);
     };
 
     const handleClickPrivacy = () => {
-        Linking.openURL("https://chukyo-passpal.app/policy");
+        Linking.openURL(PASSPAL_URLS.privacy);
     };
 
     return (

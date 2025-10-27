@@ -1,3 +1,4 @@
+import { SHIBBOLETH_URLS } from "@/src/utils/urls";
 import CookieManager, { Cookies } from "@react-native-cookies/cookies";
 import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useRef, useState } from "react";
 import { Platform, View } from "react-native";
@@ -124,7 +125,7 @@ const ShibbolethWebViewBase: ForwardRefRenderFunction<shibbolethWebViewRef, obje
     const runFirst = `
 (() => {
     let url = location.href;
-    let loginFormUrl = "https://shib.chukyo-u.ac.jp/cloudlink/module.php/core/loginuserpass.php"
+    let loginFormUrl = "${SHIBBOLETH_URLS.loginForm}";
     let goalUrl = "${credential?.goalUrl}";
     let username = "${credential?.username}";
     let password = "${credential?.password}";

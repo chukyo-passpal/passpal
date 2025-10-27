@@ -1,5 +1,6 @@
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
+import { ALBO_URLS } from "@/src/utils/urls";
 import { ExpiredSessionError } from "../../errors/AuthError";
 import { abstractChukyoProvider } from "./abstractChukyoProvider";
 
@@ -14,7 +15,7 @@ export interface AlboProvider {
 }
 
 export class IntegratedAlboProvider extends abstractChukyoProvider implements AlboProvider {
-    protected baseUrl = "https://cubics-pt-out.mng.chukyo-u.ac.jp";
+    protected baseUrl = ALBO_URLS.base;
     protected authEnterPath = "/uniprove_pt/UnLoginControl";
     protected authGoalPath = "/uniprove_pt/portal";
     protected serviceName: CUService = "albo";
