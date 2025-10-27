@@ -2,6 +2,7 @@ import ShibbolethWebView, { shibbolethWebViewRef } from "@/src/data/clients/chuk
 import adminRepositoryInstance from "@/src/data/repositories/adminRepository";
 import eventServiceInstance from "@/src/domain/services/eventService";
 import { Toast } from "@/src/presentation/components/Toast";
+import { ErrorBoundaryToastConnector, GlobalErrorBoundary } from "@/src/presentation/errors/GlobalErrorBoundary";
 import { ThemeProvider, useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAppInit from "@/src/presentation/hooks/useAppInit";
 import useAuth from "@/src/presentation/hooks/useAuth";
@@ -17,12 +18,15 @@ export default function RootLayout() {
     const shibRef = useRef<shibbolethWebViewRef>(null);
     useAppInit(shibRef);
     return (
-        <ThemeProvider>
-            <ShibbolethWebView ref={shibRef} />
-            <TamaguiProviderWrapper>
-                <RootLayoutNav />
-            </TamaguiProviderWrapper>
-        </ThemeProvider>
+        <GlobalErrorBoundary>
+            <ThemeProvider>
+                <ShibbolethWebView ref={shibRef} />
+                <TamaguiProviderWrapper>
+                    <ErrorBoundaryToastConnector />
+                    <RootLayoutNav />
+                </TamaguiProviderWrapper>
+            </ThemeProvider>
+        </GlobalErrorBoundary>
     );
 }
 
