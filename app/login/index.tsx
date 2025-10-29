@@ -1,3 +1,4 @@
+import appServiceInstance from "@/src/domain/services/appService";
 import authServiceInstance from "@/src/domain/services/authService";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
@@ -125,6 +126,18 @@ export default function Login() {
                     </TouchableOpacity>
                 </View>
             </ScrollView>
+            {/* Footer */}
+            <View style={{ alignItems: "center" }}></View>
+            <Typography
+                variant="caption"
+                color={theme.colors.text.secondary}
+                style={{
+                    fontSize: 14,
+                    textAlign: "left",
+                }}
+            >
+                {appServiceInstance.versionInfo}
+            </Typography>
         </View>
     );
 }

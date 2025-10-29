@@ -17,6 +17,12 @@ export interface AppService {
      */
     readonly maintenanceMode: boolean;
 
+    /*
+     * バージョン情報の文字列を取得します。
+    例: "Version 1.0.2 (13)"
+     */
+    readonly versionInfo: string;
+
     /**
      * バージョン文字列を比較します。
      * @param version1 比較するバージョン1 (例: "1.2.3")
@@ -49,6 +55,10 @@ export class IntegratedAppService implements AppService {
 
     get maintenanceMode(): boolean {
         return this.adminRepository.maintenanceMode;
+    }
+
+    get versionInfo(): string {
+        return `Version ${this.currentVersion} (${Application.nativeBuildVersion ?? "unknown"})`;
     }
 
     public compareVersions(version1: string, version2: string): number {

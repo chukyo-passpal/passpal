@@ -1,3 +1,4 @@
+import appServiceInstance from "@/src/domain/services/appService";
 import authServiceInstance from "@/src/domain/services/authService";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
@@ -15,7 +16,6 @@ import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useToast } from "@/src/presentation/hooks/useToast";
 import { PASSPAL_URLS } from "@/src/utils/urls";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import * as Application from "expo-application";
 import { router } from "expo-router";
 import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
 
@@ -699,7 +699,7 @@ export default function Settings() {
                                             fontSize: 14,
                                         }}
                                     >
-                                        Version {Application.nativeApplicationVersion ?? "unknown"}
+                                        {appServiceInstance.versionInfo}
                                     </Typography>
                                 </View>
                             </View>
