@@ -1,77 +1,92 @@
 {
-    "expo": {
-        "name": "PassPal",
-        "slug": "passpal",
-        "version": "0.0.1",
-        "orientation": "portrait",
-        "icon": "./assets/icons/icon.png",
-        "scheme": "passpal",
-        "userInterfaceStyle": "automatic",
-        "newArchEnabled": true,
-        "ios": {
-            "googleServicesFile": "./GoogleService-Info.plist",
-            "supportsTablet": true,
-            "bundleIdentifier": "app.chukyopasspal.passpal",
-            "infoPlist": {
-                "ITSAppUsesNonExemptEncryption": false,
-                "UIBackgroundModes": ["remote-notification"]
-            },
-            "entitlements": {
-                "aps-environment": "production"
-            },
-            "icon": "./assets/icons/passpal.icon"
-        },
-        "android": {
-            "googleServicesFile": "./google-services.json",
-            "adaptiveIcon": {
-                "backgroundColor": "#D8D4E9",
-                "foregroundImage": "./assets/icons/adaptive-icon.png",
-                "backgroundImage": "./assets/icons/adaptive-back.png",
-                "monochromeImage": "./assets/icons/adaptive-icon-gray.png"
-            },
-            "edgeToEdgeEnabled": true,
-            "predictiveBackGestureEnabled": false,
-            "package": "app.chukyopasspal.passpal"
-        },
-        "plugins": [
-            "expo-router",
-            [
-                "expo-splash-screen",
-                {
-                    "image": "./assets/icons/splash-icon.png",
-                    "imageWidth": 200,
-                    "resizeMode": "contain",
-                    "backgroundColor": "#2D2D30",
-                    "dark": {
-                        "backgroundColor": "#000000"
-                    }
-                }
-            ],
-            [
-                "expo-build-properties",
-                {
-                    "ios": {
-                        "useFrameworks": "static",
-                        "forceStaticLinking": ["RNFBApp", "RNFBAuth", "RNFBMessaging", "RNFBAnalytics", "RNFBRemoteConfig"]
-                    }
-                }
-            ],
-            "expo-secure-store",
-            "expo-notifications",
-            "@react-native-firebase/app",
-            "@react-native-firebase/auth",
-            "@react-native-firebase/messaging"
-        ],
-        "experiments": {
-            "typedRoutes": true,
-            "reactCompiler": true
-        },
-        "extra": {
-            "router": {},
-            "eas": {
-                "projectId": "4b28d163-2017-4590-bb09-edb24ad0ad20"
-            }
-        },
-        "owner": "passpal"
+  "expo": {
+    "name": "PassPal",
+    "slug": "passpal",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/icons/icon.png",
+    "scheme": "passpal",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "supportsTablet": true,
+      "bundleIdentifier": "app.chukyopasspal.passpal",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": [
+          "remote-notification",
+          "remote-notification"
+        ]
+      },
+      "entitlements": {
+        "aps-environment": "production"
+      },
+      "icon": "./assets/icons/passpal.icon"
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "backgroundColor": "#D8D4E9",
+        "foregroundImage": "./assets/icons/adaptive-icon.png",
+        "backgroundImage": "./assets/icons/adaptive-back.png",
+        "monochromeImage": "./assets/icons/adaptive-icon-gray.png"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "app.chukyopasspal.passpal"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/icons/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#2D2D30",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static",
+            "forceStaticLinking": [
+              "RNFBApp",
+              "RNFBAuth",
+              "RNFBMessaging",
+              "RNFBAnalytics",
+              "RNFBRemoteConfig"
+            ]
+          }
+        }
+      ],
+      "expo-secure-store",
+      "expo-notifications",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      "@react-native-firebase/messaging"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "4b28d163-2017-4590-bb09-edb24ad0ad20"
+      }
+    },
+    "owner": "passpal",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/4b28d163-2017-4590-bb09-edb24ad0ad20"
     }
+  }
 }
