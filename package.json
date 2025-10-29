@@ -11,6 +11,8 @@
         "prebuild": "expo prebuild --clean",
         "build:android": "eas build -p android --profile development --local",
         "build:ios": "eas build -p ios --profile development --local",
+        "submit:android": "eas build -p android --profile production --output=./production.aab --local && eas submit -p android --path ./production.aab",
+        "submit:ios": "eas build -p ios --profile production --output=./production.ipa --local && eas submit -p ios --path ./production.ipa",
         "license:update": "bun run license-checker --production --direct --json --out ./licenses.json && bun run scripts/generate-license.ts",
         "license:summary": "bun run license-checker --production --direct --summary"
     },

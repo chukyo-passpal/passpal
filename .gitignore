@@ -3,6 +3,7 @@
 # build output
 *.ipa
 *.apk
+*.aab
 licenses.json
 
 # dependencies
