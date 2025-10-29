@@ -36,6 +36,7 @@ export default function Login() {
 
     const signIn = async () => {
         try {
+            await GoogleSignin.signOut();
             const response = await GoogleSignin.signIn();
             if (isSuccessResponse(response)) {
                 if (!response.data.user.email.endsWith(allowedDomain)) {

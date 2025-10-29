@@ -1,3 +1,4 @@
+import authServiceInstance from "@/src/domain/services/authService";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -38,6 +39,13 @@ export default function Settings() {
 
         resetSettings();
 
+        const allowedDomain = authServiceInstance.allowedMailDomain;
+        const webClientId = authServiceInstance.webClientId;
+        GoogleSignin.configure({
+            hostedDomain: allowedDomain,
+            webClientId,
+            offlineAccess: true,
+        });
         await GoogleSignin.signOut();
         signOut();
     };
