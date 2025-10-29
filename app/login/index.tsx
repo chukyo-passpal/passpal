@@ -4,6 +4,7 @@ import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import { GoogleSignin, isErrorWithCode, isSuccessResponse } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Login() {
@@ -20,6 +21,10 @@ export default function Login() {
         webClientId,
         offlineAccess: true,
     });
+
+    useEffect(() => {
+        GoogleSignin.signOut();
+    }, []);
 
     const handleNext = (email: string) => {
         const studentId = email.split("@")[0];

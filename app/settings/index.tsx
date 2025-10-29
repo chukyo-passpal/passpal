@@ -13,6 +13,7 @@ import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useToast } from "@/src/presentation/hooks/useToast";
 import { PASSPAL_URLS } from "@/src/utils/urls";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import * as Application from "expo-application";
 import { router } from "expo-router";
 import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
@@ -28,7 +29,7 @@ export default function Settings() {
     const { clear: clearClass, setFromTimetable } = useClass();
     const { clear: clearAssignment } = useAssignment();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         clearTimetable();
         clearMail();
         clearNews();
@@ -37,6 +38,7 @@ export default function Settings() {
 
         resetSettings();
 
+        await GoogleSignin.signOut();
         signOut();
     };
 
