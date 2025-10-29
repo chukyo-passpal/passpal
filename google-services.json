@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "707651746611-3miajukb5h3s59n36b512i9f0cp7v5mv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.chukyopasspal.passpal",
+            "certificate_hash": "8195d7f1b7afc9c824ffc948122945a74ff028c7"
+          }
+        },
+        {
+          "client_id": "707651746611-c055v0roeaccv0mmosdh6s3ebk536lb2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.chukyopasspal.passpal",
+            "certificate_hash": "b8c345aed0215468805817885bda47d4477ef9ce"
+          }
+        },
+        {
           "client_id": "707651746611-c274h63sn1cj7g69ehp0nvafh5q3reis.apps.googleusercontent.com",
           "client_type": 3
         }
