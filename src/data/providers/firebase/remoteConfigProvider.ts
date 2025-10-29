@@ -18,7 +18,7 @@ export class IntegratedRemoteConfigProvider implements RemoteConfigProvider {
 
             // auth
             allowedMailDomain: "m.chukyo-u.ac.jp",
-            webClientId: "106090766697496251493",
+            webClientId: "707651746611-c274h63sn1cj7g69ehp0nvafh5q3reis.apps.googleusercontent.com",
         });
 
         const fetchedRemotely = await fetchAndActivate(remoteConfig);
