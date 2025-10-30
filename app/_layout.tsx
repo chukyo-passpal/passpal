@@ -46,6 +46,11 @@ function RootLayoutNav() {
 
     // すぐにやるとios版でrouteが設定されておらずエラーを吐くことがあるため仕方なくsetTimeoutする
     setTimeout(() => {
+        // 開発モード時はメンテナンス・強制アップデート画面にリダイレクトしない
+        if (__DEV__) {
+            return;
+        }
+
         if (appServiceInstance.maintenanceMode) {
             if (router.canDismiss()) {
                 router.dismissAll();
