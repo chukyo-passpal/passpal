@@ -99,9 +99,10 @@ function RootLayoutNav() {
             {/* ライセンス画面 */}
             <Stack.Screen name="license" />
 
-            {/* Storybook画面（デバッグモード時のみ） */}
+            {/* デバッグ用画面 */}
             <Stack.Protected guard={__DEV__}>
                 <Stack.Screen name="storybook" />
+                <Stack.Screen name="debug" />
             </Stack.Protected>
 
             {/* メンテナンス画面 */}

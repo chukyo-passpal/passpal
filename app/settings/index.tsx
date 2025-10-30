@@ -265,6 +265,37 @@ export default function Settings() {
                                         <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                                     </Card>
                                 </TouchableOpacity>
+
+                                {/* Debug Item */}
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        router.push("/debug/zustand");
+                                    }}
+                                    activeOpacity={0.7}
+                                >
+                                    <Card
+                                        style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            padding: theme.spacing.md,
+                                            height: 56,
+                                        }}
+                                    >
+                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                            <Typography
+                                                variant="body"
+                                                style={{
+                                                    fontSize: 16,
+                                                    fontWeight: "600",
+                                                }}
+                                            >
+                                                Zustandデバッグ画面を開く
+                                            </Typography>
+                                        </View>
+                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+                                    </Card>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </>
