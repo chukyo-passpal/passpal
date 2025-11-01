@@ -21,7 +21,7 @@ export const PASSPAL_URLS = {
 // ============================================
 export const STORE_URLS = {
     /** iOS App Store */
-    ios: "https://apps.apple.com/app/id YOUR_APP_ID", // TODO: 実際のApp Store URLに置き換える
+    ios: "https://apps.apple.com/app/passpal/id6754452343",
     /** Google Play Store */
     android: "https://play.google.com/store/apps/details?id=app.chukyopasspal.passpal",
 } as const;
