@@ -1,5 +1,6 @@
 import adminRepositoryInstance, { AdminRepository } from "@/src/data/repositories/adminRepository";
 import * as Application from "expo-application";
+import * as Updates from "expo-updates";
 
 export interface AppService {
     /**
@@ -19,7 +20,7 @@ export interface AppService {
 
     /*
      * バージョン情報の文字列を取得します。
-    例: "Version 1.0.2 (13)"
+    例: "Version 1.0.2 (202503090309)"
      */
     readonly versionInfo: string;
 
@@ -58,7 +59,18 @@ export class IntegratedAppService implements AppService {
     }
 
     get versionInfo(): string {
-        return `Version ${this.currentVersion} a (${Application.nativeBuildVersion ?? "unknown"})`;
+        const updateCreatedAt = Updates.createdAt ?? new Date(0);
+        const formatter = new Intl.DateTimeFormat("ja-JP", {
+            timeZone: "Asia/Tokyo",
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+        });
+        const date = formatter.format(updateCreatedAt).replace(/\D/g, "");
+        return `Version ${this.currentVersion} (${date})`;
     }
 
     public compareVersions(version1: string, version2: string): number {
