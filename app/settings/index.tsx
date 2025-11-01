@@ -1,5 +1,5 @@
 import appServiceInstance from "@/src/domain/services/appService";
-import authServiceInstance from "@/src/domain/services/authService";
+import googleAuthServiceInstance from "@/src/domain/services/googleAuthService";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -15,7 +15,6 @@ import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useToast } from "@/src/presentation/hooks/useToast";
 import { PASSPAL_URLS } from "@/src/utils/urls";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
 import { useRef, useState } from "react";
 import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
@@ -64,14 +63,7 @@ export default function Settings() {
 
         resetSettings();
 
-        const allowedDomain = authServiceInstance.allowedMailDomain;
-        const webClientId = authServiceInstance.webClientId;
-        GoogleSignin.configure({
-            hostedDomain: allowedDomain,
-            webClientId,
-            offlineAccess: true,
-        });
-        await GoogleSignin.signOut();
+        await googleAuthServiceInstance.signOut();
         signOut();
     };
 

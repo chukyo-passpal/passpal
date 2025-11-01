@@ -1,9 +1,8 @@
 import appServiceInstance from "@/src/domain/services/appService";
-import authServiceInstance from "@/src/domain/services/authService";
+import googleAuthServiceInstance from "@/src/domain/services/googleAuthService";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
-import { GoogleSignin, isErrorWithCode, isSuccessResponse } from "@react-native-google-signin/google-signin";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
@@ -14,21 +13,12 @@ export default function Login() {
 
     const { setFirebaseUser } = useAuth();
 
-    const allowedDomain = authServiceInstance.allowedMailDomain;
-    const webClientId = authServiceInstance.webClientId;
-
-    GoogleSignin.configure({
-        hostedDomain: allowedDomain,
-        webClientId,
-        offlineAccess: true,
-    });
-
     useEffect(() => {
-        GoogleSignin.signOut();
+        void googleAuthServiceInstance.signOut();
     }, []);
 
     const handleNext = (email: string) => {
-        const studentId = email.split("@")[0];
+        const studentId = googleAuthServiceInstance.extractStudentId(email);
         router.push({
             pathname: "/login/step2",
             params: { studentId },
@@ -36,28 +26,25 @@ export default function Login() {
     };
 
     const signIn = async () => {
-        try {
-            await GoogleSignin.signOut();
-            const response = await GoogleSignin.signIn();
-            if (isSuccessResponse(response)) {
-                if (!response.data.user.email.endsWith(allowedDomain)) {
-                    alert("中京大学のアカウントでログインしてください");
-                    return;
-                }
-
-                setFirebaseUser(response.data);
-
-                const email = response.data.user.email;
+        const result = await googleAuthServiceInstance.signIn();
+        switch (result.kind) {
+            case "success": {
+                setFirebaseUser(result.data);
+                const email = result.data.user.email;
                 handleNext(email);
-            } else {
-                alert("ログインがキャンセルされました");
-                return;
+                break;
             }
-        } catch (error) {
-            if (isErrorWithCode(error)) {
-                alert(`エラーが発生しました(${error.code}): ${error.message}`);
-            } else {
-                alert("エラーが発生しました: " + String(error));
+            case "invalid-domain": {
+                alert("中京大学のアカウントでログインしてください");
+                break;
+            }
+            case "cancelled": {
+                alert("ログインがキャンセルされました");
+                break;
+            }
+            case "error": {
+                alert(googleAuthServiceInstance.toReadableError(result.error));
+                break;
             }
         }
     };
