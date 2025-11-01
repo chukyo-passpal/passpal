@@ -99,17 +99,17 @@ function RootLayoutNav() {
             {/* ライセンス画面 */}
             <Stack.Screen name="license" />
 
-            {/* デバッグ用画面 */}
-            <Stack.Protected guard={__DEV__}>
-                <Stack.Screen name="storybook" />
-                <Stack.Screen name="debug" />
-            </Stack.Protected>
-
             {/* メンテナンス画面 */}
             <Stack.Screen name="maintenance" />
 
             {/* 強制アップデート画面 */}
             <Stack.Screen name="force-update" />
+
+            {/* デバッグ用画面 */}
+            <Stack.Protected guard={__DEV__}>
+                <Stack.Screen name="storybook" />
+            </Stack.Protected>
+            <Stack.Screen name="debug" />
         </Stack>
     );
 }

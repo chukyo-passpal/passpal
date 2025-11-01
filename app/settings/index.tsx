@@ -17,7 +17,8 @@ import { useToast } from "@/src/presentation/hooks/useToast";
 import { PASSPAL_URLS } from "@/src/utils/urls";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
-import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
+import { useRef, useState } from "react";
+import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 
 export default function Settings() {
     const { theme } = useTheme();
@@ -29,6 +30,30 @@ export default function Settings() {
     const { clear: clearNews } = useNews();
     const { clear: clearClass, setFromTimetable } = useClass();
     const { clear: clearAssignment } = useAssignment();
+
+    const [tapCount, setTapCount] = useState(0);
+    const timerRef = useRef<number | null>(null);
+
+    const handleAboutPress = () => {
+        setTapCount((prev) => {
+            const newCount = prev + 1;
+            if (newCount >= 10) {
+                router.push("/debug");
+                if (timerRef.current) {
+                    clearTimeout(timerRef.current);
+                }
+                return 0;
+            }
+            return newCount;
+        });
+
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
+        timerRef.current = setTimeout(() => {
+            setTapCount(0);
+        }, 500);
+    };
 
     const handleLogout = async () => {
         clearTimetable();
@@ -269,7 +294,7 @@ export default function Settings() {
                                 {/* Debug Item */}
                                 <TouchableOpacity
                                     onPress={() => {
-                                        router.push("/debug/zustand");
+                                        router.push("/debug");
                                     }}
                                     activeOpacity={0.7}
                                 >
@@ -290,7 +315,7 @@ export default function Settings() {
                                                     fontWeight: "600",
                                                 }}
                                             >
-                                                Zustandデバッグ画面を開く
+                                                デバッグ画面を開く
                                             </Typography>
                                         </View>
                                         <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
@@ -700,43 +725,45 @@ export default function Settings() {
                             </Card>
                         </TouchableOpacity>
 
-                        <Card
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                padding: theme.spacing.md,
-                                height: 72,
-                            }}
-                        >
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Icon name="info" size={24} color={theme.colors.text.primary} />
-                                <View style={{ marginLeft: theme.spacing.sm }}>
-                                    <Typography
-                                        variant="body"
-                                        style={{
-                                            color: theme.colors.text.primary,
-                                            fontSize: 16,
-                                            fontWeight: "600",
-                                            marginBottom: theme.spacing.xs,
-                                        }}
-                                    >
-                                        About PassPal
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        style={{
-                                            color: theme.colors.text.secondary,
-                                            fontSize: 14,
-                                        }}
-                                    >
-                                        {appServiceInstance.versionInfo}
-                                    </Typography>
+                        <TouchableOpacity onPress={handleAboutPress} activeOpacity={0.7}>
+                            <Card
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    padding: theme.spacing.md,
+                                    height: 72,
+                                }}
+                            >
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <Icon name="info" size={24} color={theme.colors.text.primary} />
+                                    <View style={{ marginLeft: theme.spacing.sm }}>
+                                        <Typography
+                                            variant="body"
+                                            style={{
+                                                color: theme.colors.text.primary,
+                                                fontSize: 16,
+                                                fontWeight: "600",
+                                                marginBottom: theme.spacing.xs,
+                                            }}
+                                        >
+                                            About PassPal
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            style={{
+                                                color: theme.colors.text.secondary,
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            {appServiceInstance.versionInfo}
+                                        </Typography>
+                                    </View>
                                 </View>
-                            </View>
-                        </Card>
+                            </Card>
+                        </TouchableOpacity>
 
-                        <TouchableOpacity onPress={handleLicenseInfo} activeOpacity={0.7}>
+                        <TouchableWithoutFeedback onPress={handleLicenseInfo}>
                             <Card
                                 style={{
                                     flexDirection: "row",
@@ -762,7 +789,7 @@ export default function Settings() {
                                 </View>
                                 <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
                             </Card>
-                        </TouchableOpacity>
+                        </TouchableWithoutFeedback>
                     </View>
                 </View>
             </ScrollView>
