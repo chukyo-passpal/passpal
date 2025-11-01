@@ -1,24 +1,19 @@
-import { router } from "expo-router";
-import { ScrollView, View } from "react-native";
-
+import notificationServiceInstance from "@/src/domain/services/notificationService";
 import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import * as Notifications from "expo-notifications";
+import { router } from "expo-router";
 import { useEffect } from "react";
+import { ScrollView, View } from "react-native";
 
 export default function Index() {
     const { theme } = useTheme();
 
     const handleNext = async () => {
         // 次のステップへ進む処理を実装
-        const { status } = await Notifications.getPermissionsAsync();
-        if (status !== "granted") {
-            await Notifications.requestPermissionsAsync();
-        }
-
+        await notificationServiceInstance.ensurePermissions();
         router.push("/setup/step3");
     };
 
@@ -28,9 +23,9 @@ export default function Index() {
     };
 
     useEffect(() => {
-        (async () => {
-            const { status } = await Notifications.getPermissionsAsync();
-            if (status === "granted") {
+        void (async () => {
+            const granted = await notificationServiceInstance.hasPermission();
+            if (granted) {
                 handleSkip();
             }
         })();
