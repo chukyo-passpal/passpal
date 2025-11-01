@@ -5,6 +5,7 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useClass from "@/src/presentation/hooks/useClass";
+import assignmentServiceInstance, { AssignmentStatsSummary } from "@/src/domain/services/assignmentService";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useMemo } from "react";
 import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
@@ -21,18 +22,10 @@ export default function ClassAssignments() {
     // この授業の課題のみを取得
     const classAssignmentInfo = assignmentData?.classes[classId || ""];
 
-    // ディレクトリ内のコンテンツを配列に変換
-    const assignments = useMemo(() => {
-        if (!classAssignmentInfo?.directories) return [];
-
-        return Object.values(classAssignmentInfo.directories).flatMap((directory) =>
-            directory.contents.map((content) => ({
-                ...content,
-                directoryId: directory.directoryId,
-                directoryName: directory.directoryName,
-            }))
-        );
-    }, [classAssignmentInfo]);
+    const assignments = useMemo(
+        () => assignmentServiceInstance.flattenClassAssignments(classAssignmentInfo),
+        [classAssignmentInfo]
+    );
 
     // 初回読み込み
     useEffect(() => {
@@ -55,34 +48,7 @@ export default function ClassAssignments() {
         }
     };
 
-    // コンテンツのタイトルを取得
-    const getContentTitle = (content: (typeof assignments)[number]) => {
-        if (content.type === "report") {
-            return content.title;
-        } else {
-            return content.comment || "ファイル";
-        }
-    };
-
-    // コンテンツのステータス色を取得
-    const getStatusColor = (isDone: boolean) => {
-        return isDone ? theme.colors.status.success : theme.colors.status.warning;
-    };
-
-    // コンテンツのステータスラベルを取得
-    const getStatusLabel = (isDone: boolean) => {
-        return isDone ? "完了" : "未完了";
-    };
-
-    // 課題の統計
-    const stats = useMemo(() => {
-        const total = assignments.length;
-        const completed = assignments.filter((a) => a.isDone).length;
-        const notCompleted = assignments.filter((a) => !a.isDone).length;
-        const overdue = assignments.filter((a) => a.duration.deadline.end && a.duration.deadline.end < new Date() && !a.isDone).length;
-
-        return { total, completed, notCompleted, overdue };
-    }, [assignments]);
+    const stats = useMemo<AssignmentStatsSummary>(() => assignmentServiceInstance.calculateClassAssignmentStats(assignments), [assignments]);
 
     // 授業が見つからない場合
     if (!classInfo) {
@@ -205,14 +171,13 @@ export default function ClassAssignments() {
 
                         {assignments.map((assignment, index) => {
                             const dueDate = assignment.duration.deadline.end;
-                            const isOverdue = dueDate && dueDate < new Date() && !assignment.isDone;
-                            const contentTitle = getContentTitle(assignment);
-                            const manaboUrl =
-                                assignment.type === "report"
-                                    ? assignment.actions.find((a) => a.href)?.href
-                                    : assignment.type === "file"
-                                    ? assignment.files[0]?.href
-                                    : undefined;
+                            const isOverdue = assignmentServiceInstance.isOverdue(assignment);
+                            const contentTitle = assignmentServiceInstance.resolveContentTitle(assignment);
+                            const manaboUrl = assignmentServiceInstance.getPrimaryActionUrl(assignment);
+                            const contentStatus = assignmentServiceInstance.resolveContentStatus(assignment);
+                            const statusColor = assignmentServiceInstance.getStatusColor(contentStatus, theme);
+                            const statusBackgroundColor = assignmentServiceInstance.getStatusBGColor(contentStatus, theme);
+                            const statusLabel = assignmentServiceInstance.getStatusLabel(contentStatus);
 
                             return (
                                 <Card
@@ -239,11 +204,11 @@ export default function ClassAssignments() {
                                                 paddingHorizontal: 8,
                                                 paddingVertical: 4,
                                                 borderRadius: 4,
-                                                backgroundColor: getStatusColor(assignment.isDone) + "20",
+                                                backgroundColor: statusBackgroundColor,
                                             }}
                                         >
-                                            <Typography variant="caption" color={getStatusColor(assignment.isDone)}>
-                                                {getStatusLabel(assignment.isDone)}
+                                            <Typography variant="caption" color={statusColor}>
+                                                {statusLabel}
                                             </Typography>
                                         </View>
                                     </View>

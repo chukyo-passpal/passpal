@@ -1,5 +1,4 @@
-import { AssignmentStatus } from "@/src/domain/constants/assignment";
-import assignmentServiceInstance from "@/src/domain/services/assignmentService";
+import assignmentServiceInstance, { AssignmentFilter, AssignmentOverviewItem } from "@/src/domain/services/assignmentService";
 import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
@@ -13,26 +12,11 @@ import { getManaboClassUrl } from "@/src/utils/urls";
 import React from "react";
 import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
-// 課題の型定義
-type Assignment = {
-    classId: string;
-    directoryId: string;
-    contentId: string;
-
-    title: string;
-    subtitle: string;
-    status: AssignmentStatus;
-    publishDate?: Date;
-    dueDate?: Date;
-};
-
-type FilterType = "all" | "not-started" | "completed" | "expired";
-
 export default function Assignments() {
     const { theme } = useTheme();
     const { timetableData } = useTimetable();
     const { assignmentData, loading, fetchAllClassAssignments } = useAssignment();
-    const [filter, setFilter] = React.useState<FilterType>("not-started");
+    const [filter, setFilter] = React.useState<AssignmentFilter>("not-started");
 
     const handleRefresh = () => {
         if (loading) return;
@@ -45,63 +29,14 @@ export default function Assignments() {
         Linking.openURL(url);
     };
 
-    let flattedAssignments: Assignment[] = [];
-    const classes = assignmentData?.classes ?? {};
-    for (const cls in classes) {
-        const clsData = classes[cls];
-        if (!clsData) continue;
-        for (const dir in clsData.directories) {
-            const dirData = clsData.directories[dir];
-            if (!dirData) continue;
-
-            dirData.contents
-                .filter((e) => e.type === "report")
-                .forEach((cont) => {
-                    flattedAssignments.push({
-                        classId: clsData.classId,
-                        directoryId: dirData.directoryId,
-                        contentId: cont.contentId,
-
-                        title: cont.title,
-                        subtitle: `${clsData.className} - ${dirData.directoryName}`,
-                        status: assignmentServiceInstance.getStatus(cont),
-                        publishDate: cont.duration.publish.end,
-                        dueDate: cont.duration.deadline.end,
-                    });
-                });
-        }
-    }
-
-    // ソート処理（締切日時 ?? 公開日時で昇順）
-    flattedAssignments.sort((a, b) => {
-        const dateA = a.dueDate ?? a.publishDate;
-        const dateB = b.dueDate ?? b.publishDate;
-
-        if (!dateA && !dateB) return 0;
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-
-        return dateA.getTime() - dateB.getTime();
-    });
-
-    // フィルタリング処理
-    const filteredAssignments = flattedAssignments.filter((assignment) => {
-        if (filter === "all") return true;
-        return assignment.status === filter;
-    });
-
-    const getFilterLabel = (filterType: FilterType): string => {
-        switch (filterType) {
-            case "all":
-                return "すべて";
-            case "not-started":
-                return "未着手";
-            case "completed":
-                return "完了";
-            case "expired":
-                return "期限切れ";
-        }
-    };
+    const flattenedAssignments = React.useMemo(
+        () => assignmentServiceInstance.buildAssignmentOverview(assignmentData),
+        [assignmentData]
+    );
+    const filteredAssignments = React.useMemo(
+        () => assignmentServiceInstance.filterAssignmentOverview(flattenedAssignments, filter),
+        [flattenedAssignments, filter]
+    );
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
@@ -119,7 +54,9 @@ export default function Assignments() {
                 <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
                     <Icon name="clipboard-list" size={48} color={theme.colors.text.secondary} />
                     <Typography variant="body" style={{ marginTop: 16 }} color={theme.colors.text.secondary}>
-                        {filter === "all" ? "課題はありません" : `${getFilterLabel(filter)}の課題はありません`}
+                        {filter === "all"
+                            ? "課題はありません"
+                            : `${assignmentServiceInstance.getAssignmentFilterLabel(filter)}の課題はありません`}
                     </Typography>
                     <Button variant="text" style={{ marginTop: 16 }} onPress={handleRefresh}>
                         更新する
@@ -131,7 +68,7 @@ export default function Assignments() {
                     <View style={{ paddingHorizontal: 20, alignItems: "flex-end" }}>
                         <Select
                             value={filter}
-                            onValueChange={(value) => setFilter(value as FilterType)}
+                            onValueChange={(value) => setFilter(value as AssignmentFilter)}
                             items={[
                                 { label: "未着手", value: "not-started" },
                                 { label: "完了", value: "completed" },
@@ -149,11 +86,11 @@ export default function Assignments() {
                         }}
                         refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[theme.colors.primary.main]} />}
                     >
-                        {filteredAssignments?.map((a) => {
-                            // 元の課題データを取得してmanaboUrlを渡す
-                            return (
-                                <AssignmentCard
-                                    key={`${a.classId},${a.directoryId}${a.title}`}
+                    {filteredAssignments?.map((a) => {
+                        // 元の課題データを取得してmanaboUrlを渡す
+                        return (
+                            <AssignmentCard
+                                key={`${a.classId},${a.directoryId}${a.title}`}
                                     assignment={a}
                                     handleTouch={() => handleTouch(a.classId, a.directoryId, a.contentId)}
                                 />
@@ -167,7 +104,7 @@ export default function Assignments() {
 }
 
 // 課題カードコンポーネント
-function AssignmentCard({ assignment, handleTouch }: { assignment: Assignment; handleTouch: () => void }) {
+function AssignmentCard({ assignment, handleTouch }: { assignment: AssignmentOverviewItem; handleTouch: () => void }) {
     const { theme } = useTheme();
 
     const formatDate = (date?: Date): string => {

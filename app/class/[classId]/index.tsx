@@ -1,4 +1,5 @@
 import { ClassInfo } from "@/src/domain/models/class";
+import classServiceInstance, { AttendanceStatsSummary } from "@/src/domain/services/classService";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -30,26 +31,10 @@ export default function ClassDetail() {
     }, [classId, refetchClassInfo, timetableData]);
 
     // 出席情報を集計
-    const attendanceStats = useMemo(() => {
-        if (!classInfo?.attendanceLog) {
-            return { present: 0, absent: 0, late: 0, rate: 0, status: "データがありません" };
-        }
-
-        const present = classInfo.attendanceLog.filter((log) => log.status === "present").length;
-        const absent = classInfo.attendanceLog.filter((log) => log.status === "absent").length;
-        const late = classInfo.attendanceLog.filter((log) => log.status === "late/early").length;
-        const total = classInfo.attendanceLog.length;
-        const rate = total > 0 ? Math.round((present / total) * 100 * 10) / 10 : 0;
-
-        let status = "データがありません";
-        if (total > 0) {
-            if (rate >= 80) status = "良好な出席状況です";
-            else if (rate >= 60) status = "出席率が低下しています";
-            else status = "出席率が著しく低下しています";
-        }
-
-        return { present, absent, late, rate, status };
-    }, [classInfo]);
+    const attendanceStats = useMemo<AttendanceStatsSummary>(
+        () => classServiceInstance.calculateAttendanceStats(classInfo?.attendanceLog ?? []),
+        [classInfo?.attendanceLog]
+    );
 
     // 授業が見つからない場合
     if (!classInfo) {
@@ -66,7 +51,7 @@ export default function ClassDetail() {
     }
 
     const { info, detail, news } = classInfo;
-    const schedule = info.timetableDate.map((td) => `${td.weekday} ${td.period}限`).join(", ");
+    const schedule = classServiceInstance.buildScheduleLabel(classInfo);
 
     const finalClassData = {
         title: info.name,
