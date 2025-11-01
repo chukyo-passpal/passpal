@@ -17,6 +17,14 @@ export const PASSPAL_URLS = {
 } as const;
 
 // ============================================
+// PassPalバックエンド関連
+// ============================================
+export const PALAPI_URLS = {
+    /** ベースURL */
+    base: "https://api.chukyo-passpal.app/v1",
+} as const;
+
+// ============================================
 // アプリストア関連
 // ============================================
 export const STORE_URLS = {
@@ -92,6 +100,9 @@ export const getManaboClassUrl = (classId: string): string => {
 
 /** PassPal URLのキー */
 export type PassPalUrlKey = keyof typeof PASSPAL_URLS;
+
+/** PALAPI URLのキー */
+export type PalapiUrlKey = keyof typeof PALAPI_URLS;
 
 /** ストアURLのキー */
 export type StoreUrlKey = keyof typeof STORE_URLS;
