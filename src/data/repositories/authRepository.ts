@@ -1,4 +1,5 @@
 import { getRemoteConfig, getValue } from "@react-native-firebase/remote-config";
+
 import manaboProviderInstance from "../providers/chukyo-univ/manaboProvider";
 
 export interface AuthRepository {

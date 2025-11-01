@@ -1,7 +1,8 @@
+import { View } from "react-native";
+
 import { Icon } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import { View } from "react-native";
 
 export default function MaintenanceScreen() {
     const { theme } = useTheme();

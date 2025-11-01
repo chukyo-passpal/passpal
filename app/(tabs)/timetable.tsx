@@ -1,3 +1,7 @@
+import React, { useMemo, useState } from "react";
+import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native";
+import { router } from "expo-router";
+
 import { TimetableViewMode } from "@/src/domain/constants/timetable";
 import { Weekday } from "@/src/domain/constants/week";
 import timetableServiceInstance from "@/src/domain/services/timetableService";
@@ -7,9 +11,6 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
-import { router } from "expo-router";
-import React, { useMemo, useState } from "react";
-import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native";
 
 // Date型の時間を文字列の時間に変換するヘルパー関数 Date to Timeの略。
 function dt(date: Date): string {
@@ -72,7 +73,14 @@ export default function TimetableScreen() {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
                 <Header title="時間割" subButtonIcon="arrow-left-right" onPressSubButton={handleChangeViewMode} />
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 20,
+                    }}
+                >
                     <Typography variant="body" color={theme.colors.text.secondary}>
                         時間割データがありません
                     </Typography>
@@ -98,11 +106,17 @@ export default function TimetableScreen() {
                                 borderRadius: 28,
                                 justifyContent: "center",
                                 alignItems: "center",
-                                backgroundColor: index === selectedDay ? theme.colors.primary.main : theme.colors.background.disabled,
+                                backgroundColor:
+                                    index === selectedDay
+                                        ? theme.colors.primary.main
+                                        : theme.colors.background.disabled,
                             }}
                             onPress={() => setSelectedDay(index)}
                         >
-                            <Typography variant="h3" color={index === selectedDay ? theme.colors.text.inverse : theme.colors.text.secondary}>
+                            <Typography
+                                variant="h3"
+                                color={index === selectedDay ? theme.colors.text.inverse : theme.colors.text.secondary}
+                            >
                                 {day}
                             </Typography>
                         </TouchableOpacity>
@@ -117,7 +131,15 @@ export default function TimetableScreen() {
                         const periodText = periodInfo ? `${dt(periodInfo.startTime)}~${dt(periodInfo.endTime)}` : "-";
 
                         return (
-                            <View key={period} style={{ flexDirection: "row", gap: 16, alignItems: "center", marginBottom: 16 }}>
+                            <View
+                                key={period}
+                                style={{
+                                    flexDirection: "row",
+                                    gap: 16,
+                                    alignItems: "center",
+                                    marginBottom: 16,
+                                }}
+                            >
                                 {/* 時間情報 */}
                                 <View style={{ width: 80, alignItems: "center", gap: 4 }}>
                                     <Typography variant="h2" color={theme.colors.text.primary}>
@@ -145,7 +167,11 @@ export default function TimetableScreen() {
                                         }}
                                     >
                                         <View style={{ flex: 1, gap: 4 }}>
-                                            <Typography variant="body" style={{ fontWeight: "600" }} color={theme.colors.text.inverse}>
+                                            <Typography
+                                                variant="body"
+                                                style={{ fontWeight: "600" }}
+                                                color={theme.colors.text.inverse}
+                                            >
                                                 {classInfo.name}
                                             </Typography>
                                             <Typography variant="caption" color={theme.colors.text.inverse}>
@@ -203,7 +229,15 @@ export default function TimetableScreen() {
                                 height: 35,
                             }}
                         >
-                            <View style={{ flex: 1, minWidth: 25, maxWidth: 25, borderRightWidth: 1, borderRightColor: theme.colors.border.default }} />
+                            <View
+                                style={{
+                                    flex: 1,
+                                    minWidth: 25,
+                                    maxWidth: 25,
+                                    borderRightWidth: 1,
+                                    borderRightColor: theme.colors.border.default,
+                                }}
+                            />
                             {displayWeekdays.map((day, index) => (
                                 <View
                                     key={day}
@@ -253,13 +287,34 @@ export default function TimetableScreen() {
                                         </Typography>
                                         {periodInfo && (
                                             <>
-                                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
+                                                <Typography
+                                                    variant="caption"
+                                                    color={theme.colors.text.secondary}
+                                                    style={{
+                                                        fontSize: 8,
+                                                        lineHeight: 10,
+                                                    }}
+                                                >
                                                     {dt(periodInfo.startTime)}
                                                 </Typography>
-                                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
+                                                <Typography
+                                                    variant="caption"
+                                                    color={theme.colors.text.secondary}
+                                                    style={{
+                                                        fontSize: 8,
+                                                        lineHeight: 10,
+                                                    }}
+                                                >
                                                     ~
                                                 </Typography>
-                                                <Typography variant="caption" color={theme.colors.text.secondary} style={{ fontSize: 8, lineHeight: 10 }}>
+                                                <Typography
+                                                    variant="caption"
+                                                    color={theme.colors.text.secondary}
+                                                    style={{
+                                                        fontSize: 8,
+                                                        lineHeight: 10,
+                                                    }}
+                                                >
                                                     {dt(periodInfo.endTime)}
                                                 </Typography>
                                             </>
@@ -307,7 +362,11 @@ export default function TimetableScreen() {
                                                             <Typography
                                                                 variant="caption"
                                                                 color={theme.colors.text.inverse}
-                                                                style={{ fontSize: 10, lineHeight: 12, textAlign: "center" }}
+                                                                style={{
+                                                                    fontSize: 10,
+                                                                    lineHeight: 12,
+                                                                    textAlign: "center",
+                                                                }}
                                                             >
                                                                 {classInfo.name}
                                                             </Typography>
@@ -321,7 +380,10 @@ export default function TimetableScreen() {
                                                                 alignItems: "center",
                                                             }}
                                                         >
-                                                            <Typography variant="caption" color={theme.colors.text.primary}>
+                                                            <Typography
+                                                                variant="caption"
+                                                                color={theme.colors.text.primary}
+                                                            >
                                                                 {classInfo.room}
                                                             </Typography>
                                                         </View>

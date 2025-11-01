@@ -1,9 +1,10 @@
-import { NewsData } from "@/src/domain/models/news";
-import newsServiceInstance, { NewsService } from "@/src/domain/services/newsService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import { NewsData } from "@/src/domain/models/news";
+import newsServiceInstance, { NewsService } from "@/src/domain/services/newsService";
 
 export interface NewsState {
     lastFetch: Date | null;

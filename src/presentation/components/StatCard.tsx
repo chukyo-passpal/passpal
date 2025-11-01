@@ -4,9 +4,10 @@
  * Used for dashboard-style cards like "Next Class" and "Assignment Count"
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import React from "react";
 import { TextStyle, View, ViewStyle } from "react-native";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { Card, CardDivider } from "./Card";
 import { Icon, IconName } from "./Icon";
 import { Typography } from "./Typography";
@@ -48,15 +49,29 @@ export const StatCard: React.FC<StatCardProps> = ({
         if (typeof content === "string" || typeof content === "number") {
             if (largeContent) {
                 return (
-                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                        <Typography variant="h1" color={theme.colors.primary.main} style={{ fontSize: 48, lineHeight: 57.6 }}>
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Typography
+                            variant="h1"
+                            color={theme.colors.primary.main}
+                            style={{ fontSize: 48, lineHeight: 57.6 }}
+                        >
                             {content}
                         </Typography>
                     </View>
                 );
             } else {
                 return (
-                    <Typography variant="h3" color={theme.colors.text.primary} style={{ textAlign: contentTextAlign, flex: 1 }}>
+                    <Typography
+                        variant="h3"
+                        color={theme.colors.text.primary}
+                        style={{ textAlign: contentTextAlign, flex: 1 }}
+                    >
                         {content}
                     </Typography>
                 );
@@ -94,7 +109,11 @@ export const StatCard: React.FC<StatCardProps> = ({
 
             {/* Optional Subtitle */}
             {subtitle && (
-                <Typography variant="body" color={theme.colors.text.primary} style={{ textAlign: contentTextAlign, fontWeight: "500" }}>
+                <Typography
+                    variant="body"
+                    color={theme.colors.text.primary}
+                    style={{ textAlign: contentTextAlign, fontWeight: "500" }}
+                >
                     {subtitle}
                 </Typography>
             )}

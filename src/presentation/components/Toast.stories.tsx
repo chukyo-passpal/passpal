@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Button, YStack } from "tamagui";
+
 import { useToast } from "../hooks/useToast";
 import { Toast } from "./Toast";
 
@@ -26,7 +27,10 @@ function ToastDemo() {
             <Button onPress={() => toast.info("情報を表示します")}>Info Toast</Button>
             <Button
                 onPress={() =>
-                    toast.success("長いメッセージのテストです。これは長いメッセージが表示された時にどのように見えるかを確認するためのテストです。", 5000)
+                    toast.success(
+                        "長いメッセージのテストです。これは長いメッセージが表示された時にどのように見えるかを確認するためのテストです。",
+                        5000
+                    )
                 }
             >
                 Long Message (5s)

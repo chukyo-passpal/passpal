@@ -1,11 +1,12 @@
-import { Period } from "@/src/domain/constants/period";
-import { Weekday } from "@/src/domain/constants/week";
-import { TimetableClassInfo, TimetableData } from "@/src/domain/models/timetable";
-import timetableServiceInstance, { TimetableService } from "@/src/domain/services/timetableService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import { Period } from "@/src/domain/constants/period";
+import { Weekday } from "@/src/domain/constants/week";
+import { TimetableClassInfo, TimetableData } from "@/src/domain/models/timetable";
+import timetableServiceInstance, { TimetableService } from "@/src/domain/services/timetableService";
 
 export interface TimetableState {
     lastFetch: Date | null;

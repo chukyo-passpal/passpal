@@ -12,5 +12,5 @@ export class ExpiredSessionError extends ErrorFactory({
 
 export class OverlapsError extends ErrorFactory({
     name: "OverlapsError",
-    message: "他の認証が行われています。"
-}) { }
+    message: "他の認証が行われています。",
+}) {}

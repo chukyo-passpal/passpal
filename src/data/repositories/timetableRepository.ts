@@ -1,5 +1,6 @@
-import { TimetableData } from "@/src/domain/models/timetable";
 import * as parser from "@chukyo-passpal/web_parser";
+
+import { TimetableData } from "@/src/domain/models/timetable";
 import { ParseError } from "../errors/ParseError";
 import { cubicsTimetableToDomain, manaboTimetableToDomain } from "../mappers/timetableMapper";
 import cubicsProviderInstance, { CubicsProvider } from "../providers/chukyo-univ/cubicsProvider";
@@ -67,7 +68,9 @@ export class IntegratedTimetableRepository implements TimetableRepository {
      * @throws ParseError 解析に失敗した場合
      */
     public async getCubicsTimetable() {
-        const response = await this.cubicsProvider.get("/unias/UnSSOLoginControl2?REQ_ACTION_DO=/ARF010.do&REQ_PRFR_MNU_ID=MNUIDSTD0103");
+        const response = await this.cubicsProvider.get(
+            "/unias/UnSSOLoginControl2?REQ_ACTION_DO=/ARF010.do&REQ_PRFR_MNU_ID=MNUIDSTD0103"
+        );
 
         const dto = parser.parseCubicsAsTimetable(response);
         if (dto.success) {

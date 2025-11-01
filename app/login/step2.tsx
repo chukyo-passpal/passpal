@@ -1,12 +1,13 @@
+import { useState } from "react";
+import { ScrollView, View } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+
 import { Button } from "@/src/presentation/components/Button";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Input } from "@/src/presentation/components/Input";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
-import { router, useLocalSearchParams } from "expo-router";
-import { useState } from "react";
-import { ScrollView, View } from "react-native";
 
 export default function Index() {
     const { signIn, authService } = useAuth();
@@ -45,8 +46,17 @@ export default function Index() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary, padding: theme.spacing.lg }}>
-            <ScrollView contentContainerStyle={{ justifyContent: "center", flex: 1 }} showsVerticalScrollIndicator={false}>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: theme.colors.background.primary,
+                padding: theme.spacing.lg,
+            }}
+        >
+            <ScrollView
+                contentContainerStyle={{ justifyContent: "center", flex: 1 }}
+                showsVerticalScrollIndicator={false}
+            >
                 <View style={{ maxWidth: 700, alignSelf: "center" }}>
                     {/* Header Section */}
                     <View style={{ alignItems: "center", marginBottom: 40 }}>
@@ -69,7 +79,13 @@ export default function Index() {
                             <Typography variant="h2" style={{ textAlign: "center", marginBottom: 16 }}>
                                 パスワードを入力
                             </Typography>
-                            <Typography variant="body" style={{ textAlign: "center", color: theme.colors.text.secondary }}>
+                            <Typography
+                                variant="body"
+                                style={{
+                                    textAlign: "center",
+                                    color: theme.colors.text.secondary,
+                                }}
+                            >
                                 CU_ID ({studentId}) のパスワードを入力してください。
                             </Typography>
                         </View>
@@ -88,7 +104,13 @@ export default function Index() {
                             disabled={isLoading}
                         />
 
-                        <Button variant="primary" fullWidth onPress={handleLogin} disabled={!isNextEnabled} loading={isLoading}>
+                        <Button
+                            variant="primary"
+                            fullWidth
+                            onPress={handleLogin}
+                            disabled={!isNextEnabled}
+                            loading={isLoading}
+                        >
                             ログインして続ける
                         </Button>
                         {__DEV__ && (

@@ -1,5 +1,6 @@
-import { AlboNewsInfo } from "@/src/domain/models/news";
 import * as parser from "@chukyo-passpal/web_parser";
+
+import { AlboNewsInfo } from "@/src/domain/models/news";
 
 /**
  * AlboニュースDTOをドメインモデルへ変換します。

@@ -1,8 +1,9 @@
+import { View } from "react-native";
+import { Link } from "expo-router";
+import { Button, Text } from "tamagui";
+
 import Header from "@/src/presentation/components/Header";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import { Link } from "expo-router";
-import { View } from "react-native";
-import { Button, Text } from "tamagui";
 
 export default function DebugIndexScreen() {
     const { theme } = useTheme();

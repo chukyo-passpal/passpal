@@ -1,10 +1,11 @@
-import { ClassData, ClassInfo } from "@/src/domain/models/class";
-import { TimetableData } from "@/src/domain/models/timetable";
-import classServiceInstance, { ClassService } from "@/src/domain/services/classService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import { ClassData, ClassInfo } from "@/src/domain/models/class";
+import { TimetableData } from "@/src/domain/models/timetable";
+import classServiceInstance, { ClassService } from "@/src/domain/services/classService";
 
 export interface ClassState {
     lastFetch: Date | null;

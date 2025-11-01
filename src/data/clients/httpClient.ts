@@ -1,6 +1,6 @@
+import { Platform } from "react-native";
 import * as Application from "expo-application";
 import { fetch } from "expo/fetch";
-import { Platform } from "react-native";
 
 import { MaintenanceError, NetworkError, TimeoutError } from "../errors/NetworkError";
 
@@ -52,7 +52,14 @@ const isAbortError = (error: unknown): boolean => {
  * @throws MaintenanceError|NetworkError|TimeoutError
  */
 export const httpClient = async (input: string | URL, options: HttpClientOptions = {}): Promise<Response> => {
-    const { timeoutMs: timeoutOverride = DEFAULT_TIMEOUT_MS, clientMode, mode, headers, signal, ...requestInit } = options;
+    const {
+        timeoutMs: timeoutOverride = DEFAULT_TIMEOUT_MS,
+        clientMode,
+        mode,
+        headers,
+        signal,
+        ...requestInit
+    } = options;
 
     const timeoutMs = timeoutOverride ?? DEFAULT_TIMEOUT_MS;
     const httpClientMode: HttpClientMode = clientMode ?? "default";

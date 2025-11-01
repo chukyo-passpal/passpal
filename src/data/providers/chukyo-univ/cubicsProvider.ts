@@ -42,7 +42,9 @@ export class IntegratedCubicsProvider extends abstractChukyoProvider implements 
             }
 
             // セッションが無効なら再認証を試みる
-            console.warn(`Cubics session expired. Attempting re-authentication (${attempt + 1}/${this.retryAuthCount})`);
+            console.warn(
+                `Cubics session expired. Attempting re-authentication (${attempt + 1}/${this.retryAuthCount})`
+            );
             await this.waitForRetryDelay();
         }
         throw new ExpiredSessionError();

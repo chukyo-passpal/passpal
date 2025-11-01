@@ -3,10 +3,11 @@
  * Text input with different states and icon support
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import { Eye, EyeOff } from "lucide-react-native";
 import React, { forwardRef, useState } from "react";
 import { StyleSheet, TextInput, TextInputProps, TextStyle, TouchableOpacity, View, ViewStyle } from "react-native";
+import { Eye, EyeOff } from "lucide-react-native";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 
 interface InputProps extends Omit<TextInputProps, "style"> {
     label?: string;
@@ -139,9 +140,15 @@ export const Input = forwardRef<TextInput, InputProps>(
                             disabled={disabled}
                         >
                             {isPasswordVisible ? (
-                                <EyeOff size={20} color={disabled ? theme.colors.text.disabled : theme.colors.text.secondary} />
+                                <EyeOff
+                                    size={20}
+                                    color={disabled ? theme.colors.text.disabled : theme.colors.text.secondary}
+                                />
                             ) : (
-                                <Eye size={20} color={disabled ? theme.colors.text.disabled : theme.colors.text.secondary} />
+                                <Eye
+                                    size={20}
+                                    color={disabled ? theme.colors.text.disabled : theme.colors.text.secondary}
+                                />
                             )}
                         </TouchableOpacity>
                     ) : rightIcon ? (

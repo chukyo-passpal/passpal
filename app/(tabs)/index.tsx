@@ -1,3 +1,7 @@
+import React from "react";
+import { Linking, ScrollView, View } from "react-native";
+import { useRouter } from "expo-router";
+
 import { AlboNewsInfo } from "@/src/domain/models/news";
 import { Button } from "@/src/presentation/components/Button";
 import { Card, CardDivider, CardHeader } from "@/src/presentation/components/Card";
@@ -9,9 +13,6 @@ import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import { ALBO_URLS, MANABO_URLS } from "@/src/utils/urls";
-import { useRouter } from "expo-router";
-import React from "react";
-import { Linking, ScrollView, View } from "react-native";
 
 export default function HomeScreen() {
     const { theme } = useTheme();
@@ -101,7 +102,12 @@ export default function HomeScreen() {
                 >
                     {/* Next Class Card */}
                     <View style={{ flex: 1 }}>
-                        <StatCard iconName="calendar" title="次の授業" content="アルゴリズムとデータ構造" subtitle="1273" />
+                        <StatCard
+                            iconName="calendar"
+                            title="次の授業"
+                            content="アルゴリズムとデータ構造"
+                            subtitle="1273"
+                        />
                     </View>
 
                     {/* Assignment Count Card */}
@@ -117,17 +123,30 @@ export default function HomeScreen() {
                         backgroundColor: theme.colors.background.surface,
                     }}
                 >
-                    <CardHeader title="ALBOお知らせ" icon={<Icon name="bell" size={20} color={theme.colors.text.primary} />} />
+                    <CardHeader
+                        title="ALBOお知らせ"
+                        icon={<Icon name="bell" size={20} color={theme.colors.text.primary} />}
+                    />
                     <CardDivider />
                     <View style={{ gap: theme.spacing.md }}>
                         {loadingNews ? (
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                            <Typography
+                                variant="body"
+                                color={theme.colors.text.secondary}
+                                style={{ textAlign: "center" }}
+                            >
                                 読み込み中...
                             </Typography>
                         ) : newsData?.alboNews && newsData.alboNews.length > 0 ? (
-                            newsData.alboNews.map((news, index) => <AlboNewsComponent key={index} newsItem={news} />).slice(0, 3)
+                            newsData.alboNews
+                                .map((news, index) => <AlboNewsComponent key={index} newsItem={news} />)
+                                .slice(0, 3)
                         ) : (
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                            <Typography
+                                variant="body"
+                                color={theme.colors.text.secondary}
+                                style={{ textAlign: "center" }}
+                            >
                                 現在お知らせはないです。
                             </Typography>
                         )}
@@ -141,11 +160,18 @@ export default function HomeScreen() {
                         backgroundColor: theme.colors.background.surface,
                     }}
                 >
-                    <CardHeader title="最近のMaNaBoメール" icon={<Icon name="user" size={20} color={theme.colors.text.primary} />} />
+                    <CardHeader
+                        title="最近のMaNaBoメール"
+                        icon={<Icon name="user" size={20} color={theme.colors.text.primary} />}
+                    />
                     <CardDivider />
                     <View style={{ gap: theme.spacing.md }}>
                         {mailLoading ? (
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                            <Typography
+                                variant="body"
+                                color={theme.colors.text.secondary}
+                                style={{ textAlign: "center" }}
+                            >
                                 読み込み中...
                             </Typography>
                         ) : mailData?.manaboMails && mailData.manaboMails.length > 0 ? (
@@ -164,7 +190,11 @@ export default function HomeScreen() {
                                 />
                             ))
                         ) : (
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center", flex: 1 }}>
+                            <Typography
+                                variant="body"
+                                color={theme.colors.text.secondary}
+                                style={{ textAlign: "center", flex: 1 }}
+                            >
                                 現在新しいメールはないです。
                             </Typography>
                         )}
@@ -235,7 +265,11 @@ const AlboNewsComponent = ({ newsItem }: { newsItem: AlboNewsInfo }) => {
                                 justifyContent: "center",
                             }}
                         >
-                            <Typography variant="caption" color={theme.colors.status.error} style={{ fontWeight: "600" }}>
+                            <Typography
+                                variant="caption"
+                                color={theme.colors.status.error}
+                                style={{ fontWeight: "600" }}
+                            >
                                 重要
                             </Typography>
                         </View>
@@ -271,7 +305,11 @@ const AlboNewsComponent = ({ newsItem }: { newsItem: AlboNewsInfo }) => {
     );
 };
 
-const MailComponent = ({ mailItem }: { mailItem: { title: string; author: string; date: string; isRead: boolean } }) => {
+const MailComponent = ({
+    mailItem,
+}: {
+    mailItem: { title: string; author: string; date: string; isRead: boolean };
+}) => {
     const { theme } = useTheme();
 
     return (
@@ -294,7 +332,11 @@ const MailComponent = ({ mailItem }: { mailItem: { title: string; author: string
                             }}
                         />
                     )}
-                    <Typography variant="body" color={theme.colors.text.primary} style={{ flex: 1, fontWeight: !mailItem.isRead ? "600" : "500" }}>
+                    <Typography
+                        variant="body"
+                        color={theme.colors.text.primary}
+                        style={{ flex: 1, fontWeight: !mailItem.isRead ? "600" : "500" }}
+                    >
                         {mailItem.title}
                     </Typography>
                 </View>

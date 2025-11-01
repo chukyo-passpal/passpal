@@ -80,7 +80,10 @@ export interface AssignmentService {
     /**
      * 授業単位の課題コンテンツから統計情報を算出します。
      */
-    calculateClassAssignmentStats(assignments: ClassAssignmentContentItem[], referenceDate?: Date): AssignmentStatsSummary;
+    calculateClassAssignmentStats(
+        assignments: ClassAssignmentContentItem[],
+        referenceDate?: Date
+    ): AssignmentStatsSummary;
 
     /**
      * コンテンツ種別に合わせてタイトルを返します。
@@ -254,7 +257,10 @@ export class IntegratedAssignmentService implements AssignmentService {
         return overview;
     }
 
-    public filterAssignmentOverview(assignments: AssignmentOverviewItem[], filter: AssignmentFilter): AssignmentOverviewItem[] {
+    public filterAssignmentOverview(
+        assignments: AssignmentOverviewItem[],
+        filter: AssignmentFilter
+    ): AssignmentOverviewItem[] {
         if (filter === "all") {
             return assignments;
         }
@@ -289,7 +295,10 @@ export class IntegratedAssignmentService implements AssignmentService {
         );
     }
 
-    public calculateClassAssignmentStats(assignments: ClassAssignmentContentItem[], referenceDate: Date = new Date()): AssignmentStatsSummary {
+    public calculateClassAssignmentStats(
+        assignments: ClassAssignmentContentItem[],
+        referenceDate: Date = new Date()
+    ): AssignmentStatsSummary {
         const total = assignments.length;
         const completed = assignments.filter((assignment) => assignment.isDone).length;
         const notCompleted = total - completed;

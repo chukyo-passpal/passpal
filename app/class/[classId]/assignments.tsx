@@ -1,3 +1,8 @@
+import React, { useEffect, useMemo } from "react";
+import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+
+import assignmentServiceInstance, { AssignmentStatsSummary } from "@/src/domain/services/assignmentService";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -5,10 +10,6 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useClass from "@/src/presentation/hooks/useClass";
-import assignmentServiceInstance, { AssignmentStatsSummary } from "@/src/domain/services/assignmentService";
-import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useMemo } from "react";
-import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function ClassAssignments() {
     const { theme } = useTheme();
@@ -48,14 +49,24 @@ export default function ClassAssignments() {
         }
     };
 
-    const stats = useMemo<AssignmentStatsSummary>(() => assignmentServiceInstance.calculateClassAssignmentStats(assignments), [assignments]);
+    const stats = useMemo<AssignmentStatsSummary>(
+        () => assignmentServiceInstance.calculateClassAssignmentStats(assignments),
+        [assignments]
+    );
 
     // 授業が見つからない場合
     if (!classInfo) {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
                 <Header title="課題一覧" shownBackButton />
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 20,
+                    }}
+                >
                     <Typography variant="body" color={theme.colors.text.secondary}>
                         授業データが見つかりません
                     </Typography>
@@ -71,7 +82,13 @@ export default function ClassAssignments() {
             <ScrollView
                 style={{ flex: 1 }}
                 contentContainerStyle={{ padding: 20, gap: 24 }}
-                refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[theme.colors.primary.main]} />}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={loading}
+                        onRefresh={handleRefresh}
+                        colors={[theme.colors.primary.main]}
+                    />
+                }
             >
                 {/* 授業情報ヘッダー */}
                 <Card variant="feature" style={{ gap: 12 }}>
@@ -88,14 +105,26 @@ export default function ClassAssignments() {
 
                 {/* 統計情報 */}
                 <Card variant="default" style={{ gap: 16 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
                         <Typography variant="h3" color={theme.colors.text.primary}>
                             課題の進捗状況
                         </Typography>
                         <Icon name="clipboard-list" size={24} color={theme.colors.text.primary} />
                     </View>
 
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8 }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingVertical: 8,
+                        }}
+                    >
                         <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color={theme.colors.text.primary}>
                                 {stats.total}
@@ -160,7 +189,13 @@ export default function ClassAssignments() {
                     </Card>
                 ) : (
                     <View style={{ gap: 16 }}>
-                        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                            }}
+                        >
                             <Typography variant="h3" color={theme.colors.text.primary}>
                                 課題リスト
                             </Typography>
@@ -176,7 +211,10 @@ export default function ClassAssignments() {
                             const manaboUrl = assignmentServiceInstance.getPrimaryActionUrl(assignment);
                             const contentStatus = assignmentServiceInstance.resolveContentStatus(assignment);
                             const statusColor = assignmentServiceInstance.getStatusColor(contentStatus, theme);
-                            const statusBackgroundColor = assignmentServiceInstance.getStatusBGColor(contentStatus, theme);
+                            const statusBackgroundColor = assignmentServiceInstance.getStatusBGColor(
+                                contentStatus,
+                                theme
+                            );
                             const statusLabel = assignmentServiceInstance.getStatusLabel(contentStatus);
 
                             return (
@@ -186,16 +224,29 @@ export default function ClassAssignments() {
                                     style={{
                                         gap: 12,
                                         borderLeftWidth: 4,
-                                        borderLeftColor: isOverdue ? theme.colors.status.error : theme.colors.primary.main,
+                                        borderLeftColor: isOverdue
+                                            ? theme.colors.status.error
+                                            : theme.colors.primary.main,
                                     }}
                                 >
                                     {/* タイトルとステータス */}
-                                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            justifyContent: "space-between",
+                                            alignItems: "flex-start",
+                                            gap: 12,
+                                        }}
+                                    >
                                         <View style={{ flex: 1 }}>
                                             <Typography variant="label" color={theme.colors.text.primary}>
                                                 {contentTitle}
                                             </Typography>
-                                            <Typography variant="caption" color={theme.colors.text.secondary} style={{ marginTop: 4 }}>
+                                            <Typography
+                                                variant="caption"
+                                                color={theme.colors.text.secondary}
+                                                style={{ marginTop: 4 }}
+                                            >
                                                 {assignment.directoryName}
                                             </Typography>
                                         </View>
@@ -215,11 +266,31 @@ export default function ClassAssignments() {
 
                                     {/* 期限 */}
                                     {dueDate && (
-                                        <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                            <Icon name="calendar" size={16} color={isOverdue ? theme.colors.status.error : theme.colors.text.secondary} />
-                                            <Typography variant="bodySmall" color={isOverdue ? theme.colors.status.error : theme.colors.text.secondary}>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                gap: 8,
+                                            }}
+                                        >
+                                            <Icon
+                                                name="calendar"
+                                                size={16}
+                                                color={
+                                                    isOverdue ? theme.colors.status.error : theme.colors.text.secondary
+                                                }
+                                            />
+                                            <Typography
+                                                variant="bodySmall"
+                                                color={
+                                                    isOverdue ? theme.colors.status.error : theme.colors.text.secondary
+                                                }
+                                            >
                                                 期限: {dueDate.toLocaleDateString("ja-JP")}{" "}
-                                                {dueDate.toLocaleTimeString("ja-JP", { hour: "2-digit", minute: "2-digit" })}
+                                                {dueDate.toLocaleTimeString("ja-JP", {
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                })}
                                             </Typography>
                                             {isOverdue && (
                                                 <View
@@ -251,8 +322,19 @@ export default function ClassAssignments() {
                                     {assignment.type === "file" && assignment.files.length > 0 && (
                                         <View style={{ gap: 4 }}>
                                             {assignment.files.map((file, fileIndex) => (
-                                                <View key={fileIndex} style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                                    <Icon name="clipboard-list" size={14} color={theme.colors.text.secondary} />
+                                                <View
+                                                    key={fileIndex}
+                                                    style={{
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        gap: 8,
+                                                    }}
+                                                >
+                                                    <Icon
+                                                        name="clipboard-list"
+                                                        size={14}
+                                                        color={theme.colors.text.secondary}
+                                                    />
                                                     <Typography variant="caption" color={theme.colors.text.secondary}>
                                                         {file.fileName}
                                                     </Typography>
@@ -262,7 +344,13 @@ export default function ClassAssignments() {
                                     )}
 
                                     {/* アクションボタン */}
-                                    <View style={{ flexDirection: "row", gap: 8, marginTop: 8 }}>
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            gap: 8,
+                                            marginTop: 8,
+                                        }}
+                                    >
                                         {/* MaNaBoで開く */}
                                         {manaboUrl && (
                                             <TouchableOpacity
@@ -279,7 +367,11 @@ export default function ClassAssignments() {
                                                     gap: 6,
                                                 }}
                                             >
-                                                <Icon name="arrow-left-right" size={16} color={theme.colors.background.primary} />
+                                                <Icon
+                                                    name="arrow-left-right"
+                                                    size={16}
+                                                    color={theme.colors.background.primary}
+                                                />
                                                 <Typography variant="label" color={theme.colors.background.primary}>
                                                     MaNaBoで開く
                                                 </Typography>

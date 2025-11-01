@@ -3,7 +3,8 @@
  * Wrapper for Lucide icons with consistent sizing and theming
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import React from "react";
+import { View, ViewStyle } from "react-native";
 import {
     AlertTriangle,
     ArrowLeftRight,
@@ -39,8 +40,8 @@ import {
     Trash2,
     User,
 } from "lucide-react-native";
-import React from "react";
-import { View, ViewStyle } from "react-native";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 
 export type IconName =
     | "alert-triangle"
@@ -143,7 +144,13 @@ interface IconContainerProps extends IconProps {
     variant?: "default" | "primary";
 }
 
-export const IconContainer: React.FC<IconContainerProps> = ({ variant = "default", backgroundColor, size = 24, containerStyle, ...iconProps }) => {
+export const IconContainer: React.FC<IconContainerProps> = ({
+    variant = "default",
+    backgroundColor,
+    size = 24,
+    containerStyle,
+    ...iconProps
+}) => {
     const { theme } = useTheme();
 
     const getBackgroundColor = () => {

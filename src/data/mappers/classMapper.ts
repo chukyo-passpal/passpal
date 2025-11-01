@@ -1,6 +1,13 @@
-import { AttendanceStatus } from "@/src/domain/constants/class";
-import { ClassDetailInfo, ClassNewsInfo, ManaboContentData, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/class";
 import * as parser from "@chukyo-passpal/web_parser";
+
+import { AttendanceStatus } from "@/src/domain/constants/class";
+import {
+    ClassDetailInfo,
+    ClassNewsInfo,
+    ManaboContentData,
+    ManaboDirectoryInfo,
+    PortalRecordedAttendance,
+} from "@/src/domain/models/class";
 
 /**
  * Manaboの授業ディレクトリDTOをドメインモデルへ変換します。

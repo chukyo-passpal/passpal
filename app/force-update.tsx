@@ -1,9 +1,10 @@
+import { Linking, Platform, Pressable, View } from "react-native";
+
 import appServiceInstance from "@/src/domain/services/appService";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { getStoreUrl } from "@/src/utils/urls";
-import { Linking, Platform, Pressable, View } from "react-native";
 
 export default function ForceUpdateScreen() {
     const { theme } = useTheme();

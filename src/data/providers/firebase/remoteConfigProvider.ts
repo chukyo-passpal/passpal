@@ -25,7 +25,9 @@ export class IntegratedRemoteConfigProvider implements RemoteConfigProvider {
         if (fetchedRemotely) {
             console.log("[Firebase Remote Config] Configs were retrieved from the backend and activated.");
         } else {
-            console.warn("[Firebase Remote Config] No configs were fetched from the backend, and the local configs were already activated");
+            console.warn(
+                "[Firebase Remote Config] No configs were fetched from the backend, and the local configs were already activated"
+            );
         }
     }
 }

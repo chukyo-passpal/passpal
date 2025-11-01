@@ -1,5 +1,6 @@
-import { ManaboMailInfo } from "@/src/domain/models/mail";
 import * as parser from "@chukyo-passpal/web_parser";
+
+import { ManaboMailInfo } from "@/src/domain/models/mail";
 import { ParseError } from "../errors/ParseError";
 import { receivedMailToDomain } from "../mappers/mailMapper";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
@@ -92,7 +93,9 @@ export class IntegratedClassRepositoryMailRepository implements MailRepository {
     }
 
     public async getMailDetail(mailId: string) {
-        const response = await this.manaboProvider.get(`/?mail_id=${mailId}&action=glexa_modal_mail_view&_=${Date.now()}`);
+        const response = await this.manaboProvider.get(
+            `/?mail_id=${mailId}&action=glexa_modal_mail_view&_=${Date.now()}`
+        );
         const dto = parser.parseManaboMailView(response);
         if (dto.success) {
             // TODO: domain形にmapする

@@ -1,9 +1,9 @@
-import { AlertCircle, CheckCircle, Info, XCircle } from "lucide-react-native";
 import { useEffect, useRef } from "react";
 import { Animated, Pressable } from "react-native";
+import { AlertCircle, CheckCircle, Info, XCircle } from "lucide-react-native";
 import { Text, XStack } from "tamagui";
-import type { Toast } from "../hooks/useToast";
-import { useToastStore } from "../hooks/useToast";
+
+import { useToastStore, type Toast } from "../hooks/useToast";
 import { lightColors } from "../tokens/colors";
 
 interface ToastItemProps {

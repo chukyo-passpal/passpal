@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import Header from "./Header";
 
 const meta = {
@@ -73,7 +74,12 @@ export const AllVariants: Story = {
             <Header title="シンプルヘッダー" />
             <Header title="戻るボタン付き" shownBackButton />
             <Header title="サブボタン付き" subButtonIcon="settings" onPressSubButton={() => console.log("Settings")} />
-            <Header title="両方のボタン付き" shownBackButton subButtonIcon="refresh-cw" onPressSubButton={() => console.log("Refresh")} />
+            <Header
+                title="両方のボタン付き"
+                shownBackButton
+                subButtonIcon="refresh-cw"
+                onPressSubButton={() => console.log("Refresh")}
+            />
         </View>
     ),
 };

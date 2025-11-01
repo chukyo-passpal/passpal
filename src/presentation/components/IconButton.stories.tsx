@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import { IconButton } from "./IconButton";
 import { Typography } from "./Typography";
 

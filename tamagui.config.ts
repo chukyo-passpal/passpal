@@ -1,6 +1,7 @@
-import { darkColors, lightColors } from "@/src/presentation/tokens/colors";
 import { defaultConfig } from "@tamagui/config/v4";
 import { createTamagui } from "tamagui";
+
+import { darkColors, lightColors } from "@/src/presentation/tokens/colors";
 
 // defaultConfigをベースに、カスタムテーマを追加
 export const tamaguiConfig = createTamagui({

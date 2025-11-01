@@ -1,7 +1,20 @@
-import { ClassDetailInfo, ClassNewsInfo, ManaboContentData, ManaboDirectoryInfo, PortalRecordedAttendance } from "@/src/domain/models/class";
 import * as parser from "@chukyo-passpal/web_parser";
+
+import {
+    ClassDetailInfo,
+    ClassNewsInfo,
+    ManaboContentData,
+    ManaboDirectoryInfo,
+    PortalRecordedAttendance,
+} from "@/src/domain/models/class";
 import { ParseError } from "../errors/ParseError";
-import { classDirectoryToDomain, classNewsToDomain, classSyllabusToDomain, entryToDomain, manaboContentToDomain } from "../mappers/classMapper";
+import {
+    classDirectoryToDomain,
+    classNewsToDomain,
+    classSyllabusToDomain,
+    entryToDomain,
+    manaboContentToDomain,
+} from "../mappers/classMapper";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export interface ClassRepository {
@@ -74,7 +87,12 @@ export interface ClassRepository {
      * @returns 出席送信の結果オブジェクト
      * @throws ParseError 解析に失敗した場合
      */
-    submitEntry(classId: string, directoryId: string, entryId: string, uniqueId: string): Promise<parser.ManaboEntryResponseDTO>;
+    submitEntry(
+        classId: string,
+        directoryId: string,
+        entryId: string,
+        uniqueId: string
+    ): Promise<parser.ManaboEntryResponseDTO>;
 }
 
 export class IntegratedClassRepository implements ClassRepository {
@@ -199,7 +217,9 @@ export class IntegratedClassRepository implements ClassRepository {
     }
 
     public async getEntryForm(classId: string) {
-        const response = await this.manaboProvider.get(`/?class_id=${classId}&action=glexa_modal_entry_form&_=${Date.now()}`);
+        const response = await this.manaboProvider.get(
+            `/?class_id=${classId}&action=glexa_modal_entry_form&_=${Date.now()}`
+        );
         const dto = parser.parseManaboEntryForm(response);
         if (dto.success) {
             // TODO: domain形にmapする

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Pressable, ScrollView, Text, View } from "react-native";
+
 import Header from "@/src/presentation/components/Header";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
@@ -7,8 +10,6 @@ import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
-import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
 
 interface ExpandState {
     [key: string]: boolean;
@@ -43,8 +44,25 @@ function DataViewer({
         if (value === null) {
             return (
                 <View key={fullPath} style={{ flexDirection: "row", paddingVertical: theme.spacing.xs }}>
-                    <Text style={{ color: theme.colors.text.secondary, fontFamily: "monospace", fontSize: 12 }}>{key}: </Text>
-                    <Text style={{ color: theme.colors.text.placeholder, fontFamily: "monospace", fontSize: 12, fontStyle: "italic" }}>null</Text>
+                    <Text
+                        style={{
+                            color: theme.colors.text.secondary,
+                            fontFamily: "monospace",
+                            fontSize: 12,
+                        }}
+                    >
+                        {key}:{" "}
+                    </Text>
+                    <Text
+                        style={{
+                            color: theme.colors.text.placeholder,
+                            fontFamily: "monospace",
+                            fontSize: 12,
+                            fontStyle: "italic",
+                        }}
+                    >
+                        null
+                    </Text>
                 </View>
             );
         }
@@ -52,8 +70,25 @@ function DataViewer({
         if (value === undefined) {
             return (
                 <View key={fullPath} style={{ flexDirection: "row", paddingVertical: theme.spacing.xs }}>
-                    <Text style={{ color: theme.colors.text.secondary, fontFamily: "monospace", fontSize: 12 }}>{key}: </Text>
-                    <Text style={{ color: theme.colors.text.placeholder, fontFamily: "monospace", fontSize: 12, fontStyle: "italic" }}>undefined</Text>
+                    <Text
+                        style={{
+                            color: theme.colors.text.secondary,
+                            fontFamily: "monospace",
+                            fontSize: 12,
+                        }}
+                    >
+                        {key}:{" "}
+                    </Text>
+                    <Text
+                        style={{
+                            color: theme.colors.text.placeholder,
+                            fontFamily: "monospace",
+                            fontSize: 12,
+                            fontStyle: "italic",
+                        }}
+                    >
+                        undefined
+                    </Text>
                 </View>
             );
         }
@@ -62,8 +97,22 @@ function DataViewer({
         if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
             return (
                 <View key={fullPath} style={{ flexDirection: "row", paddingVertical: theme.spacing.xs }}>
-                    <Text style={{ color: theme.colors.text.secondary, fontFamily: "monospace", fontSize: 12 }}>{key}: </Text>
-                    <Text style={{ color: theme.colors.primary.main, fontFamily: "monospace", fontSize: 12 }}>
+                    <Text
+                        style={{
+                            color: theme.colors.text.secondary,
+                            fontFamily: "monospace",
+                            fontSize: 12,
+                        }}
+                    >
+                        {key}:{" "}
+                    </Text>
+                    <Text
+                        style={{
+                            color: theme.colors.primary.main,
+                            fontFamily: "monospace",
+                            fontSize: 12,
+                        }}
+                    >
                         {typeof value === "string" ? `"${value}"` : String(value)}
                     </Text>
                 </View>
@@ -74,8 +123,24 @@ function DataViewer({
         if (value instanceof Date) {
             return (
                 <View key={fullPath} style={{ flexDirection: "row", paddingVertical: theme.spacing.xs }}>
-                    <Text style={{ color: theme.colors.text.secondary, fontFamily: "monospace", fontSize: 12 }}>{key}: </Text>
-                    <Text style={{ color: theme.colors.status.info, fontFamily: "monospace", fontSize: 12 }}>Date({value.toISOString()})</Text>
+                    <Text
+                        style={{
+                            color: theme.colors.text.secondary,
+                            fontFamily: "monospace",
+                            fontSize: 12,
+                        }}
+                    >
+                        {key}:{" "}
+                    </Text>
+                    <Text
+                        style={{
+                            color: theme.colors.status.info,
+                            fontFamily: "monospace",
+                            fontSize: 12,
+                        }}
+                    >
+                        Date({value.toISOString()})
+                    </Text>
                 </View>
             );
         }
@@ -91,10 +156,23 @@ function DataViewer({
                         }}
                         style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                        <Text style={{ color: theme.colors.text.primary, fontFamily: "monospace", fontSize: 12, marginRight: theme.spacing.xs }}>
+                        <Text
+                            style={{
+                                color: theme.colors.text.primary,
+                                fontFamily: "monospace",
+                                fontSize: 12,
+                                marginRight: theme.spacing.xs,
+                            }}
+                        >
                             {isExpanded ? "▼" : "▶"}
                         </Text>
-                        <Text style={{ color: theme.colors.text.secondary, fontFamily: "monospace", fontSize: 12 }}>
+                        <Text
+                            style={{
+                                color: theme.colors.text.secondary,
+                                fontFamily: "monospace",
+                                fontSize: 12,
+                            }}
+                        >
                             {key}: Array[{itemCount}]
                         </Text>
                     </Pressable>
@@ -126,10 +204,23 @@ function DataViewer({
                         }}
                         style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                        <Text style={{ color: theme.colors.text.primary, fontFamily: "monospace", fontSize: 12, marginRight: theme.spacing.xs }}>
+                        <Text
+                            style={{
+                                color: theme.colors.text.primary,
+                                fontFamily: "monospace",
+                                fontSize: 12,
+                                marginRight: theme.spacing.xs,
+                            }}
+                        >
                             {isExpanded ? "▼" : "▶"}
                         </Text>
-                        <Text style={{ color: theme.colors.text.secondary, fontFamily: "monospace", fontSize: 12 }}>
+                        <Text
+                            style={{
+                                color: theme.colors.text.secondary,
+                                fontFamily: "monospace",
+                                fontSize: 12,
+                            }}
+                        >
                             {key}: Object{"{"}
                             {keyCount}
                             {"}"}
@@ -180,13 +271,48 @@ export default function ZustandDebugScreen() {
     const [timetableExpand, setTimetableExpand] = useState<ExpandState>({});
 
     const stores = [
-        { name: "useAuth", state: authState, expandState: authExpand, setExpandState: setAuthExpand },
-        { name: "useAssignment", state: assignmentState, expandState: assignmentExpand, setExpandState: setAssignmentExpand },
-        { name: "useClass", state: classState, expandState: classExpand, setExpandState: setClassExpand },
-        { name: "useMail", state: mailState, expandState: mailExpand, setExpandState: setMailExpand },
-        { name: "useNews", state: newsState, expandState: newsExpand, setExpandState: setNewsExpand },
-        { name: "useSetting", state: settingState, expandState: settingExpand, setExpandState: setSettingExpand },
-        { name: "useTimetable", state: timetableState, expandState: timetableExpand, setExpandState: setTimetableExpand },
+        {
+            name: "useAuth",
+            state: authState,
+            expandState: authExpand,
+            setExpandState: setAuthExpand,
+        },
+        {
+            name: "useAssignment",
+            state: assignmentState,
+            expandState: assignmentExpand,
+            setExpandState: setAssignmentExpand,
+        },
+        {
+            name: "useClass",
+            state: classState,
+            expandState: classExpand,
+            setExpandState: setClassExpand,
+        },
+        {
+            name: "useMail",
+            state: mailState,
+            expandState: mailExpand,
+            setExpandState: setMailExpand,
+        },
+        {
+            name: "useNews",
+            state: newsState,
+            expandState: newsExpand,
+            setExpandState: setNewsExpand,
+        },
+        {
+            name: "useSetting",
+            state: settingState,
+            expandState: settingExpand,
+            setExpandState: setSettingExpand,
+        },
+        {
+            name: "useTimetable",
+            state: timetableState,
+            expandState: timetableExpand,
+            setExpandState: setTimetableExpand,
+        },
     ];
 
     return (
@@ -207,10 +333,21 @@ export default function ZustandDebugScreen() {
                                     borderColor: theme.colors.border.default,
                                 }}
                             >
-                                <Text style={{ fontSize: 18, fontWeight: "bold", color: theme.colors.text.primary, marginBottom: theme.spacing.md }}>
+                                <Text
+                                    style={{
+                                        fontSize: 18,
+                                        fontWeight: "bold",
+                                        color: theme.colors.text.primary,
+                                        marginBottom: theme.spacing.md,
+                                    }}
+                                >
                                     {store.name}
                                 </Text>
-                                <DataViewer data={store.state} expandState={store.expandState} setExpandState={store.setExpandState} />
+                                <DataViewer
+                                    data={store.state}
+                                    expandState={store.expandState}
+                                    setExpandState={store.setExpandState}
+                                />
                             </View>
                         ))}
                     </View>

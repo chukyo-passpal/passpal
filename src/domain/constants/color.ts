@@ -1,5 +1,6 @@
-import { Theme } from "@/src/utils/theme";
 import { z } from "zod";
+
+import { Theme } from "@/src/utils/theme";
 
 export const COLOR_OPTIONS = ["red", "green", "blue", "black"] as const;
 export const ColorOptionSchema = z.literal(COLOR_OPTIONS);

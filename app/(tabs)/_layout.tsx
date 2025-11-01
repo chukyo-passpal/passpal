@@ -1,6 +1,7 @@
+import { Tabs } from "expo-router";
+
 import { Icon } from "@/src/presentation/components/Icon";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import { Tabs } from "expo-router";
 
 export default function TabLayout() {
     const { theme } = useTheme();

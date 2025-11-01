@@ -1,13 +1,14 @@
-import authServiceInstance from "@/src/domain/services/authService";
 import {
     GoogleSignin,
-    GoogleSigninSuccessResponse,
     isErrorWithCode,
     isSuccessResponse,
+    SignInSuccessResponse,
 } from "@react-native-google-signin/google-signin";
 
+import authServiceInstance from "@/src/domain/services/authService";
+
 export type GoogleSignInResult =
-    | { kind: "success"; data: GoogleSigninSuccessResponse["data"] }
+    | { kind: "success"; data: SignInSuccessResponse["data"] }
     | { kind: "cancelled" }
     | { kind: "invalid-domain"; email: string; allowedDomain: string }
     | { kind: "error"; error: unknown };
@@ -64,7 +65,11 @@ export class IntegratedGoogleAuthService implements GoogleAuthService {
 
             const email = response.data.user.email;
             if (!email.endsWith(authServiceInstance.allowedMailDomain)) {
-                return { kind: "invalid-domain", email, allowedDomain: authServiceInstance.allowedMailDomain };
+                return {
+                    kind: "invalid-domain",
+                    email,
+                    allowedDomain: authServiceInstance.allowedMailDomain,
+                };
             }
 
             return { kind: "success", data: response.data };

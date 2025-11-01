@@ -1,3 +1,8 @@
+import React, { useState } from "react";
+import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
+import { Checkbox } from "expo-checkbox";
+import { router } from "expo-router";
+
 import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -5,10 +10,6 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import { PASSPAL_URLS } from "@/src/utils/urls";
-import { Checkbox } from "expo-checkbox";
-import { router } from "expo-router";
-import React, { useState } from "react";
-import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Step3() {
     const { acceptTerms } = useAuth();
@@ -31,9 +32,21 @@ export default function Step3() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary, padding: theme.spacing.lg }}>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: theme.colors.background.primary,
+                padding: theme.spacing.lg,
+            }}
+        >
             <ScrollView
-                contentContainerStyle={{ justifyContent: "center", flex: 1, maxWidth: 400, alignSelf: "center", width: "100%" }}
+                contentContainerStyle={{
+                    justifyContent: "center",
+                    flex: 1,
+                    maxWidth: 400,
+                    alignSelf: "center",
+                    width: "100%",
+                }}
                 showsVerticalScrollIndicator={false}
             >
                 <View style={{ gap: 40 }}>
@@ -57,7 +70,11 @@ export default function Step3() {
                             <Typography variant="h2" style={{ textAlign: "center" }}>
                                 セットアップ完了！
                             </Typography>
-                            <Typography variant="body" color={theme.colors.text.secondary} style={{ textAlign: "center" }}>
+                            <Typography
+                                variant="body"
+                                color={theme.colors.text.secondary}
+                                style={{ textAlign: "center" }}
+                            >
                                 PassPalと一緒に、シンプルなキャンパスライフを。
                             </Typography>
                         </View>
@@ -69,7 +86,13 @@ export default function Step3() {
                             </Typography>
                             <View style={{ gap: 16 }}>
                                 {/* Timetable Feature */}
-                                <View style={{ flexDirection: "row", gap: 16, alignItems: "flex-start" }}>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        gap: 16,
+                                        alignItems: "flex-start",
+                                    }}
+                                >
                                     <Icon name="calendar" size={24} color={theme.colors.primary.main} />
                                     <View style={{ flex: 1, gap: 4 }}>
                                         <Typography variant="label" color={theme.colors.primary.main}>
@@ -82,7 +105,13 @@ export default function Step3() {
                                 </View>
 
                                 {/* Assignment Feature */}
-                                <View style={{ flexDirection: "row", gap: 16, alignItems: "flex-start" }}>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        gap: 16,
+                                        alignItems: "flex-start",
+                                    }}
+                                >
                                     <Icon name="clipboard-list" size={24} color={theme.colors.primary.main} />
                                     <View style={{ flex: 1, gap: 4 }}>
                                         <Typography variant="label" color={theme.colors.primary.main}>
@@ -99,15 +128,34 @@ export default function Step3() {
 
                     {/* Terms Agreement */}
                     <View style={{ gap: 12, alignItems: "center" }}>
-                        <View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                gap: 12,
+                                alignItems: "center",
+                            }}
+                        >
                             {/* Checkbox */}
-                            <View style={{ width: 20, height: 20, alignItems: "center", justifyContent: "center" }}>
+                            <View
+                                style={{
+                                    width: 20,
+                                    height: 20,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}
+                            >
                                 <Checkbox value={isAcceptedTerms} onValueChange={setIsAcceptedTerms} />
                             </View>
 
                             {/* Terms Text */}
                             <View style={{ flex: 1, gap: 4 }}>
-                                <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        flexWrap: "wrap",
+                                        gap: 4,
+                                    }}
+                                >
                                     <TouchableOpacity onPress={handleClickTerms}>
                                         <Typography variant="label" color={theme.colors.primary.main}>
                                             利用規約
@@ -130,7 +178,14 @@ export default function Step3() {
                     </View>
 
                     {/* Next Button */}
-                    <Button variant="primary" fullWidth size="large" style={{ marginBottom: 40 }} onPress={handleNext} disabled={!isAcceptedTerms}>
+                    <Button
+                        variant="primary"
+                        fullWidth
+                        size="large"
+                        style={{ marginBottom: 40 }}
+                        onPress={handleNext}
+                        disabled={!isAcceptedTerms}
+                    >
                         次へ
                     </Button>
                 </View>

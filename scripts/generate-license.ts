@@ -50,7 +50,7 @@ const ensureLicenseJsonExists = async () => {
     } catch {
         throw new Error(
             `licenses.json not found at ${LICENSE_JSON_PATH}. ` +
-                "Run `bun run license-checker --production --direct --json --out ./licenses.json` first.",
+                "Run `bun run license-checker --production --direct --json --out ./licenses.json` first."
         );
     }
 };

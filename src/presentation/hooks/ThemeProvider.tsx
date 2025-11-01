@@ -4,11 +4,12 @@
  * Automatically syncs with device settings via Expo
  */
 
-import { createTheme, theme, Theme } from "@/src/utils/theme";
-import * as NavigationBar from "expo-navigation-bar";
-import { StatusBar } from "expo-status-bar";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { Platform, useColorScheme } from "react-native";
+import * as NavigationBar from "expo-navigation-bar";
+import { StatusBar } from "expo-status-bar";
+
+import { createTheme, theme, Theme } from "@/src/utils/theme";
 
 export type ColorMode = "light" | "dark" | "auto";
 

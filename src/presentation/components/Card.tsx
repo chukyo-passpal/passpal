@@ -3,9 +3,10 @@
  * Flexible card container with different variants
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import React from "react";
 import { View, ViewProps, ViewStyle } from "react-native";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { Typography } from "./Typography";
 
 type CardVariant = "default" | "feature" | "info";

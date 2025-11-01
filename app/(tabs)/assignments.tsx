@@ -1,4 +1,10 @@
-import assignmentServiceInstance, { AssignmentFilter, AssignmentOverviewItem } from "@/src/domain/services/assignmentService";
+import React from "react";
+import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
+
+import assignmentServiceInstance, {
+    AssignmentFilter,
+    AssignmentOverviewItem,
+} from "@/src/domain/services/assignmentService";
 import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
@@ -9,8 +15,6 @@ import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { getManaboClassUrl } from "@/src/utils/urls";
-import React from "react";
-import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Assignments() {
     const { theme } = useTheme();
@@ -51,7 +55,14 @@ export default function Assignments() {
                     </Typography>
                 </View>
             ) : filteredAssignments.length === 0 ? (
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 20,
+                    }}
+                >
                     <Icon name="clipboard-list" size={48} color={theme.colors.text.secondary} />
                     <Typography variant="body" style={{ marginTop: 16 }} color={theme.colors.text.secondary}>
                         {filter === "all"
@@ -84,13 +95,19 @@ export default function Assignments() {
                             gap: 16,
                             paddingBottom: 24,
                         }}
-                        refreshControl={<RefreshControl refreshing={loading} onRefresh={handleRefresh} colors={[theme.colors.primary.main]} />}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={loading}
+                                onRefresh={handleRefresh}
+                                colors={[theme.colors.primary.main]}
+                            />
+                        }
                     >
-                    {filteredAssignments?.map((a) => {
-                        // 元の課題データを取得してmanaboUrlを渡す
-                        return (
-                            <AssignmentCard
-                                key={`${a.classId},${a.directoryId}${a.title}`}
+                        {filteredAssignments?.map((a) => {
+                            // 元の課題データを取得してmanaboUrlを渡す
+                            return (
+                                <AssignmentCard
+                                    key={`${a.classId},${a.directoryId}${a.title}`}
                                     assignment={a}
                                     handleTouch={() => handleTouch(a.classId, a.directoryId, a.contentId)}
                                 />
@@ -147,7 +164,10 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: AssignmentOve
                             borderRadius: 16,
                         }}
                     >
-                        <Typography variant="caption" color={assignmentServiceInstance.getStatusColor(assignment.status, theme)}>
+                        <Typography
+                            variant="caption"
+                            color={assignmentServiceInstance.getStatusColor(assignment.status, theme)}
+                        >
                             {assignmentServiceInstance.getStatusLabel(assignment.status)}
                         </Typography>
                     </View>

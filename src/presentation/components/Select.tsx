@@ -3,12 +3,12 @@
  * Customizable dropdown select component with native and sheet adaptations
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
 import React from "react";
-import type { SelectProps as TamaguiSelectProps } from "tamagui";
-import { Adapt, Sheet, Select as TamaguiSelect, YStack } from "tamagui";
+import { Check, ChevronDown, ChevronUp } from "lucide-react-native";
+import { Adapt, Sheet, Select as TamaguiSelect, YStack, type SelectProps as TamaguiSelectProps } from "tamagui";
 import { LinearGradient } from "tamagui/linear-gradient";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 
 export interface SelectItem {
     label: string;
@@ -66,7 +66,11 @@ export const Select: React.FC<SelectProps> = ({
     return (
         <TamaguiSelect value={internalValue} onValueChange={handleValueChange} disablePreventBodyScroll {...props}>
             {trigger || (
-                <TamaguiSelect.Trigger maxWidth={maxWidth} iconAfter={<ChevronDown color={theme.colors.text.primary} />} disabled={disabled}>
+                <TamaguiSelect.Trigger
+                    maxWidth={maxWidth}
+                    iconAfter={<ChevronDown color={theme.colors.text.primary} />}
+                    disabled={disabled}
+                >
                     <TamaguiSelect.Value placeholder={placeholder} />
                 </TamaguiSelect.Trigger>
             )}
@@ -78,7 +82,12 @@ export const Select: React.FC<SelectProps> = ({
                             <Adapt.Contents />
                         </Sheet.ScrollView>
                     </Sheet.Frame>
-                    <Sheet.Overlay bg="$shadowColor" animation="lazy" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} />
+                    <Sheet.Overlay
+                        bg="$shadowColor"
+                        animation="lazy"
+                        enterStyle={{ opacity: 0 }}
+                        exitStyle={{ opacity: 0 }}
+                    />
                 </Sheet>
             </Adapt>
 

@@ -1,7 +1,8 @@
+import * as parser from "@chukyo-passpal/web_parser";
+
 import { Period, PERIODS, PeriodSchema } from "@/src/domain/constants/period";
 import { Weekday, WEEKDAYS, WeekdaySchema } from "@/src/domain/constants/week";
 import { TimetableData } from "@/src/domain/models/timetable";
-import * as parser from "@chukyo-passpal/web_parser";
 import { MapError } from "../errors/MapError";
 
 /**
@@ -11,7 +12,7 @@ import { MapError } from "../errors/MapError";
  */
 function extractClassId(path: string): string {
     const match = path.match(/\/class\/(\d+)\//);
-    return match ? match[1] ?? "" : "";
+    return match ? (match[1] ?? "") : "";
 }
 
 /**
@@ -42,13 +43,19 @@ function extractWeekday(label: string): string {
  */
 export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): TimetableData {
     let tbl: Pick<TimetableData, "timetable"> = {
-        timetable: WEEKDAYS.reduce((acc, curr) => {
-            acc[curr] = PERIODS.reduce((acc2, curr2) => {
-                acc2[curr2] = null;
-                return acc2;
-            }, {} as Record<Period, null>);
-            return acc;
-        }, {} as Record<Weekday, Record<Period, null>>),
+        timetable: WEEKDAYS.reduce(
+            (acc, curr) => {
+                acc[curr] = PERIODS.reduce(
+                    (acc2, curr2) => {
+                        acc2[curr2] = null;
+                        return acc2;
+                    },
+                    {} as Record<Period, null>
+                );
+                return acc;
+            },
+            {} as Record<Weekday, Record<Period, null>>
+        ),
     };
 
     data.periods.forEach((p) => {
@@ -93,13 +100,19 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
  */
 export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): TimetableData {
     let tbl: Pick<TimetableData, "timetable"> = {
-        timetable: WEEKDAYS.reduce((acc, curr) => {
-            acc[curr] = PERIODS.reduce((acc2, curr2) => {
-                acc2[curr2] = null;
-                return acc2;
-            }, {} as Record<Period, null>);
-            return acc;
-        }, {} as Record<Weekday, Record<Period, null>>),
+        timetable: WEEKDAYS.reduce(
+            (acc, curr) => {
+                acc[curr] = PERIODS.reduce(
+                    (acc2, curr2) => {
+                        acc2[curr2] = null;
+                        return acc2;
+                    },
+                    {} as Record<Period, null>
+                );
+                return acc;
+            },
+            {} as Record<Weekday, Record<Period, null>>
+        ),
     };
 
     let days: Weekday[] = data.days.map((d) => {

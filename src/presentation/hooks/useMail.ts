@@ -1,9 +1,10 @@
-import { MailData } from "@/src/domain/models/mail";
-import mailServiceInstance, { MailService } from "@/src/domain/services/mailService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import { MailData } from "@/src/domain/models/mail";
+import mailServiceInstance, { MailService } from "@/src/domain/services/mailService";
 
 export interface MailState {
     lastFetch: Date | null;

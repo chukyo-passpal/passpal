@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 import { View } from "react-native";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import { Select, SelectItem } from "./Select";
 
 const meta = {
@@ -92,7 +93,13 @@ const InteractiveComponent = () => {
 
     return (
         <View style={{ gap: 16 }}>
-            <Select items={classItems} value={value} onValueChange={setValue} placeholder="授業を選択してください" groupLabel="履修授業" />
+            <Select
+                items={classItems}
+                value={value}
+                onValueChange={setValue}
+                placeholder="授業を選択してください"
+                groupLabel="履修授業"
+            />
             {value && (
                 <View style={{ padding: 16, backgroundColor: "#f0f0f0", borderRadius: 8 }}>
                     <View>選択された値: {value}</View>
@@ -116,8 +123,20 @@ const MultipleSelectsComponent = () => {
 
     return (
         <View style={{ gap: 16 }}>
-            <Select items={classItems} value={classData} onValueChange={setClassData} placeholder="授業を選択" groupLabel="履修授業" />
-            <Select items={periodItems} value={period} onValueChange={setPeriod} placeholder="時限を選択" groupLabel="時限" />
+            <Select
+                items={classItems}
+                value={classData}
+                onValueChange={setClassData}
+                placeholder="授業を選択"
+                groupLabel="履修授業"
+            />
+            <Select
+                items={periodItems}
+                value={period}
+                onValueChange={setPeriod}
+                placeholder="時限を選択"
+                groupLabel="時限"
+            />
         </View>
     );
 };

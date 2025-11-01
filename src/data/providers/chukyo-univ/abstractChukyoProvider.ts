@@ -1,10 +1,11 @@
+import { Cookies } from "@react-native-cookies/cookies";
+
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { NotSetError } from "@/src/domain/errors/serviceError";
 import { CookieCredentials } from "@/src/domain/models/auth";
 import { UserData } from "@/src/domain/models/user";
 import { authState } from "@/src/presentation/hooks/useAuth";
 import { cookiesToString } from "@/src/utils/cookie";
-import { Cookies } from "@react-native-cookies/cookies";
 
 export abstract class abstractChukyoProvider {
     protected abstract baseUrl: string;
@@ -20,7 +21,9 @@ export abstract class abstractChukyoProvider {
      */
     protected get auth() {
         if (!this._auth) {
-            throw new NotSetError({ cause: new Error("ChukyoProviderにauthStateが設定されていません") });
+            throw new NotSetError({
+                cause: new Error("ChukyoProviderにauthStateが設定されていません"),
+            });
         }
         return this._auth;
     }
@@ -123,7 +126,9 @@ export abstract class abstractChukyoProvider {
      */
     protected async getAuthedCookie() {
         if (!this.auth.user) {
-            throw new NotSetError({ cause: new Error("ユーザー情報が設定されていません") });
+            throw new NotSetError({
+                cause: new Error("ユーザー情報が設定されていません"),
+            });
         }
 
         const credentials = await this.getCredentialCookies(this.serviceName);

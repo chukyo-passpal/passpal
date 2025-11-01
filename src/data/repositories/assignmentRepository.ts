@@ -1,4 +1,5 @@
 import * as parser from "@chukyo-passpal/web_parser";
+
 import { ParseError } from "../errors/ParseError";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 

@@ -1,10 +1,11 @@
-import { AssignmentClassData, AssignmentInfo } from "@/src/domain/models/assignment";
-import { TimetableData } from "@/src/domain/models/timetable";
-import assignmentServiceInstance, { AssignmentService } from "@/src/domain/services/assignmentService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import { AssignmentClassData, AssignmentInfo } from "@/src/domain/models/assignment";
+import { TimetableData } from "@/src/domain/models/timetable";
+import assignmentServiceInstance, { AssignmentService } from "@/src/domain/services/assignmentService";
 
 /**
  * Assignment State

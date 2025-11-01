@@ -1,5 +1,6 @@
 import type { Preview } from "@storybook/react";
 import { TamaguiProvider } from "tamagui";
+
 import { ThemeProvider } from "../src/presentation/hooks/ThemeProvider";
 import config from "../tamagui.config";
 

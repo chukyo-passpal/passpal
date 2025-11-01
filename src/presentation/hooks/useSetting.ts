@@ -1,9 +1,10 @@
-import { Campus } from "@/src/domain/constants/chukyo-univ";
-import { TimetableViewMode } from "@/src/domain/constants/timetable";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
+
+import { Campus } from "@/src/domain/constants/chukyo-univ";
+import { TimetableViewMode } from "@/src/domain/constants/timetable";
 
 export interface settingState {
     campus: Campus;

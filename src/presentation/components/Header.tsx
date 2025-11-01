@@ -1,12 +1,19 @@
-import { router } from "expo-router";
 import { View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { router } from "expo-router";
+
 import { spacing } from "../tokens/spacing";
 import { IconName } from "./Icon";
 import { IconButton } from "./IconButton";
 import { Typography } from "./Typography";
 
-type Props = { title: string; subButtonIcon?: IconName; onPressSubButton?: () => void; shownBackButton?: boolean; onPressBackButton?: () => void };
+type Props = {
+    title: string;
+    subButtonIcon?: IconName;
+    onPressSubButton?: () => void;
+    shownBackButton?: boolean;
+    onPressBackButton?: () => void;
+};
 
 export default function Header({
     title,
@@ -38,7 +45,13 @@ export default function Header({
                     paddingTop: 16,
                 }}
             >
-                <View style={{ flexDirection: "row", alignItems: "center", gap: spacing.md }}>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: spacing.md,
+                    }}
+                >
                     {shownBackButton && <IconButton icon="chevron-left" onPress={onPressBackButton} />}
                     <Typography variant="h2" color="#B19CD9">
                         {title}

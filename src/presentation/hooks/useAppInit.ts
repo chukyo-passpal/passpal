@@ -1,12 +1,13 @@
+import { useEffect } from "react";
+import { getAuth, getIdToken, GoogleAuthProvider, signInWithCredential } from "@react-native-firebase/auth";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
 import { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
 import alboProviderInstance from "@/src/data/providers/chukyo-univ/alboProvider";
 import cubicsProviderInstance from "@/src/data/providers/chukyo-univ/cubicsProvider";
 import manaboProviderInstance from "@/src/data/providers/chukyo-univ/manaboProvider";
 import palAPIProviderInstance from "@/src/data/providers/palapi/palapiProvider";
 import authServiceInstance from "@/src/domain/services/authService";
-import { getAuth, getIdToken, GoogleAuthProvider, signInWithCredential } from "@react-native-firebase/auth";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { useEffect } from "react";
 import useAuth from "./useAuth";
 
 export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef | null>) {
@@ -37,7 +38,9 @@ export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef
             try {
                 await GoogleSignin.signInSilently();
                 // 1. GoogleにサインインしてIDトークン取得
-                await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
+                await GoogleSignin.hasPlayServices({
+                    showPlayServicesUpdateDialog: true,
+                });
                 const { idToken, accessToken } = await GoogleSignin.getTokens();
                 // 2. IDトークンからFirebase認証用Credentialを作成
                 const googleCredential = GoogleAuthProvider.credential(idToken, accessToken);

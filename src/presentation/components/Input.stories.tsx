@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 import { View } from "react-native";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import { Icon } from "./Icon";
 import { Input } from "./Input";
 
@@ -112,7 +113,13 @@ const LoginFormComponent = () => {
 
     return (
         <View style={{ gap: 16 }}>
-            <Input value={username} onChangeText={setUsername} placeholder="学籍番号" label="学籍番号" leftIcon={<Icon name="user" size={20} />} />
+            <Input
+                value={username}
+                onChangeText={setUsername}
+                placeholder="学籍番号"
+                label="学籍番号"
+                leftIcon={<Icon name="user" size={20} />}
+            />
             <Input
                 value={password}
                 onChangeText={setPassword}

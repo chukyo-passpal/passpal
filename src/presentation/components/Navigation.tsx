@@ -3,9 +3,10 @@
  * Tab navigation and bottom navigation components
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import React from "react";
 import { TouchableOpacity, View, ViewStyle } from "react-native";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { Icon, IconName } from "./Icon";
 import { Typography } from "./Typography";
 
@@ -49,7 +50,10 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ tabs, onTabPress, 
                     onPress={() => onTabPress(tab.id)}
                     activeOpacity={0.7}
                 >
-                    <Typography variant="button" color={tab.active ? theme.colors.text.inverse : theme.colors.text.secondary}>
+                    <Typography
+                        variant="button"
+                        color={tab.active ? theme.colors.text.inverse : theme.colors.text.secondary}
+                    >
                         {tab.label}
                     </Typography>
                 </TouchableOpacity>
@@ -106,7 +110,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ items, onIte
                     activeOpacity={0.7}
                 >
                     <View style={{ position: "relative", marginBottom: 4 }}>
-                        <Icon name={item.icon} size={24} color={item.active ? theme.colors.primary.main : theme.colors.text.secondary} />
+                        <Icon
+                            name={item.icon}
+                            size={24}
+                            color={item.active ? theme.colors.primary.main : theme.colors.text.secondary}
+                        />
                         {item.badge && item.badge > 0 && (
                             <View
                                 style={{
@@ -122,7 +130,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({ items, onIte
                                     paddingHorizontal: 6,
                                 }}
                             >
-                                <Typography variant="caption" color={theme.colors.text.inverse} style={{ fontSize: 10, lineHeight: 12 }}>
+                                <Typography
+                                    variant="caption"
+                                    color={theme.colors.text.inverse}
+                                    style={{ fontSize: 10, lineHeight: 12 }}
+                                >
                                     {item.badge > 99 ? "99+" : item.badge.toString()}
                                 </Typography>
                             </View>
@@ -153,7 +165,14 @@ interface NavigationHeaderProps {
     style?: ViewStyle;
 }
 
-export const NavigationHeader: React.FC<NavigationHeaderProps> = ({ title, leftIcon, rightIcon, onLeftPress, onRightPress, style }) => {
+export const NavigationHeader: React.FC<NavigationHeaderProps> = ({
+    title,
+    leftIcon,
+    rightIcon,
+    onLeftPress,
+    onRightPress,
+    style,
+}) => {
     const { theme } = useTheme();
 
     return (

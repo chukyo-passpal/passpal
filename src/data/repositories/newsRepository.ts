@@ -1,5 +1,6 @@
-import { AlboNewsInfo } from "@/src/domain/models/news";
 import * as parser from "@chukyo-passpal/web_parser";
+
+import { AlboNewsInfo } from "@/src/domain/models/news";
 import { ParseError } from "../errors/ParseError";
 import { alboNewsToDomain } from "../mappers/newsMapper";
 import alboProviderInstance, { AlboProvider } from "../providers/chukyo-univ/alboProvider";

@@ -1,3 +1,7 @@
+import { useRef } from "react";
+import { Stack, useRouter } from "expo-router";
+import { TamaguiProvider } from "tamagui";
+
 import ShibbolethWebView, { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
 import appServiceInstance from "@/src/domain/services/appService";
 import eventServiceInstance from "@/src/domain/services/eventService";
@@ -6,9 +10,6 @@ import { ThemeProvider, useTheme } from "@/src/presentation/hooks/ThemeProvider"
 import useAppInit from "@/src/presentation/hooks/useAppInit";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import { tamaguiConfig } from "@/tamagui.config";
-import { Stack, useRouter } from "expo-router";
-import { useRef } from "react";
-import { TamaguiProvider } from "tamagui";
 
 eventServiceInstance.appInit();
 

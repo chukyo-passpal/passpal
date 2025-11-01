@@ -3,9 +3,10 @@
  * Primary, secondary, and text button variants with different sizes
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import React from "react";
 import { ActivityIndicator, TouchableOpacity, TouchableOpacityProps, ViewStyle } from "react-native";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { Typography } from "./Typography";
 
 type ButtonVariant = "primary" | "secondary" | "text";
@@ -96,7 +97,12 @@ export const Button: React.FC<ButtonProps> = ({
     };
 
     return (
-        <TouchableOpacity style={[getButtonStyles(), style]} disabled={disabled || loading} activeOpacity={0.7} {...props}>
+        <TouchableOpacity
+            style={[getButtonStyles(), style]}
+            disabled={disabled || loading}
+            activeOpacity={0.7}
+            {...props}
+        >
             {loading ? <ActivityIndicator size="small" color={getTextColor()} style={{ marginRight: 8 }} /> : null}
             <Typography variant={getTypographyVariant()} color={getTextColor()}>
                 {children}

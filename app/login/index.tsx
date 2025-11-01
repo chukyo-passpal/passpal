@@ -1,11 +1,12 @@
+import { useEffect } from "react";
+import { Image, ScrollView, TouchableOpacity, View } from "react-native";
+import { useRouter } from "expo-router";
+
 import appServiceInstance from "@/src/domain/services/appService";
 import googleAuthServiceInstance from "@/src/domain/services/googleAuthService";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
-import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function Login() {
     const { theme } = useTheme();
@@ -57,7 +58,10 @@ export default function Login() {
                 padding: theme.spacing.lg,
             }}
         >
-            <ScrollView contentContainerStyle={{ justifyContent: "center", flex: 1 }} showsVerticalScrollIndicator={false}>
+            <ScrollView
+                contentContainerStyle={{ justifyContent: "center", flex: 1 }}
+                showsVerticalScrollIndicator={false}
+            >
                 {/* ウェルカムセクション */}
                 <View style={{ marginBottom: theme.spacing.xl }}>
                     <Typography
@@ -109,7 +113,10 @@ export default function Login() {
                     </View>
 
                     <TouchableOpacity style={{ alignItems: "center" }} activeOpacity={0.7} onPress={signIn}>
-                        <Image style={{ height: 50, objectFit: "contain" }} source={require("@/assets/images/google-sign-in.png")} />
+                        <Image
+                            style={{ height: 50, objectFit: "contain" }}
+                            source={require("@/assets/images/google-sign-in.png")}
+                        />
                     </TouchableOpacity>
                 </View>
             </ScrollView>

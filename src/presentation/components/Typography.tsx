@@ -3,10 +3,11 @@
  * Consistent text styling throughout the app
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import { TypographyVariant } from "@/src/presentation/tokens/typography";
 import React from "react";
 import { Text, TextProps } from "react-native";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import { TypographyVariant } from "@/src/presentation/tokens/typography";
 
 interface TypographyProps extends Omit<TextProps, "style"> {
     variant?: TypographyVariant;

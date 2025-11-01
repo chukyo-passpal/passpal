@@ -10,7 +10,7 @@ export interface AuthService {
 
     /**
      * Googleサインイン時に使用するFirebase Admin SDKのWebクライアントID
-    */
+     */
     readonly webClientId: string;
 
     /**
@@ -58,9 +58,13 @@ export class IntegratedAuthService implements AuthService {
         return this.authRepository.authTest(studentId, cuIdPass);
     }
 
-    public shibAuth = (...params: Parameters<shibbolethWebViewAuthFunction>): ReturnType<shibbolethWebViewAuthFunction> => {
+    public shibAuth = (
+        ...params: Parameters<shibbolethWebViewAuthFunction>
+    ): ReturnType<shibbolethWebViewAuthFunction> => {
         if (this.chukyoShibbolethAuth === undefined) {
-            throw new NotSetError({ cause: new Error("AuthServiceにChukyoShibbolethAuthが設定されていません") });
+            throw new NotSetError({
+                cause: new Error("AuthServiceにChukyoShibbolethAuthが設定されていません"),
+            });
         }
         const authFn = this.chukyoShibbolethAuth;
         const task = () => authFn(...params);

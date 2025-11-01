@@ -1,8 +1,9 @@
+import { ScrollView, View } from "react-native";
+import * as Updates from "expo-updates";
+
 import Header from "@/src/presentation/components/Header";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import * as Updates from "expo-updates";
-import { ScrollView, View } from "react-native";
 
 export default function ZustandDebugScreen() {
     const { theme } = useTheme();

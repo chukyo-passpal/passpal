@@ -1,3 +1,7 @@
+import React, { useEffect, useMemo } from "react";
+import { ScrollView, TouchableOpacity, View } from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+
 import { ClassInfo } from "@/src/domain/models/class";
 import classServiceInstance, { AttendanceStatsSummary } from "@/src/domain/services/classService";
 import { Card } from "@/src/presentation/components/Card";
@@ -7,9 +11,6 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useClass from "@/src/presentation/hooks/useClass";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useMemo } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
 
 export default function ClassDetail() {
     const { theme } = useTheme();
@@ -41,7 +42,14 @@ export default function ClassDetail() {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
                 <Header title="授業詳細" shownBackButton />
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 20 }}>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 20,
+                    }}
+                >
                     <Typography variant="body" color={theme.colors.text.secondary}>
                         授業データが見つかりません
                     </Typography>
@@ -70,7 +78,13 @@ export default function ClassDetail() {
             <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 24 }}>
                 {/* Class Header Card */}
                 <Card variant="feature" style={{ gap: 16 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
                         <Typography variant="h2" color={theme.colors.primary.main} style={{ flex: 1 }}>
                             {finalClassData.title}
                         </Typography>
@@ -78,19 +92,37 @@ export default function ClassDetail() {
                     </View>
 
                     <View style={{ gap: 8 }}>
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 12,
+                            }}
+                        >
                             <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
                                 {finalClassData.schedule}
                             </Typography>
                         </View>
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 12,
+                            }}
+                        >
                             <Icon name="map-pin" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
                                 {finalClassData.room}
                             </Typography>
                         </View>
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: 12,
+                            }}
+                        >
                             <Icon name="user" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="bodySmall" color={theme.colors.text.secondary}>
                                 {finalClassData.teacher}
@@ -123,14 +155,26 @@ export default function ClassDetail() {
 
                 {/* Attendance Section */}
                 <Card variant="default" style={{ gap: 16 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
                         <Typography variant="h3" color={theme.colors.text.primary}>
                             出欠管理
                         </Typography>
                         <Icon name="calendar" size={24} color={theme.colors.text.primary} />
                     </View>
 
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", paddingVertical: 8 }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            paddingVertical: 8,
+                        }}
+                    >
                         <View style={{ alignItems: "center", gap: 4 }}>
                             <Typography variant="h2" color={theme.colors.status.success}>
                                 {finalClassData.attendance.present}
@@ -157,7 +201,15 @@ export default function ClassDetail() {
                         </View>
                     </View>
 
-                    <View style={{ padding: 12, borderRadius: 8, alignItems: "center", gap: 4, backgroundColor: theme.colors.status.success + "20" }}>
+                    <View
+                        style={{
+                            padding: 12,
+                            borderRadius: 8,
+                            alignItems: "center",
+                            gap: 4,
+                            backgroundColor: theme.colors.status.success + "20",
+                        }}
+                    >
                         <Typography variant="label" color={theme.colors.status.success}>
                             出席率: {finalClassData.attendance.rate}%
                         </Typography>
@@ -169,7 +221,13 @@ export default function ClassDetail() {
 
                 {/* Announcements Section */}
                 <Card variant="default" style={{ gap: 16 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
                         <Typography variant="h3" color={theme.colors.text.primary}>
                             お知らせ
                         </Typography>
@@ -179,17 +237,35 @@ export default function ClassDetail() {
                     <View style={{ gap: 12 }}>
                         {finalClassData.announcements.length > 0 ? (
                             finalClassData.announcements.map((announcement, index) => (
-                                <View key={index} style={{ padding: 16, borderRadius: 8, gap: 8, backgroundColor: theme.colors.background.secondary }}>
+                                <View
+                                    key={index}
+                                    style={{
+                                        padding: 16,
+                                        borderRadius: 8,
+                                        gap: 8,
+                                        backgroundColor: theme.colors.background.secondary,
+                                    }}
+                                >
                                     <Typography variant="label" color={theme.colors.text.primary}>
                                         {announcement.title}
                                     </Typography>
-                                    <Typography variant="bodySmall" color={theme.colors.text.secondary} style={{ lineHeight: 20 }}>
+                                    <Typography
+                                        variant="bodySmall"
+                                        color={theme.colors.text.secondary}
+                                        style={{ lineHeight: 20 }}
+                                    >
                                         {announcement.body}
                                     </Typography>
                                 </View>
                             ))
                         ) : (
-                            <View style={{ padding: 16, borderRadius: 8, backgroundColor: theme.colors.background.secondary }}>
+                            <View
+                                style={{
+                                    padding: 16,
+                                    borderRadius: 8,
+                                    backgroundColor: theme.colors.background.secondary,
+                                }}
+                            >
                                 <Typography variant="bodySmall" color={theme.colors.text.secondary}>
                                     お知らせはありません
                                 </Typography>
@@ -200,7 +276,13 @@ export default function ClassDetail() {
 
                 {/* Grade Evaluation Section */}
                 <Card variant="default" style={{ gap: 16 }}>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                        }}
+                    >
                         <Typography variant="h3" color={theme.colors.text.primary}>
                             成績評価方法・基準
                         </Typography>
@@ -230,7 +312,13 @@ export default function ClassDetail() {
                                 </View>
                             ))
                         ) : (
-                            <View style={{ padding: 16, borderRadius: 8, backgroundColor: theme.colors.background.secondary }}>
+                            <View
+                                style={{
+                                    padding: 16,
+                                    borderRadius: 8,
+                                    backgroundColor: theme.colors.background.secondary,
+                                }}
+                            >
                                 <Typography variant="bodySmall" color={theme.colors.text.secondary}>
                                     評価基準の情報はありません
                                 </Typography>

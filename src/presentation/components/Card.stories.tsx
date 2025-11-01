@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import { Card, CardContent, CardDivider, CardHeader, FeatureCard, InfoCard } from "./Card";
 import { Icon } from "./Icon";
 import { Typography } from "./Typography";
@@ -99,7 +100,13 @@ export const InfoCardExample: Story = {
     args: {
         children: null,
     },
-    render: () => <InfoCard title="次の授業" content="情報システム概論 I\n10:40 - 12:10" icon={<Icon name="calendar" size={20} />} />,
+    render: () => (
+        <InfoCard
+            title="次の授業"
+            content="情報システム概論 I\n10:40 - 12:10"
+            icon={<Icon name="calendar" size={20} />}
+        />
+    ),
 };
 
 export const AllVariants: Story = {
@@ -121,7 +128,11 @@ export const AllVariants: Story = {
             </Card>
 
             <Card variant="default">
-                <CardHeader title="Card with Header" subtitle="And subtitle" icon={<Icon name="check-circle" size={20} />} />
+                <CardHeader
+                    title="Card with Header"
+                    subtitle="And subtitle"
+                    icon={<Icon name="check-circle" size={20} />}
+                />
                 <CardContent>
                     <Typography variant="body">Content goes here</Typography>
                 </CardContent>

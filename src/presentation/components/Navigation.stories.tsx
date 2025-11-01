@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState } from "react";
 import { View } from "react-native";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import { TabNavigation } from "./Navigation";
 
 const meta = {

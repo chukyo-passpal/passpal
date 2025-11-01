@@ -14,7 +14,8 @@
         "submit:android": "eas build -p android --profile production --output=./production.aab --local && eas submit -p android --path ./production.aab",
         "submit:ios": "eas build -p ios --profile production --output=./production.ipa --local && eas submit -p ios --path ./production.ipa",
         "license:update": "bun run license-checker --production --direct --json --out ./licenses.json && bun run scripts/generate-license.ts",
-        "license:summary": "bun run license-checker --production --direct --summary"
+        "license:summary": "bun run license-checker --production --direct --summary",
+        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,cjs,mjs,md,json,lintstagedrc}\""
     },
     "dependencies": {
         "@chukyo-passpal/web_parser": "^0.3.4",
@@ -75,6 +76,7 @@
     "devDependencies": {
         "@babel/core": "7.28.4",
         "@gorhom/bottom-sheet": "5.2.6",
+        "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
         "@react-native-async-storage/async-storage": "2.2.0",
         "@react-native-community/datetimepicker": "8.4.5",
         "@react-native-community/slider": "5.0.1",
@@ -86,6 +88,8 @@
         "eslint": "^9.25.0",
         "eslint-config-expo": "~10.0.0",
         "license-checker": "^25.0.1",
+        "prettier": "^3.6.2",
+        "prettier-plugin-tailwindcss": "^0.7.1",
         "react-native-svg": "15.14.0",
         "storybook": "9.1.12",
         "typescript": "~5.9.2"

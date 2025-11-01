@@ -103,7 +103,11 @@ export class IntegratedClassService implements ClassService {
                         });
                     } else {
                         // 新しい授業として追加
-                        const classInfo = this.buildClassInfoFromTimetableClassInfo(classTimetable, weekdayKey, periodKey);
+                        const classInfo = this.buildClassInfoFromTimetableClassInfo(
+                            classTimetable,
+                            weekdayKey,
+                            periodKey
+                        );
                         classMap.set(classTimetable.manaboClassId, classInfo);
                     }
                 }
@@ -122,7 +126,11 @@ export class IntegratedClassService implements ClassService {
         };
     }
 
-    private buildClassInfoFromTimetableClassInfo(info: TimetableClassInfo, weekday: Weekday, period: Period): ClassInfo {
+    private buildClassInfoFromTimetableClassInfo(
+        info: TimetableClassInfo,
+        weekday: Weekday,
+        period: Period
+    ): ClassInfo {
         return {
             info: {
                 manaboClassId: info.manaboClassId,
@@ -144,7 +152,13 @@ export class IntegratedClassService implements ClassService {
 
     public calculateAttendanceStats(attendanceLog: AttendanceInfo[] = []): AttendanceStatsSummary {
         if (!attendanceLog || attendanceLog.length === 0) {
-            return { present: 0, absent: 0, late: 0, rate: 0, status: "データがありません" };
+            return {
+                present: 0,
+                absent: 0,
+                late: 0,
+                rate: 0,
+                status: "データがありません",
+            };
         }
 
         const present = attendanceLog.filter((log) => log.status === "present").length;

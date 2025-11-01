@@ -1,3 +1,7 @@
+import { useRef, useState } from "react";
+import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { router } from "expo-router";
+
 import appServiceInstance from "@/src/domain/services/appService";
 import googleAuthServiceInstance from "@/src/domain/services/googleAuthService";
 import { Card } from "@/src/presentation/components/Card";
@@ -15,9 +19,6 @@ import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useToast } from "@/src/presentation/hooks/useToast";
 import { PASSPAL_URLS } from "@/src/utils/urls";
-import { router } from "expo-router";
-import { useRef, useState } from "react";
-import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 
 export default function Settings() {
     const { theme } = useTheme();
@@ -144,7 +145,12 @@ export default function Settings() {
                                             height: 56,
                                         }}
                                     >
-                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <Typography
                                                 variant="body"
                                                 style={{
@@ -175,7 +181,12 @@ export default function Settings() {
                                             height: 56,
                                         }}
                                     >
-                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <Typography
                                                 variant="body"
                                                 style={{
@@ -206,7 +217,12 @@ export default function Settings() {
                                             height: 56,
                                         }}
                                     >
-                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <Typography
                                                 variant="body"
                                                 style={{
@@ -237,7 +253,12 @@ export default function Settings() {
                                             height: 56,
                                         }}
                                     >
-                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <Typography
                                                 variant="body"
                                                 style={{
@@ -268,7 +289,12 @@ export default function Settings() {
                                             height: 56,
                                         }}
                                     >
-                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <Typography
                                                 variant="body"
                                                 style={{
@@ -299,7 +325,12 @@ export default function Settings() {
                                             height: 56,
                                         }}
                                     >
-                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                        <View
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                            }}
+                                        >
                                             <Typography
                                                 variant="body"
                                                 style={{
@@ -426,7 +457,14 @@ export default function Settings() {
                             height: 64,
                         }}
                     >
-                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: "100%",
+                            }}
+                        >
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <Icon name="building" size={24} color={theme.colors.text.primary} />
                                 <Typography
@@ -461,7 +499,14 @@ export default function Settings() {
                             height: 64,
                         }}
                     >
-                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: "100%",
+                            }}
+                        >
                             <View style={{ flexDirection: "row", alignItems: "center" }}>
                                 <Icon name="calendar" size={24} color={theme.colors.text.primary} />
                                 <Typography
@@ -689,7 +734,11 @@ export default function Settings() {
                                 }}
                             >
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Icon name="message-circle-question-mark" size={24} color={theme.colors.text.primary} />
+                                    <Icon
+                                        name="message-circle-question-mark"
+                                        size={24}
+                                        color={theme.colors.text.primary}
+                                    />
                                     <View style={{ marginLeft: theme.spacing.sm }}>
                                         <Typography
                                             variant="body"

@@ -1,8 +1,9 @@
-import { SHIBBOLETH_URLS } from "@/src/utils/urls";
-import CookieManager, { Cookies } from "@react-native-cookies/cookies";
 import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useRef, useState } from "react";
 import { Platform, View } from "react-native";
 import { WebView, WebViewMessageEvent } from "react-native-webview";
+import CookieManager, { Cookies } from "@react-native-cookies/cookies";
+
+import { SHIBBOLETH_URLS } from "@/src/utils/urls";
 import { OverlapsError, UnauthorizedError } from "../errors/AuthError";
 import { TimeoutError } from "../errors/NetworkError";
 

@@ -3,9 +3,10 @@
  * Circular button with icon only, following the PassPal design system
  */
 
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import React from "react";
 import { Pressable, PressableProps, ViewStyle } from "react-native";
+
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { Icon, IconName } from "./Icon";
 
 type IconButtonSize = "small" | "medium" | "large";
@@ -19,7 +20,15 @@ interface IconButtonProps extends Omit<PressableProps, "style"> {
     style?: ViewStyle;
 }
 
-export const IconButton: React.FC<IconButtonProps> = ({ icon, size = "medium", variant = "default", iconColor, disabled, style, ...props }) => {
+export const IconButton: React.FC<IconButtonProps> = ({
+    icon,
+    size = "medium",
+    variant = "default",
+    iconColor,
+    disabled,
+    style,
+    ...props
+}) => {
     const { theme } = useTheme();
 
     // Size configuration

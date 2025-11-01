@@ -1,5 +1,6 @@
-import { ManaboMailInfo } from "@/src/domain/models/mail";
 import * as parser from "@chukyo-passpal/web_parser";
+
+import { ManaboMailInfo } from "@/src/domain/models/mail";
 
 /**
  * 日本語表記の日付文字列をDateオブジェクトへ変換します。

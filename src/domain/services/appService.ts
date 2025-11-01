@@ -1,6 +1,7 @@
-import adminRepositoryInstance, { AdminRepository } from "@/src/data/repositories/adminRepository";
 import * as Application from "expo-application";
 import * as Updates from "expo-updates";
+
+import adminRepositoryInstance, { AdminRepository } from "@/src/data/repositories/adminRepository";
 
 export interface AppService {
     /**

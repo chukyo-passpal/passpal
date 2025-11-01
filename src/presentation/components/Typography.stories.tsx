@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from "@storybook/react";
 import React from "react";
 import { View } from "react-native";
+import type { Meta, StoryObj } from "@storybook/react";
+
 import { Typography } from "./Typography";
 
 const meta = {
@@ -171,7 +172,9 @@ export const TypographyShowcase: Story = {
                 <Typography variant="caption" color="#999">
                     Body - 16px / 24px
                 </Typography>
-                <Typography variant="body">これは本文テキストの例です。アプリケーション内で最も一般的に使用されるテキストスタイルです。</Typography>
+                <Typography variant="body">
+                    これは本文テキストの例です。アプリケーション内で最も一般的に使用されるテキストスタイルです。
+                </Typography>
             </View>
 
             <View>

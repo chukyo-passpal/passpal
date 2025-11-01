@@ -1,13 +1,14 @@
+import { useState } from "react";
+import { Pressable, ScrollView, View } from "react-native";
+import { router } from "expo-router";
+import { Car, Check, GraduationCap } from "lucide-react-native";
+
 import { Campus } from "@/src/domain/constants/chukyo-univ";
 import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useSetting from "@/src/presentation/hooks/useSetting";
-import { router } from "expo-router";
-import { Car, Check, GraduationCap } from "lucide-react-native";
-import { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
 
 export default function Index() {
     const { theme } = useTheme();
@@ -20,9 +21,21 @@ export default function Index() {
     };
 
     return (
-        <View style={{ flex: 1, backgroundColor: theme.colors.background.primary, padding: theme.spacing.lg }}>
+        <View
+            style={{
+                flex: 1,
+                backgroundColor: theme.colors.background.primary,
+                padding: theme.spacing.lg,
+            }}
+        >
             <ScrollView
-                contentContainerStyle={{ justifyContent: "center", flex: 1, maxWidth: 400, alignSelf: "center", width: "100%" }}
+                contentContainerStyle={{
+                    justifyContent: "center",
+                    flex: 1,
+                    maxWidth: 400,
+                    alignSelf: "center",
+                    width: "100%",
+                }}
                 showsVerticalScrollIndicator={false}
             >
                 {/* Main Card Section */}
@@ -31,7 +44,13 @@ export default function Index() {
                         <Typography variant="h2" style={{ textAlign: "center" }}>
                             どちらのキャンパスに在籍していますか？
                         </Typography>
-                        <Typography variant="body" style={{ color: theme.colors.text.secondary, textAlign: "center" }}>
+                        <Typography
+                            variant="body"
+                            style={{
+                                color: theme.colors.text.secondary,
+                                textAlign: "center",
+                            }}
+                        >
                             あなたにぴったりの体験をお届けするために役立ちます。
                         </Typography>
                     </View>
@@ -44,8 +63,12 @@ export default function Index() {
                                     flexDirection: "row",
                                     alignItems: "center",
                                     borderWidth: 2,
-                                    borderColor: selectedCampus === "nagoya" ? theme.colors.primary.main : "transparent",
-                                    backgroundColor: selectedCampus === "nagoya" ? theme.colors.background.secondary : theme.colors.background.primary,
+                                    borderColor:
+                                        selectedCampus === "nagoya" ? theme.colors.primary.main : "transparent",
+                                    backgroundColor:
+                                        selectedCampus === "nagoya"
+                                            ? theme.colors.background.secondary
+                                            : theme.colors.background.primary,
                                 }}
                             >
                                 <View
@@ -88,8 +111,12 @@ export default function Index() {
                                     flexDirection: "row",
                                     alignItems: "center",
                                     borderWidth: 2,
-                                    borderColor: selectedCampus === "toyota" ? theme.colors.primary.main : "transparent",
-                                    backgroundColor: selectedCampus === "toyota" ? theme.colors.background.secondary : theme.colors.background.primary,
+                                    borderColor:
+                                        selectedCampus === "toyota" ? theme.colors.primary.main : "transparent",
+                                    backgroundColor:
+                                        selectedCampus === "toyota"
+                                            ? theme.colors.background.secondary
+                                            : theme.colors.background.primary,
                                 }}
                             >
                                 <View
