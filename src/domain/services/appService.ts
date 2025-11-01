@@ -58,7 +58,7 @@ export class IntegratedAppService implements AppService {
     }
 
     get versionInfo(): string {
-        return `Version ${this.currentVersion} (${Application.nativeBuildVersion ?? "unknown"})`;
+        return `Version ${this.currentVersion} a (${Application.nativeBuildVersion ?? "unknown"})`;
     }
 
     public compareVersions(version1: string, version2: string): number {
