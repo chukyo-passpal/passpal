@@ -2,10 +2,8 @@ import { useRef, useState } from "react";
 import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { router } from "expo-router";
 
-
-
 import appServiceInstance from "@/src/domain/services/appService";
-import authServiceInstance from "@/src/domain/services/authService";
+import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -18,7 +16,6 @@ import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useToast } from "@/src/presentation/hooks/useToast";
 import { PASSPAL_URLS } from "@/src/utils/urls";
-
 
 export default function Settings() {
     const { theme } = useTheme();
@@ -53,11 +50,11 @@ export default function Settings() {
     };
 
     const handleLogout = async () => {
-        await authServiceInstance.signOut();
+        await authCoordinatorInstance.signOut();
     };
 
     const handlePurgeCache = () => {
-        authServiceInstance.purgeCaches();
+        authCoordinatorInstance.purgeCaches();
         alert("キャッシュを削除しました");
     };
 

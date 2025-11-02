@@ -3,7 +3,7 @@ import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import appServiceInstance from "@/src/domain/services/appService";
-import authServiceInstance from "@/src/domain/services/authService";
+import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
 import googleAuthServiceInstance from "@/src/domain/services/googleAuthService";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
@@ -13,7 +13,7 @@ export default function Login() {
     const router = useRouter();
 
     useEffect(() => {
-        void authServiceInstance.resetGoogleSession();
+        void authCoordinatorInstance.resetGoogleSession();
     }, []);
 
     const handleNext = (studentId: string) => {
@@ -24,7 +24,7 @@ export default function Login() {
     };
 
     const signIn = async () => {
-        const result = await authServiceInstance.signInWithGoogle();
+        const result = await authCoordinatorInstance.signInWithGoogle();
         switch (result.kind) {
             case "success": {
                 handleNext(result.studentId);

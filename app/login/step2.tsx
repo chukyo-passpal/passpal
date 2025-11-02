@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 
-import authServiceInstance from "@/src/domain/services/authService";
+import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
 import { Button } from "@/src/presentation/components/Button";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Input } from "@/src/presentation/components/Input";
@@ -26,7 +26,7 @@ export default function Index() {
 
         setIsLoading(true);
         try {
-            await authServiceInstance.signInWithCredentials(studentId, password);
+            await authCoordinatorInstance.signInWithCredentials(studentId, password);
         } catch (error) {
             if (error instanceof Error) {
                 alert(error.message);

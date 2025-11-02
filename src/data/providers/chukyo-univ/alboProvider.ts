@@ -32,6 +32,7 @@ export class IntegratedAlboProvider extends abstractChukyoProvider implements Al
                 credentials: "omit",
                 headers: {
                     cookie: await this.getAuthedCookie(),
+                    "Accept-Language": "ja",
                 },
             });
 

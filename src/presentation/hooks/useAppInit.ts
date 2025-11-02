@@ -19,19 +19,12 @@ export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef
     // Shibbolethの認証関数を設定
     const { authService } = useAuth();
     useEffect(() => {
-        if (shibRef.current) authService.setChukyoShibbolethAuthFunction(shibRef.current.auth);
-    }, [authService, shibRef]);
+        if (shibRef.current) {
+            authService.setChukyoShibbolethAuthFunction(shibRef.current.auth);
+        }
+    }, [shibRef, authService]);
 
     /* 一時的にユーザー情報をサーバーへ送る処理 TODO: 消す */
-    const allowedDomain = authService.allowedMailDomain;
-    const webClientId = authService.webClientId;
-
-    GoogleSignin.configure({
-        hostedDomain: allowedDomain,
-        webClientId,
-        offlineAccess: true,
-    });
-
     useEffect(() => {
         (async () => {
             try {
