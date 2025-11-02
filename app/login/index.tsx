@@ -3,23 +3,20 @@ import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import appServiceInstance from "@/src/domain/services/appService";
+import authServiceInstance from "@/src/domain/services/authService";
 import googleAuthServiceInstance from "@/src/domain/services/googleAuthService";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import useAuth from "@/src/presentation/hooks/useAuth";
 
 export default function Login() {
     const { theme } = useTheme();
     const router = useRouter();
 
-    const { setFirebaseUser } = useAuth();
-
     useEffect(() => {
-        void googleAuthServiceInstance.signOut();
+        void authServiceInstance.resetGoogleSession();
     }, []);
 
-    const handleNext = (email: string) => {
-        const studentId = googleAuthServiceInstance.extractStudentId(email);
+    const handleNext = (studentId: string) => {
         router.push({
             pathname: "/login/step2",
             params: { studentId },
@@ -27,12 +24,10 @@ export default function Login() {
     };
 
     const signIn = async () => {
-        const result = await googleAuthServiceInstance.signIn();
+        const result = await authServiceInstance.signInWithGoogle();
         switch (result.kind) {
             case "success": {
-                setFirebaseUser(result.data);
-                const email = result.data.user.email;
-                handleNext(email);
+                handleNext(result.studentId);
                 break;
             }
             case "invalid-domain": {

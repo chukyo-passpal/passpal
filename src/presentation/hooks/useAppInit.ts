@@ -20,7 +20,7 @@ export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef
     // Shibbolethの認証関数を設定
     const { authService } = useAuth();
     useEffect(() => {
-        if (shibRef.current) authService.setChukyoShibbolethAuthFunction(shibRef.current.auth);
+        if (shibRef.current) authServiceInstance.setChukyoShibbolethAuthFunction(shibRef.current.auth);
     }, [authService, shibRef]);
 
     /* 一時的にユーザー情報をサーバーへ送る処理 TODO: 消す */

@@ -2,36 +2,33 @@ import { useRef, useState } from "react";
 import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { router } from "expo-router";
 
+
+
 import appServiceInstance from "@/src/domain/services/appService";
-import googleAuthServiceInstance from "@/src/domain/services/googleAuthService";
+import authServiceInstance from "@/src/domain/services/authService";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import useClass from "@/src/presentation/hooks/useClass";
-import useMail from "@/src/presentation/hooks/useMail";
-import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useToast } from "@/src/presentation/hooks/useToast";
 import { PASSPAL_URLS } from "@/src/utils/urls";
 
+
 export default function Settings() {
     const { theme } = useTheme();
     const toast = useToast();
-    const { user, signOut, purgeCache: purgeAuthCache } = useAuth();
-    const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode, reset: resetSettings } = useSetting();
-    const { refetch: refetchTimetable, clear: clearTimetable } = useTimetable();
-    const { clear: clearMail } = useMail();
-    const { clear: clearNews } = useNews();
-    const { clear: clearClass, setFromTimetable } = useClass();
-    const { clear: clearAssignment } = useAssignment();
+    const { user } = useAuth();
+    const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode } = useSetting();
+    const { refetch: refetchTimetable } = useTimetable();
+    const { setFromTimetable } = useClass();
 
-    const [tapCount, setTapCount] = useState(0);
+    const [, setTapCount] = useState(0);
     const timerRef = useRef<number | null>(null);
 
     const handleAboutPress = () => {
@@ -56,24 +53,11 @@ export default function Settings() {
     };
 
     const handleLogout = async () => {
-        clearTimetable();
-        clearMail();
-        clearNews();
-        clearClass();
-        clearAssignment();
-
-        resetSettings();
-
-        await googleAuthServiceInstance.signOut();
-        signOut();
+        await authServiceInstance.signOut();
     };
 
     const handlePurgeCache = () => {
-        purgeAuthCache();
-        clearMail();
-        clearNews();
-        clearClass();
-        clearAssignment();
+        authServiceInstance.purgeCaches();
         alert("キャッシュを削除しました");
     };
 

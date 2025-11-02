@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ScrollView, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 
+import authServiceInstance from "@/src/domain/services/authService";
 import { Button } from "@/src/presentation/components/Button";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Input } from "@/src/presentation/components/Input";
@@ -10,8 +11,8 @@ import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
 
 export default function Index() {
-    const { signIn, authService } = useAuth();
     const { theme } = useTheme();
+    const { signIn } = useAuth();
     const { studentId } = useLocalSearchParams<{ studentId: string }>();
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +26,7 @@ export default function Index() {
 
         setIsLoading(true);
         try {
-            await authService.authTest(studentId, password);
+            await authServiceInstance.signInWithCredentials(studentId, password);
         } catch (error) {
             if (error instanceof Error) {
                 alert(error.message);
@@ -36,9 +37,6 @@ export default function Index() {
             return;
         }
         setIsLoading(false);
-
-        // ログイン処理を実装
-        signIn(studentId, password);
     };
 
     const handleBackToStudentId = () => {
@@ -114,7 +112,12 @@ export default function Index() {
                             ログインして続ける
                         </Button>
                         {__DEV__ && (
-                            <Button variant="text" onPress={() => signIn(studentId, password)}>
+                            <Button
+                                variant="text"
+                                onPress={() => {
+                                    signIn(studentId, password);
+                                }}
+                            >
                                 skip authentication
                             </Button>
                         )}
