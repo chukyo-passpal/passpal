@@ -41,6 +41,7 @@ export class IntegratedManaboProvider extends abstractChukyoProvider implements 
             credentials: "omit",
             headers: {
                 cookie: await this.getAuthedCookie(),
+                "Accept-Language": "ja",
             },
         });
         return await response.text();
@@ -55,6 +56,7 @@ export class IntegratedManaboProvider extends abstractChukyoProvider implements 
             headers: {
                 cookie: await this.getAuthedCookie(),
                 "Content-Type": contentType,
+                "Accept-Language": "ja",
             },
         });
         return await response.text();

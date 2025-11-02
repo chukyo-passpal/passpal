@@ -32,6 +32,7 @@ export class IntegratedCubicsProvider extends abstractChukyoProvider implements 
                 credentials: "omit",
                 headers: {
                     cookie: await this.getAuthedCookie(),
+                    "Accept-Language": "ja",
                 },
             });
 
