@@ -67,8 +67,14 @@ export class IntegratedCubicsProvider extends abstractChukyoProvider implements 
      * @returns セッションが有効ならtrue
      */
     private isSessionValid(responseText: string): boolean {
-        // セッションが無効な場合、Cubicsは特定のタイトルのページを返す
-        return !responseText.includes("<title>Missing cookie</title>");
+        // セッションが無効な場合、Alboは特定のタイトルのページを返す
+        const invalidTitles = ["<title>Missing cookie</title>", "<title>クッキーが見つかりません</title>"];
+        for (const title of invalidTitles) {
+            if (responseText.includes(title)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 

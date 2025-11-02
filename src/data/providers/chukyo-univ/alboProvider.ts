@@ -63,7 +63,13 @@ export class IntegratedAlboProvider extends abstractChukyoProvider implements Al
      */
     private isSessionValid(responseText: string): boolean {
         // セッションが無効な場合、Alboは特定のタイトルのページを返す
-        return !responseText.includes("<title>Missing cookie</title>");
+        const invalidTitles = ["<title>Missing cookie</title>", "<title>クッキーが見つかりません</title>"];
+        for (const title of invalidTitles) {
+            if (responseText.includes(title)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 
