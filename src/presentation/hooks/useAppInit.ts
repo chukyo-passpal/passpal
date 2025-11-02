@@ -7,7 +7,6 @@ import alboProviderInstance from "@/src/data/providers/chukyo-univ/alboProvider"
 import cubicsProviderInstance from "@/src/data/providers/chukyo-univ/cubicsProvider";
 import manaboProviderInstance from "@/src/data/providers/chukyo-univ/manaboProvider";
 import palAPIProviderInstance from "@/src/data/providers/palapi/palapiProvider";
-import authServiceInstance from "@/src/domain/services/authService";
 import useAuth from "./useAuth";
 
 export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef | null>) {
@@ -20,12 +19,12 @@ export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef
     // Shibbolethの認証関数を設定
     const { authService } = useAuth();
     useEffect(() => {
-        if (shibRef.current) authServiceInstance.setChukyoShibbolethAuthFunction(shibRef.current.auth);
+        if (shibRef.current) authService.setChukyoShibbolethAuthFunction(shibRef.current.auth);
     }, [authService, shibRef]);
 
     /* 一時的にユーザー情報をサーバーへ送る処理 TODO: 消す */
-    const allowedDomain = authServiceInstance.allowedMailDomain;
-    const webClientId = authServiceInstance.webClientId;
+    const allowedDomain = authService.allowedMailDomain;
+    const webClientId = authService.webClientId;
 
     GoogleSignin.configure({
         hostedDomain: allowedDomain,
