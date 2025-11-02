@@ -36,15 +36,12 @@ export class IntegratedCubicsProvider extends abstractChukyoProvider implements 
             });
 
             const responseText = await response.text();
-
-            if (this.isSessionValid(responseText)) {
+            if (this.isSessionValid(response, responseText)) {
                 return responseText;
             }
 
             // セッションが無効なら再認証を試みる
-            console.warn(
-                `Cubics session expired. Attempting re-authentication (${attempt + 1}/${this.retryAuthCount})`
-            );
+            console.warn(`Cubics session expired. Attempting re-fetch (${attempt + 1}/${this.retryAuthCount})`);
             await this.waitForRetryDelay();
         }
         throw new ExpiredSessionError();
@@ -63,12 +60,17 @@ export class IntegratedCubicsProvider extends abstractChukyoProvider implements 
 
     /**
      * レスポンスからセッションが有効かどうかを判定します。
+     * @param res HTTPレスポンスオブジェクト
      * @param responseText 判定対象のHTML文字列
      * @returns セッションが有効ならtrue
      */
-    private isSessionValid(responseText: string): boolean {
-        // セッションが無効な場合、Alboは特定のタイトルのページを返す
+    private isSessionValid(res: Response, responseText: string): boolean {
         const invalidTitles = ["<title>Missing cookie</title>", "<title>クッキーが見つかりません</title>"];
+        // リダイレクト先のURLがベースURLと異なる場合、セッションが無効と判断
+        if (!res.url.startsWith(this.baseUrl)) {
+            return false;
+        }
+        // セッションが無効な場合に返されるタイトルをチェック
         for (const title of invalidTitles) {
             if (responseText.includes(title)) {
                 return false;
