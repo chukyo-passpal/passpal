@@ -9,6 +9,9 @@
         "scheme": "passpal",
         "userInterfaceStyle": "automatic",
         "newArchEnabled": true,
+        "locales": {
+            "ja": "./locales/ja.json"
+        },
         "ios": {
             "appleTeamId": "SAQNQ79SJB",
             "appStoreUrl": "https://apps.apple.com/app/passpal/id6754452343",
@@ -17,7 +20,9 @@
             "bundleIdentifier": "app.chukyopasspal.passpal",
             "infoPlist": {
                 "ITSAppUsesNonExemptEncryption": false,
-                "UIBackgroundModes": ["remote-notification", "remote-notification"]
+                "UIBackgroundModes": ["remote-notification"],
+                "CFBundleDevelopmentRegion": "ja",
+                "CFBundleLocalizations": ["ja"]
             },
             "entitlements": {
                 "aps-environment": "production"
