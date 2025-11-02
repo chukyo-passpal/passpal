@@ -139,7 +139,7 @@ export class IntegratedAuthService implements AuthService {
         return {
             kind: "success",
             firebaseUser,
-            studentId: this.googleAuthService.extractStudentId(firebaseUser.user.email),
+            studentId: this.extractStudentId(firebaseUser.user.email),
         };
     }
 
@@ -170,6 +170,10 @@ export class IntegratedAuthService implements AuthService {
         useClass.getState().clear();
         useAssignment.getState().clear();
         useSetting.getState().reset();
+    }
+
+    private extractStudentId(email: string): string {
+        return email.split("@")[0] ?? email;
     }
 }
 

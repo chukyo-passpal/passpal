@@ -28,12 +28,7 @@ export interface GoogleAuthService {
      * サインインを実行し結果を返します。
      */
     signIn(): Promise<GoogleSignInResult>;
-
-    /**
-     * メールアドレスから学籍番号を抽出します。
-     */
-    extractStudentId(email: string): string;
-
+    
     /**
      * Google サインインエラーをユーザー表示用メッセージへ変換します。
      */
@@ -50,13 +45,12 @@ export class IntegratedGoogleAuthService implements GoogleAuthService {
     }
 
     public async signOut(): Promise<void> {
-        this.configure();
         await GoogleSignin.signOut();
     }
 
     public async signIn(): Promise<GoogleSignInResult> {
         try {
-            await this.signOut();
+            await GoogleSignin.signOut();
             const response = await GoogleSignin.signIn();
 
             if (!isSuccessResponse(response)) {
@@ -76,10 +70,6 @@ export class IntegratedGoogleAuthService implements GoogleAuthService {
         } catch (error) {
             return { kind: "error", error };
         }
-    }
-
-    public extractStudentId(email: string): string {
-        return email.split("@")[0] ?? email;
     }
 
     public toReadableError(error: unknown): string {
