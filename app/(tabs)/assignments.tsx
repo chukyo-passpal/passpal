@@ -14,6 +14,7 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
+import { formatReadableDate } from "@/src/utils/date";
 import { getManaboClassUrl } from "@/src/utils/urls";
 
 export default function Assignments() {
@@ -124,21 +125,6 @@ export default function Assignments() {
 function AssignmentCard({ assignment, handleTouch }: { assignment: AssignmentOverviewItem; handleTouch: () => void }) {
     const { theme } = useTheme();
 
-    const formatDate = (date?: Date): string => {
-        if (!date) return "無し";
-        const year = date.getFullYear();
-        const nowYear = new Date().getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-
-        if (year !== nowYear) {
-            return `${year}年${month}月${day}日 ${hours}:${minutes}`;
-        }
-        return `${month}月${day}日 ${hours}:${minutes}`;
-    };
-
     return (
         <TouchableOpacity activeOpacity={0.8} onPress={handleTouch}>
             <Card style={{ gap: 16, padding: 20 }}>
@@ -185,7 +171,7 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: AssignmentOve
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
                             <Icon name="calendar" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="body" style={{ fontSize: 16 }}>
-                                {formatDate(assignment.publishDate)}
+                                {formatReadableDate(assignment.publishDate)}
                             </Typography>
                         </View>
                     </View>
@@ -196,7 +182,7 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: AssignmentOve
                         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
                             <Icon name="clock" size={16} color={theme.colors.text.secondary} />
                             <Typography variant="body" style={{ fontSize: 16 }}>
-                                {formatDate(assignment.dueDate)}
+                                {formatReadableDate(assignment.dueDate)}
                             </Typography>
                         </View>
                     </View>
