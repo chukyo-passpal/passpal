@@ -3,12 +3,15 @@
         "name": "PassPal",
         "slug": "passpal",
         "version": "0.0.1",
+        "githubUrl": "https://github.com/chukyo-passpal/passpal",
         "orientation": "portrait",
         "icon": "./assets/icons/icon.png",
         "scheme": "passpal",
         "userInterfaceStyle": "automatic",
         "newArchEnabled": true,
         "ios": {
+            "appleTeamId": "SAQNQ79SJB",
+            "appStoreUrl": "https://apps.apple.com/app/passpal/id6754452343",
             "googleServicesFile": "./GoogleService-Info.plist",
             "supportsTablet": true,
             "bundleIdentifier": "app.chukyopasspal.passpal",
@@ -22,6 +25,7 @@
             "icon": "./assets/icons/passpal.icon"
         },
         "android": {
+            "playStoreUrl": "https://play.google.com/store/apps/details?id=app.chukyopasspal.passpal",
             "googleServicesFile": "./google-services.json",
             "adaptiveIcon": {
                 "backgroundColor": "#D8D4E9",
