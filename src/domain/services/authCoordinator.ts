@@ -1,6 +1,10 @@
-import { SignInSuccessResponse } from "@react-native-google-signin/google-signin";
+import {
+    GoogleSignin,
+    isErrorWithCode,
+    isSuccessResponse,
+    SignInSuccessResponse,
+} from "@react-native-google-signin/google-signin";
 
-import googleAuthServiceInstance, { GoogleSignInResult } from "@/src/domain/services/googleAuthService";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import useClass from "@/src/presentation/hooks/useClass";
@@ -8,6 +12,7 @@ import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
+import authServiceInstance from "./authService";
 
 export type GoogleSignInFlowResult =
     | { kind: "success"; studentId: string; firebaseUser: SignInSuccessResponse["data"] }
@@ -17,9 +22,14 @@ export type GoogleSignInFlowResult =
 
 export interface AuthCoordinator {
     /**
-     * Google認証のセッションを明示的に破棄します。
+     * サインインの初期設定を行います。
      */
-    resetGoogleSession(): Promise<void>;
+    configure(): void;
+
+    /**
+     * Google サインインエラーをユーザー表示用メッセージへ変換します。
+     */
+    formatGoogleSignInErrorMessage(error: unknown): string;
 
     /**
      * Google認証を実行し、成功時にはFirebaseユーザー情報を保持します。
@@ -48,24 +58,58 @@ export interface AuthCoordinator {
 }
 
 export class IntegratedAuthService implements AuthCoordinator {
-    public async resetGoogleSession(): Promise<void> {
-        await googleAuthServiceInstance.signOut();
+    public configure(): void {
+        GoogleSignin.configure({
+            hostedDomain: authServiceInstance.allowedMailDomain,
+            webClientId: authServiceInstance.webClientId,
+            offlineAccess: true,
+        });
+    }
+
+    public formatGoogleSignInErrorMessage(error: unknown): string {
+        if (isErrorWithCode(error)) {
+            return `エラーが発生しました(${error.code}): ${error.message}`;
+        }
+
+        if (error instanceof Error) {
+            return `エラーが発生しました: ${error.message}`;
+        }
+
+        return "エラーが発生しました。";
     }
 
     public async signInWithGoogle(): Promise<GoogleSignInFlowResult> {
-        const result: GoogleSignInResult = await googleAuthServiceInstance.signIn();
-        if (result.kind !== "success") {
-            return result;
+        try {
+            await GoogleSignin.signOut();
+            const response = await GoogleSignin.signIn();
+
+            if (!isSuccessResponse(response)) {
+                return { kind: "cancelled" };
+            }
+
+            // メールドメインの検証
+            const email = response.data.user.email;
+            if (!email.endsWith(authServiceInstance.allowedMailDomain)) {
+                return {
+                    kind: "invalid-domain",
+                    email,
+                    allowedDomain: authServiceInstance.allowedMailDomain,
+                };
+            }
+
+            const result = { kind: "success", data: response.data };
+
+            const firebaseUser = result.data;
+            useAuth.getState().setFirebaseUser(firebaseUser);
+
+            return {
+                kind: "success",
+                firebaseUser,
+                studentId: this.extractStudentId(firebaseUser.user.email),
+            };
+        } catch (error) {
+            return { kind: "error", error };
         }
-
-        const firebaseUser = result.data;
-        useAuth.getState().setFirebaseUser(firebaseUser);
-
-        return {
-            kind: "success",
-            firebaseUser,
-            studentId: this.extractStudentId(firebaseUser.user.email),
-        };
     }
 
     public async signInWithCredentials(studentId: string, password: string): Promise<void> {
@@ -76,7 +120,7 @@ export class IntegratedAuthService implements AuthCoordinator {
 
     public async signOut(): Promise<void> {
         this.clearContentStores();
-        await googleAuthServiceInstance.signOut();
+        await GoogleSignin.signOut();
         useAuth.getState().signOut();
     }
 

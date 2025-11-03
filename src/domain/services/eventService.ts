@@ -1,6 +1,5 @@
 import remoteConfigProviderInstance from "@/src/data/providers/firebase/remoteConfigProvider";
-import googleAuthServiceInstance from "./googleAuthService";
-
+import authCoordinatorInstance from "./authCoordinator";
 
 export interface EventService {
     /**
@@ -13,7 +12,7 @@ export class IntegratedEventService implements EventService {
     public async appInit(): Promise<void> {
         // 初期化処理があればここに追加
         await remoteConfigProviderInstance.fetchRemoteConfig();
-        googleAuthServiceInstance.configure();
+        authCoordinatorInstance.configure();
     }
 }
 

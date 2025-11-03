@@ -1,20 +1,14 @@
-import { useEffect } from "react";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { useRouter } from "expo-router";
 
 import appServiceInstance from "@/src/domain/services/appService";
 import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
-import googleAuthServiceInstance from "@/src/domain/services/googleAuthService";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 
 export default function Login() {
     const { theme } = useTheme();
     const router = useRouter();
-
-    useEffect(() => {
-        void authCoordinatorInstance.resetGoogleSession();
-    }, []);
 
     const handleNext = (studentId: string) => {
         router.push({
@@ -39,7 +33,7 @@ export default function Login() {
                 break;
             }
             case "error": {
-                alert(googleAuthServiceInstance.toReadableError(result.error));
+                alert(authCoordinatorInstance.formatGoogleSignInErrorMessage(result.error));
                 break;
             }
         }
