@@ -2,7 +2,7 @@
     "expo": {
         "name": "PassPal",
         "slug": "passpal",
-        "version": "0.0.1",
+        "version": "0.0.2",
         "githubUrl": "https://github.com/chukyo-passpal/passpal",
         "orientation": "portrait",
         "icon": "./assets/icons/icon.png",
