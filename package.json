@@ -18,7 +18,7 @@
         "format": "prettier --write \"**/*.{ts,tsx,js,jsx,cjs,mjs,md,json,lintstagedrc}\""
     },
     "dependencies": {
-        "@chukyo-passpal/web_parser": "^0.3.4",
+        "@chukyo-passpal/web_parser": "^0.3.5",
         "@expo/vector-icons": "^15.0.2",
         "@praha/error-factory": "^1.2.1",
         "@react-native-community/netinfo": "11.4.1",
