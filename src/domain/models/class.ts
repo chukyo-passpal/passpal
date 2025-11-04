@@ -103,6 +103,7 @@ export interface ManaboReportContentData extends ManaboBaseContentData {
     contentId: string;
     reportType: string;
     isExpired: boolean;
+    isNotAvailableYet: boolean;
     actions: {
         title: string;
         href: string;

@@ -28,13 +28,6 @@ export interface AssignmentService {
     getAllAssignments(timetable: TimetableData): Promise<AssignmentInfo>;
 
     /**
-     * コンテンツのステータスを取得
-     * @param content コンテンツデータ
-     * @returns コンテンツのステータス
-     */
-    getStatus(content: ManaboReportContentData): AssignmentStatus;
-
-    /**
      * コンテンツのステータス色を取得
      * @param status コンテンツの完了状態
      * @param theme テーマ情報
@@ -177,9 +170,16 @@ export class IntegratedAssignmentService implements AssignmentService {
         };
     }
 
-    public getStatus = (content: ManaboReportContentData): AssignmentStatus => {
+    /**
+     * コンテンツのステータスを取得
+     * @param content コンテンツデータ
+     * @returns コンテンツのステータス
+     */
+    private getStatus = (content: ManaboReportContentData): AssignmentStatus => {
         if (content.isDone) {
             return "completed";
+        } else if (content.isNotAvailableYet) {
+            return "no-available-yet";
         } else if (content.isExpired) {
             return "expired";
         } else {
@@ -190,6 +190,7 @@ export class IntegratedAssignmentService implements AssignmentService {
     public getStatusColor = (status: AssignmentStatus, theme: Theme) => {
         switch (status) {
             case "not-started":
+            case "no-available-yet":
                 return theme.colors.status.warning;
             case "completed":
                 return theme.colors.status.success;
@@ -211,6 +212,8 @@ export class IntegratedAssignmentService implements AssignmentService {
                 return "完了";
             case "expired":
                 return "期限切れ";
+            case "no-available-yet":
+                return "未公開";
         }
     };
 
