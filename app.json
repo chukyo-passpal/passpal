@@ -9,9 +9,6 @@
         "scheme": "passpal",
         "userInterfaceStyle": "automatic",
         "newArchEnabled": true,
-        "locales": {
-            "ja": "./locales/ja.json"
-        },
         "ios": {
             "appleTeamId": "SAQNQ79SJB",
             "appStoreUrl": "https://apps.apple.com/app/passpal/id6754452343",
