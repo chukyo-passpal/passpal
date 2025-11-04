@@ -1,3 +1,5 @@
 {
-    "CFBundleDisplayName": "PassPal"
+    "expo": {
+        "name": "PassPal"
+    }
 }
