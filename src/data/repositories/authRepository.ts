@@ -1,6 +1,7 @@
 import { getRemoteConfig, getValue } from "@react-native-firebase/remote-config";
 
 import manaboProviderInstance from "../providers/chukyo-univ/manaboProvider";
+import palAPIProviderInstance from "../providers/palapi/palapiProvider";
 
 export interface AuthRepository {
     /**
@@ -35,6 +36,12 @@ export class IntegratedAuthRepository implements AuthRepository {
 
     public authTest(studentId: string, cuIdPass: string): Promise<boolean> {
         return this.manaboProvider.authTest(studentId, cuIdPass);
+    }
+
+    public login(firebaseIdToken: string) {
+        palAPIProviderInstance.post("/account/login", {
+            bearer: firebaseIdToken,
+        });
     }
 }
 

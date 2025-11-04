@@ -12,11 +12,19 @@ export interface PalAPIProvider {
     /**
      * PalAPIにPOSTリクエストを送り、応答本文を取得します。
      * @param path POST先のパス
-     * @param contentType リクエストのContent-Typeヘッダー
-     * @param body 送信するボディ
+     * @param options.body 送信するボディ
+     * @param options.contentType リクエストのContent-Typeヘッダー
+     * @param options.bearer リクエストの認証情報
      * @returns レスポンスボディの文字列
      */
-    post(path: string, contentType: string, body: BodyInit, bearer: string): Promise<string>;
+    post(
+        path: string,
+        options?: {
+            body?: BodyInit;
+            contentType?: string;
+            bearer?: string;
+        }
+    ): Promise<string>;
 }
 
 export class IntegratedPalAPIProvider implements PalAPIProvider {
@@ -30,15 +38,26 @@ export class IntegratedPalAPIProvider implements PalAPIProvider {
         return await response.text();
     }
 
-    public async post(path: string, contentType: string, body: BodyInit, bearer: string): Promise<string> {
+    public async post(
+        path: string,
+        options?: {
+            body?: BodyInit;
+            contentType?: string;
+            bearer?: string;
+        }
+    ): Promise<string> {
+        const { body, contentType, bearer } = options || {};
+
+        let headers: HeadersInit = {};
+
+        if (bearer) headers["Authorization"] = `Bearer ${bearer}`;
+        if (contentType) headers["Content-Type"] = contentType;
+
         const response = await httpClient(`${this.baseUrl}${path}`, {
             clientMode: "palapi",
             method: "POST",
             body,
-            headers: {
-                Authorization: `Bearer ${bearer}`,
-                "Content-Type": contentType,
-            },
+            headers,
         });
         return await response.text();
     }

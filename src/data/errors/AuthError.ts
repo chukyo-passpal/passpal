@@ -14,3 +14,8 @@ export class OverlapsError extends ErrorFactory({
     name: "OverlapsError",
     message: "他の認証が行われています。",
 }) {}
+
+export class AuthProcessError extends ErrorFactory({
+    name: "AuthProcessError",
+    message: "認証処理中にエラーが発生しました。",
+}) {}

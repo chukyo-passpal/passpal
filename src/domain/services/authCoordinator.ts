@@ -1,10 +1,18 @@
 import {
+    signInWithCredential as firebaseSignInInWithCredential,
+    getAuth,
+    getIdToken,
+    GoogleAuthProvider,
+} from "@react-native-firebase/auth";
+import {
     GoogleSignin,
     isErrorWithCode,
     isSuccessResponse,
     SignInSuccessResponse,
 } from "@react-native-google-signin/google-signin";
 
+import { AuthProcessError } from "@/src/data/errors/AuthError";
+import authRepositoryInstance from "@/src/data/repositories/authRepository";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import useClass from "@/src/presentation/hooks/useClass";
@@ -83,6 +91,7 @@ export class IntegratedAuthService implements AuthCoordinator {
             await GoogleSignin.signOut();
             const response = await GoogleSignin.signIn();
 
+            // ユーザーがキャンセルした場合
             if (!isSuccessResponse(response)) {
                 return { kind: "cancelled" };
             }
@@ -97,9 +106,12 @@ export class IntegratedAuthService implements AuthCoordinator {
                 };
             }
 
-            const result = { kind: "success", data: response.data };
-
-            const firebaseUser = result.data;
+            // ユーザー情報を取得
+            const firebaseIdToken = await this.getFirebaseIdToken();
+            const firebaseUser = response.data;
+            // PalAPIにログイン
+            authRepositoryInstance.login(firebaseIdToken);
+            // Firebaseユーザー情報をストアに保存
             useAuth.getState().setFirebaseUser(firebaseUser);
 
             return {
@@ -109,6 +121,34 @@ export class IntegratedAuthService implements AuthCoordinator {
             };
         } catch (error) {
             return { kind: "error", error };
+        }
+    }
+
+    /**
+     * FirebaseのIDトークンを取得します。
+     *
+     * ! RNGoogleSignInでsignInした後に呼び出す必要があります。
+     *
+     * @throw AuthProcessError 取得に失敗した場合
+     * @returns FirebaseのIDトークン
+     */
+    private async getFirebaseIdToken(): Promise<string> {
+        try {
+            // 1. Google Sign-Inからトークンを取得
+            const { idToken, accessToken } = await GoogleSignin.getTokens();
+            // 2. IDトークンからFirebase認証用Credentialを作成
+            const googleCredential = GoogleAuthProvider.credential(idToken, accessToken);
+            // 3. Firebaseにサインイン
+            const auth = getAuth();
+            await firebaseSignInInWithCredential(auth, googleCredential);
+            // 4. Firebase発行のIDトークンを取得
+            const currentUser = auth.currentUser;
+            if (!currentUser) throw new Error("Firebaseの現在のユーザーが存在しません");
+            const firebaseIdToken = await getIdToken(currentUser);
+            if (!firebaseIdToken) throw new Error("FirebaseのIDトークンが取得できません");
+            return firebaseIdToken;
+        } catch (e) {
+            throw new AuthProcessError({ cause: e });
         }
     }
 
