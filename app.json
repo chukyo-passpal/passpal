@@ -89,7 +89,11 @@
             "policy": "appVersion"
         },
         "updates": {
-            "url": "https://u.expo.dev/4b28d163-2017-4590-bb09-edb24ad0ad20"
+            "checkAutomatically": "WIFI_ONLY",
+            "url": "https://u.expo.dev/4b28d163-2017-4590-bb09-edb24ad0ad20",
+            "requestHeaders": {
+                "expo-channel-name": "production"
+            }
         }
     }
 }
