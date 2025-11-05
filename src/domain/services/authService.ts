@@ -1,12 +1,10 @@
-
-
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { shibbolethWebViewAuthFunction } from "@/src/data/clients/chukyoShibboleth";
-import authRepositoryInstance from "@/src/data/repositories/authRepository";
+import "@/src/data/repositories/authRepository";
+import type { AuthRepository } from "@/src/data/repositories/authRepository";
 
 import { NotSetError } from "../errors/serviceError";
-
-
-
 export interface AuthService {
     /**
      * Googleサインインで許可するメールドメイン
@@ -46,7 +44,7 @@ export interface AuthService {
 export class IntegratedAuthService implements AuthService {
     protected chukyoShibbolethAuth?: shibbolethWebViewAuthFunction;
     protected shibAuthQueue: Promise<void> = Promise.resolve();
-    protected authRepository = authRepositoryInstance;
+    constructor(private readonly authRepository: AuthRepository) {}
 
     public get allowedMailDomain(): string {
         return this.authRepository.allowedMailDomain;
@@ -83,5 +81,9 @@ export class IntegratedAuthService implements AuthService {
 
 }
 
-const authServiceInstance = new IntegratedAuthService();
+diContainer.registerSingleton(DI_TOKENS.authService, (container) =>
+    new IntegratedAuthService(container.resolve<AuthRepository>(DI_TOKENS.authRepository))
+);
+
+const authServiceInstance = diContainer.resolve<AuthService>(DI_TOKENS.authService);
 export default authServiceInstance;

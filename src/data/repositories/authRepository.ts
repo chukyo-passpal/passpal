@@ -1,7 +1,11 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { getRemoteConfig, getValue } from "@react-native-firebase/remote-config";
+import "../providers/chukyo-univ/manaboProvider";
+import "../providers/palapi/palapiProvider";
 
-import manaboProviderInstance from "../providers/chukyo-univ/manaboProvider";
-import palAPIProviderInstance from "../providers/palapi/palapiProvider";
+import type { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
+import type { PalAPIProvider } from "../providers/palapi/palapiProvider";
 
 export interface AuthRepository {
     /**
@@ -21,10 +25,19 @@ export interface AuthRepository {
      * @returns 認証成功可否のPromise
      */
     authTest: (studentId: string, cuIdPass: string) => Promise<boolean>;
+
+    /**
+     * Firebase IDトークンを用いてPalAPIにログインします。
+     * @param firebaseIdToken Firebaseが発行したIDトークン
+     */
+    login: (firebaseIdToken: string) => Promise<string>;
 }
 
 export class IntegratedAuthRepository implements AuthRepository {
-    private manaboProvider = manaboProviderInstance;
+    constructor(
+        private readonly manaboProvider: ManaboProvider,
+        private readonly palAPIProvider: PalAPIProvider
+    ) {}
 
     get allowedMailDomain(): string {
         return getValue(getRemoteConfig(), "allowedMailDomain").asString();
@@ -39,11 +52,18 @@ export class IntegratedAuthRepository implements AuthRepository {
     }
 
     public login(firebaseIdToken: string) {
-        palAPIProviderInstance.post("/account/login", {
+        return this.palAPIProvider.post("/account/login", {
             bearer: firebaseIdToken,
         });
     }
 }
 
-const authRepositoryInstance = new IntegratedAuthRepository();
+diContainer.registerSingleton(DI_TOKENS.authRepository, (container) =>
+    new IntegratedAuthRepository(
+        container.resolve<ManaboProvider>(DI_TOKENS.manaboProvider),
+        container.resolve<PalAPIProvider>(DI_TOKENS.palAPIProvider)
+    )
+);
+
+const authRepositoryInstance = diContainer.resolve<AuthRepository>(DI_TOKENS.authRepository);
 export default authRepositoryInstance;

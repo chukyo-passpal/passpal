@@ -1,4 +1,7 @@
-import timetableRepositoryInstance, { TimetableRepository } from "@/src/data/repositories/timetableRepository";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
+import "@/src/data/repositories/timetableRepository";
+import type { TimetableRepository } from "@/src/data/repositories/timetableRepository";
 import { Campus } from "../constants/chukyo-univ";
 import { Period } from "../constants/period";
 import { Weekday } from "../constants/week";
@@ -80,7 +83,7 @@ export class IntegratedTimetableService implements TimetableService {
      * サービスを初期化し、時間割リポジトリを設定します。
      * @param timetableRepository 時間割取得に利用するリポジトリ
      */
-    constructor(timetableRepository: TimetableRepository = timetableRepositoryInstance) {
+    constructor(timetableRepository: TimetableRepository) {
         this.timetableRepository = timetableRepository;
     }
 
@@ -141,5 +144,9 @@ export class IntegratedTimetableService implements TimetableService {
     }
 }
 
-const timetableServiceInstance = new IntegratedTimetableService();
+diContainer.registerSingleton(DI_TOKENS.timetableService, (container) =>
+    new IntegratedTimetableService(container.resolve<TimetableRepository>(DI_TOKENS.timetableRepository))
+);
+
+const timetableServiceInstance = diContainer.resolve<TimetableService>(DI_TOKENS.timetableService);
 export default timetableServiceInstance;

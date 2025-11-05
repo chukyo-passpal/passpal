@@ -1,3 +1,7 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
+import "@/src/data/repositories/authRepository";
+import "./authService";
 import {
     signInWithCredential as firebaseSignInInWithCredential,
     getAuth,
@@ -12,7 +16,7 @@ import {
 } from "@react-native-google-signin/google-signin";
 
 import { AuthProcessError } from "@/src/data/errors/AuthError";
-import authRepositoryInstance from "@/src/data/repositories/authRepository";
+import type { AuthRepository } from "@/src/data/repositories/authRepository";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import useClass from "@/src/presentation/hooks/useClass";
@@ -20,7 +24,7 @@ import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
-import authServiceInstance from "./authService";
+import type { AuthService } from "./authService";
 
 export type GoogleSignInFlowResult =
     | { kind: "success"; studentId: string; firebaseUser: SignInSuccessResponse["data"] }
@@ -66,10 +70,15 @@ export interface AuthCoordinator {
 }
 
 export class IntegratedAuthService implements AuthCoordinator {
+    constructor(
+        private readonly authRepository: AuthRepository,
+        private readonly authService: AuthService
+    ) {}
+
     public configure(): void {
         GoogleSignin.configure({
-            hostedDomain: authServiceInstance.allowedMailDomain,
-            webClientId: authServiceInstance.webClientId,
+            hostedDomain: this.authService.allowedMailDomain,
+            webClientId: this.authService.webClientId,
             offlineAccess: true,
         });
     }
@@ -98,11 +107,11 @@ export class IntegratedAuthService implements AuthCoordinator {
 
             // メールドメインの検証
             const email = response.data.user.email;
-            if (!email.endsWith(authServiceInstance.allowedMailDomain)) {
+            if (!email.endsWith(this.authService.allowedMailDomain)) {
                 return {
                     kind: "invalid-domain",
                     email,
-                    allowedDomain: authServiceInstance.allowedMailDomain,
+                    allowedDomain: this.authService.allowedMailDomain,
                 };
             }
 
@@ -110,7 +119,7 @@ export class IntegratedAuthService implements AuthCoordinator {
             const firebaseIdToken = await this.getFirebaseIdToken();
             const firebaseUser = response.data;
             // PalAPIにログイン
-            authRepositoryInstance.login(firebaseIdToken);
+            this.authRepository.login(firebaseIdToken);
             // Firebaseユーザー情報をストアに保存
             useAuth.getState().setFirebaseUser(firebaseUser);
 
@@ -186,5 +195,12 @@ export class IntegratedAuthService implements AuthCoordinator {
     }
 }
 
-const authCoordinatorInstance = new IntegratedAuthService();
+diContainer.registerSingleton(DI_TOKENS.authCoordinator, (container) =>
+    new IntegratedAuthService(
+        container.resolve<AuthRepository>(DI_TOKENS.authRepository),
+        container.resolve<AuthService>(DI_TOKENS.authService)
+    )
+);
+
+const authCoordinatorInstance = diContainer.resolve<AuthCoordinator>(DI_TOKENS.authCoordinator);
 export default authCoordinatorInstance;

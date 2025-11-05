@@ -1,7 +1,10 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { ParseError } from "../errors/ParseError";
-import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
+import "../providers/chukyo-univ/manaboProvider";
+import type { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export interface AssignmentRepository {
     /**
@@ -34,7 +37,7 @@ export class IntegratedAssignmentRepository implements AssignmentRepository {
      * リポジトリを初期化します。
      * @param manaboProvider Manaboプロバイダーの差し替え用インスタンス
      */
-    constructor({ manaboProvider = manaboProviderInstance }: { manaboProvider?: ManaboProvider } = {}) {
+    constructor({ manaboProvider }: { manaboProvider: ManaboProvider }) {
         this.manaboProvider = manaboProvider;
     }
 
@@ -59,5 +62,11 @@ export class IntegratedAssignmentRepository implements AssignmentRepository {
     }
 }
 
-const assignmentRepositoryInstance = new IntegratedAssignmentRepository();
+diContainer.registerSingleton(DI_TOKENS.assignmentRepository, (container) =>
+    new IntegratedAssignmentRepository({
+        manaboProvider: container.resolve<ManaboProvider>(DI_TOKENS.manaboProvider),
+    })
+);
+
+const assignmentRepositoryInstance = diContainer.resolve<AssignmentRepository>(DI_TOKENS.assignmentRepository);
 export default assignmentRepositoryInstance;

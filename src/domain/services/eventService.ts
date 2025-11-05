@@ -1,5 +1,9 @@
-import remoteConfigProviderInstance from "@/src/data/providers/firebase/remoteConfigProvider";
-import authCoordinatorInstance from "./authCoordinator";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
+import "@/src/data/providers/firebase/remoteConfigProvider";
+import type { RemoteConfigProvider } from "@/src/data/providers/firebase/remoteConfigProvider";
+import "./authCoordinator";
+import type { AuthCoordinator } from "./authCoordinator";
 
 export interface EventService {
     /**
@@ -9,12 +13,24 @@ export interface EventService {
 }
 
 export class IntegratedEventService implements EventService {
+    constructor(
+        private readonly remoteConfigProvider: RemoteConfigProvider,
+        private readonly authCoordinator: AuthCoordinator
+    ) {}
+
     public async appInit(): Promise<void> {
         // 初期化処理があればここに追加
-        await remoteConfigProviderInstance.fetchRemoteConfig();
-        authCoordinatorInstance.configure();
+        await this.remoteConfigProvider.fetchRemoteConfig();
+        this.authCoordinator.configure();
     }
 }
 
-const eventServiceInstance = new IntegratedEventService();
+diContainer.registerSingleton(DI_TOKENS.eventService, (container) =>
+    new IntegratedEventService(
+        container.resolve<RemoteConfigProvider>(DI_TOKENS.remoteConfigProvider),
+        container.resolve<AuthCoordinator>(DI_TOKENS.authCoordinator)
+    )
+);
+
+const eventServiceInstance = diContainer.resolve<EventService>(DI_TOKENS.eventService);
 export default eventServiceInstance;

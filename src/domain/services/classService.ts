@@ -1,4 +1,7 @@
-import classRepositoryInstance, { ClassRepository } from "@/src/data/repositories/classRepository";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
+import "@/src/data/repositories/classRepository";
+import type { ClassRepository } from "@/src/data/repositories/classRepository";
 import { Period } from "../constants/period";
 import { Weekday } from "../constants/week";
 import { DataBuildError } from "../errors/serviceError";
@@ -43,7 +46,7 @@ export class IntegratedClassService implements ClassService {
      * 授業サービスを初期化します。
      * @param classRepository 授業関連データを扱うリポジトリ
      */
-    constructor(classRepository = classRepositoryInstance) {
+    constructor(classRepository: ClassRepository) {
         this.classRepository = classRepository;
     }
 
@@ -193,7 +196,11 @@ export class IntegratedClassService implements ClassService {
     }
 }
 
-const classServiceInstance = new IntegratedClassService();
+diContainer.registerSingleton(DI_TOKENS.classService, (container) =>
+    new IntegratedClassService(container.resolve<ClassRepository>(DI_TOKENS.classRepository))
+);
+
+const classServiceInstance = diContainer.resolve<ClassService>(DI_TOKENS.classService);
 export default classServiceInstance;
 
 export interface AttendanceStatsSummary {

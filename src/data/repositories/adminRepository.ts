@@ -1,3 +1,5 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { getRemoteConfig, getValue } from "@react-native-firebase/remote-config";
 
 export interface AdminRepository {
@@ -22,5 +24,7 @@ export class IntegratedAdminRepository implements AdminRepository {
     }
 }
 
-const adminRepositoryInstance = new IntegratedAdminRepository();
+diContainer.registerSingleton(DI_TOKENS.adminRepository, () => new IntegratedAdminRepository());
+
+const adminRepositoryInstance = diContainer.resolve<AdminRepository>(DI_TOKENS.adminRepository);
 export default adminRepositoryInstance;

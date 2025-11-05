@@ -1,4 +1,7 @@
-import newsRepositoryInstance, { NewsRepository } from "@/src/data/repositories/newsRepository";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
+import "@/src/data/repositories/newsRepository";
+import type { NewsRepository } from "@/src/data/repositories/newsRepository";
 import { NewsData } from "../models/news";
 
 export interface NewsService {
@@ -16,7 +19,7 @@ export class IntegratedNewsService implements NewsService {
      * ニュースサービスを初期化します。
      * @param newsRepository ニュース取得に利用するリポジトリ
      */
-    constructor(newsRepository = newsRepositoryInstance) {
+    constructor(newsRepository: NewsRepository) {
         this.newsRepository = newsRepository;
     }
 
@@ -29,5 +32,9 @@ export class IntegratedNewsService implements NewsService {
     }
 }
 
-const newsServiceInstance = new IntegratedNewsService();
+diContainer.registerSingleton(DI_TOKENS.newsService, (container) =>
+    new IntegratedNewsService(container.resolve<NewsRepository>(DI_TOKENS.newsRepository))
+);
+
+const newsServiceInstance = diContainer.resolve<NewsService>(DI_TOKENS.newsService);
 export default newsServiceInstance;

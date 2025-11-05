@@ -1,10 +1,14 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
 import { AlboNewsInfo } from "@/src/domain/models/news";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { ParseError } from "../errors/ParseError";
 import { alboNewsToDomain } from "../mappers/newsMapper";
-import alboProviderInstance, { AlboProvider } from "../providers/chukyo-univ/alboProvider";
-import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
+import "../providers/chukyo-univ/alboProvider";
+import "../providers/chukyo-univ/manaboProvider";
+import type { AlboProvider } from "../providers/chukyo-univ/alboProvider";
+import type { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export interface NewsRepository {
     /**
@@ -32,9 +36,9 @@ export class IntegratedNewsRepository implements NewsRepository {
      * @param alboProvider Alboプロバイダー
      */
     constructor({
-        manaboProvider = manaboProviderInstance,
-        alboProvider = alboProviderInstance,
-    }: { manaboProvider?: ManaboProvider; alboProvider?: AlboProvider } = {}) {
+        manaboProvider,
+        alboProvider,
+    }: { manaboProvider: ManaboProvider; alboProvider: AlboProvider }) {
         this.manaboProvider = manaboProvider;
         this.alboProvider = alboProvider;
     }
@@ -67,5 +71,12 @@ export class IntegratedNewsRepository implements NewsRepository {
     }
 }
 
-const newsRepositoryInstance = new IntegratedNewsRepository();
+diContainer.registerSingleton(DI_TOKENS.newsRepository, (container) =>
+    new IntegratedNewsRepository({
+        manaboProvider: container.resolve<ManaboProvider>(DI_TOKENS.manaboProvider),
+        alboProvider: container.resolve<AlboProvider>(DI_TOKENS.alboProvider),
+    })
+);
+
+const newsRepositoryInstance = diContainer.resolve<NewsRepository>(DI_TOKENS.newsRepository);
 export default newsRepositoryInstance;

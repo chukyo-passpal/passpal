@@ -1,3 +1,5 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { fetchAndActivate, getRemoteConfig, setDefaults } from "@react-native-firebase/remote-config";
 
 export interface RemoteConfigProvider {
@@ -32,5 +34,7 @@ export class IntegratedRemoteConfigProvider implements RemoteConfigProvider {
     }
 }
 
-const remoteConfigProviderInstance = new IntegratedRemoteConfigProvider();
+diContainer.registerSingleton(DI_TOKENS.remoteConfigProvider, () => new IntegratedRemoteConfigProvider());
+
+const remoteConfigProviderInstance = diContainer.resolve<RemoteConfigProvider>(DI_TOKENS.remoteConfigProvider);
 export default remoteConfigProviderInstance;

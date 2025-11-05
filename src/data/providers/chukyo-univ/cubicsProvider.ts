@@ -1,3 +1,5 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { CUBICS_URLS } from "@/src/utils/urls";
@@ -81,5 +83,7 @@ export class IntegratedCubicsProvider extends abstractChukyoProvider implements 
     }
 }
 
-const cubicsProviderInstance = new IntegratedCubicsProvider();
+diContainer.registerSingleton(DI_TOKENS.cubicsProvider, () => new IntegratedCubicsProvider());
+
+const cubicsProviderInstance = diContainer.resolve<CubicsProvider>(DI_TOKENS.cubicsProvider);
 export default cubicsProviderInstance;

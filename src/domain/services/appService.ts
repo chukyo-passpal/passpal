@@ -1,7 +1,10 @@
 import * as Application from "expo-application";
 import * as Updates from "expo-updates";
 
-import adminRepositoryInstance, { AdminRepository } from "@/src/data/repositories/adminRepository";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
+import "@/src/data/repositories/adminRepository";
+import type { AdminRepository } from "@/src/data/repositories/adminRepository";
 
 export interface AppService {
     /**
@@ -41,9 +44,9 @@ export interface AppService {
 }
 
 export class IntegratedAppService implements AppService {
-    private readonly adminRepository;
+    private readonly adminRepository: AdminRepository;
 
-    constructor(adminRepository: AdminRepository = adminRepositoryInstance) {
+    constructor(adminRepository: AdminRepository) {
         this.adminRepository = adminRepository;
     }
 
@@ -100,5 +103,9 @@ export class IntegratedAppService implements AppService {
     }
 }
 
-const appServiceInstance = new IntegratedAppService();
+diContainer.registerSingleton(DI_TOKENS.appService, (container) =>
+    new IntegratedAppService(container.resolve<AdminRepository>(DI_TOKENS.adminRepository))
+);
+
+const appServiceInstance = diContainer.resolve<AppService>(DI_TOKENS.appService);
 export default appServiceInstance;

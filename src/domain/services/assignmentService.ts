@@ -1,4 +1,7 @@
-import classRepositoryInstance, { ClassRepository } from "@/src/data/repositories/classRepository";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
+import "@/src/data/repositories/classRepository";
+import type { ClassRepository } from "@/src/data/repositories/classRepository";
 import { Theme } from "@/src/utils/theme";
 import { AssignmentStatus } from "../constants/assignment";
 import { AssignmentClassData, AssignmentDirectoryData, AssignmentInfo } from "../models/assignment";
@@ -113,7 +116,7 @@ export class IntegratedAssignmentService implements AssignmentService {
      * 課題サービスを初期化します。
      * @param classRepository 授業情報を扱うリポジトリ
      */
-    constructor(classRepository = classRepositoryInstance) {
+    constructor(classRepository: ClassRepository) {
         this.classRepository = classRepository;
     }
 
@@ -340,7 +343,11 @@ export class IntegratedAssignmentService implements AssignmentService {
     }
 }
 
-const assignmentServiceInstance = new IntegratedAssignmentService();
+diContainer.registerSingleton(DI_TOKENS.assignmentService, (container) =>
+    new IntegratedAssignmentService(container.resolve<ClassRepository>(DI_TOKENS.classRepository))
+);
+
+const assignmentServiceInstance = diContainer.resolve<AssignmentService>(DI_TOKENS.assignmentService);
 export default assignmentServiceInstance;
 
 export type AssignmentFilter = "all" | "not-started" | "completed" | "expired";

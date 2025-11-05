@@ -1,3 +1,5 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import * as Notifications from "expo-notifications";
 
 export interface NotificationService {
@@ -46,5 +48,7 @@ export class IntegratedNotificationService implements NotificationService {
     }
 }
 
-const notificationServiceInstance = new IntegratedNotificationService();
+diContainer.registerSingleton(DI_TOKENS.notificationService, () => new IntegratedNotificationService());
+
+const notificationServiceInstance = diContainer.resolve<NotificationService>(DI_TOKENS.notificationService);
 export default notificationServiceInstance;

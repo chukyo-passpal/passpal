@@ -1,10 +1,14 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
 import { TimetableData } from "@/src/domain/models/timetable";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { ParseError } from "../errors/ParseError";
 import { cubicsTimetableToDomain, manaboTimetableToDomain } from "../mappers/timetableMapper";
-import cubicsProviderInstance, { CubicsProvider } from "../providers/chukyo-univ/cubicsProvider";
-import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
+import "../providers/chukyo-univ/cubicsProvider";
+import "../providers/chukyo-univ/manaboProvider";
+import type { CubicsProvider } from "../providers/chukyo-univ/cubicsProvider";
+import type { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export interface TimetableRepository {
     // マナボ時間割取得
@@ -33,9 +37,9 @@ export class IntegratedTimetableRepository implements TimetableRepository {
      * @param cubicsProvider Cubicsプロバイダー
      */
     constructor({
-        manaboProvider = manaboProviderInstance,
-        cubicsProvider = cubicsProviderInstance,
-    }: { manaboProvider?: ManaboProvider; cubicsProvider?: CubicsProvider } = {}) {
+        manaboProvider,
+        cubicsProvider,
+    }: { manaboProvider: ManaboProvider; cubicsProvider: CubicsProvider }) {
         this.manaboProvider = manaboProvider;
         this.cubicsProvider = cubicsProvider;
     }
@@ -81,5 +85,12 @@ export class IntegratedTimetableRepository implements TimetableRepository {
     }
 }
 
-const timetableRepositoryInstance = new IntegratedTimetableRepository();
+diContainer.registerSingleton(DI_TOKENS.timetableRepository, (container) =>
+    new IntegratedTimetableRepository({
+        manaboProvider: container.resolve<ManaboProvider>(DI_TOKENS.manaboProvider),
+        cubicsProvider: container.resolve<CubicsProvider>(DI_TOKENS.cubicsProvider),
+    })
+);
+
+const timetableRepositoryInstance = diContainer.resolve<TimetableRepository>(DI_TOKENS.timetableRepository);
 export default timetableRepositoryInstance;

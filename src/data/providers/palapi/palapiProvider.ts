@@ -1,3 +1,5 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { httpClient } from "@/src/data/clients/httpClient";
 import { PALAPI_URLS } from "@/src/utils/urls";
 
@@ -63,5 +65,7 @@ export class IntegratedPalAPIProvider implements PalAPIProvider {
     }
 }
 
-const palAPIProviderInstance = new IntegratedPalAPIProvider();
+diContainer.registerSingleton(DI_TOKENS.palAPIProvider, () => new IntegratedPalAPIProvider());
+
+const palAPIProviderInstance = diContainer.resolve<PalAPIProvider>(DI_TOKENS.palAPIProvider);
 export default palAPIProviderInstance;

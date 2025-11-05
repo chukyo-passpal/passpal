@@ -1,3 +1,5 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { MANABO_URLS } from "@/src/utils/urls";
@@ -75,5 +77,7 @@ export class IntegratedManaboProvider extends abstractChukyoProvider implements 
     }
 }
 
-const manaboProviderInstance = new IntegratedManaboProvider();
+diContainer.registerSingleton(DI_TOKENS.manaboProvider, () => new IntegratedManaboProvider());
+
+const manaboProviderInstance = diContainer.resolve<ManaboProvider>(DI_TOKENS.manaboProvider);
 export default manaboProviderInstance;

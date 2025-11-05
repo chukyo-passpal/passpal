@@ -1,3 +1,5 @@
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { ALBO_URLS } from "@/src/utils/urls";
@@ -81,5 +83,7 @@ export class IntegratedAlboProvider extends abstractChukyoProvider implements Al
     }
 }
 
-const alboProviderInstance = new IntegratedAlboProvider();
+diContainer.registerSingleton(DI_TOKENS.alboProvider, () => new IntegratedAlboProvider());
+
+const alboProviderInstance = diContainer.resolve<AlboProvider>(DI_TOKENS.alboProvider);
 export default alboProviderInstance;

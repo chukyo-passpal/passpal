@@ -7,7 +7,10 @@ import {
     ManaboDirectoryInfo,
     PortalRecordedAttendance,
 } from "@/src/domain/models/class";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { ParseError } from "../errors/ParseError";
+import "../providers/chukyo-univ/manaboProvider";
 import {
     classDirectoryToDomain,
     classNewsToDomain,
@@ -15,7 +18,7 @@ import {
     entryToDomain,
     manaboContentToDomain,
 } from "../mappers/classMapper";
-import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
+import type { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export interface ClassRepository {
     /**
@@ -102,7 +105,7 @@ export class IntegratedClassRepository implements ClassRepository {
      * リポジトリを初期化します。
      * @param manaboProvider Manaboプロバイダーの差し替え用インスタンス
      */
-    constructor({ manaboProvider = manaboProviderInstance }: { manaboProvider?: ManaboProvider } = {}) {
+    constructor({ manaboProvider }: { manaboProvider: ManaboProvider }) {
         this.manaboProvider = manaboProvider;
     }
 
@@ -243,5 +246,11 @@ export class IntegratedClassRepository implements ClassRepository {
     }
 }
 
-const classRepositoryInstance = new IntegratedClassRepository();
+diContainer.registerSingleton(DI_TOKENS.classRepository, (container) =>
+    new IntegratedClassRepository({
+        manaboProvider: container.resolve<ManaboProvider>(DI_TOKENS.manaboProvider),
+    })
+);
+
+const classRepositoryInstance = diContainer.resolve<ClassRepository>(DI_TOKENS.classRepository);
 export default classRepositoryInstance;

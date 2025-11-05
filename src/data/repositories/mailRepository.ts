@@ -1,9 +1,12 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
 import { ManaboMailInfo } from "@/src/domain/models/mail";
+import { diContainer } from "@/src/di/container";
+import { DI_TOKENS } from "@/src/di/tokens";
 import { ParseError } from "../errors/ParseError";
 import { receivedMailToDomain } from "../mappers/mailMapper";
-import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
+import "../providers/chukyo-univ/manaboProvider";
+import type { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export interface MailRepository {
     /**
@@ -53,7 +56,7 @@ export class IntegratedClassRepositoryMailRepository implements MailRepository {
      * リポジトリを初期化します。
      * @param manaboProvider Manaboプロバイダーの差し替え用インスタンス
      */
-    constructor({ manaboProvider = manaboProviderInstance }: { manaboProvider?: ManaboProvider } = {}) {
+    constructor({ manaboProvider }: { manaboProvider: ManaboProvider }) {
         this.manaboProvider = manaboProvider;
     }
 
@@ -139,5 +142,11 @@ export class IntegratedClassRepositoryMailRepository implements MailRepository {
     }
 }
 
-const mailRepositoryInstance = new IntegratedClassRepositoryMailRepository();
+diContainer.registerSingleton(DI_TOKENS.mailRepository, (container) =>
+    new IntegratedClassRepositoryMailRepository({
+        manaboProvider: container.resolve<ManaboProvider>(DI_TOKENS.manaboProvider),
+    })
+);
+
+const mailRepositoryInstance = diContainer.resolve<MailRepository>(DI_TOKENS.mailRepository);
 export default mailRepositoryInstance;
