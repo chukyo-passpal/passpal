@@ -72,7 +72,8 @@
             "expo-notifications",
             "@react-native-firebase/app",
             "@react-native-firebase/auth",
-            "@react-native-firebase/messaging"
+            "@react-native-firebase/messaging",
+            "expo-web-browser"
         ],
         "experiments": {
             "typedRoutes": true,
