@@ -1,11 +1,6 @@
-
-
 import { shibbolethWebViewAuthFunction } from "@/src/data/clients/chukyoShibboleth";
 import authRepositoryInstance from "@/src/data/repositories/authRepository";
-
 import { NotSetError } from "../errors/serviceError";
-
-
 
 export interface AuthService {
     /**
@@ -80,7 +75,6 @@ export class IntegratedAuthService implements AuthService {
         );
         return queuedPromise;
     };
-
 }
 
 const authServiceInstance = new IntegratedAuthService();

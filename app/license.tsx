@@ -3,8 +3,8 @@ import { ScrollView, TouchableOpacity, View } from "react-native";
 
 import licenseEntriesJson from "@/assets/data/licenseEntries.json";
 import Header from "@/src/presentation/components/Header";
-import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { Typography } from "@/src/presentation/components/Typography";
+import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 
 type LicenseEntry = {
     packageName: string;
