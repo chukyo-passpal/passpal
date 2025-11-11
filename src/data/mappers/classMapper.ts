@@ -186,6 +186,7 @@ export function manaboContentToDomain(data: parser.ManaboClassContentDTO): Manab
                     contentId: content.content.contentId,
                     reportType: content.content.pluginKey,
                     isExpired: content.toggleArea.isExpired,
+                    isNotAvailableYet: content.toggleArea.isNotAvailableYet,
                     actions: content.toggleArea.actions.map((action) => ({
                         title: action.title,
                         href: action.href,
