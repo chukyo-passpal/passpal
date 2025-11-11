@@ -4,6 +4,7 @@ import { Weekday } from "../constants/week";
 import { DataBuildError } from "../errors/serviceError";
 import { AttendanceInfo, ClassData, ClassInfo } from "../models/class";
 import { TimetableClassInfo, TimetableData } from "../models/timetable";
+import authServiceInstance, { AuthService } from "./authService";
 
 export interface ClassService {
     /**
@@ -38,19 +39,25 @@ export interface ClassService {
 
 export class IntegratedClassService implements ClassService {
     protected readonly classRepository: ClassRepository;
+    protected readonly authService: AuthService;
 
     /**
      * 授業サービスを初期化します。
      * @param classRepository 授業関連データを扱うリポジトリ
+     * @param authService 認証を処理するサービス
      */
-    constructor(classRepository = classRepositoryInstance) {
+    constructor(classRepository = classRepositoryInstance, authService = authServiceInstance) {
         this.classRepository = classRepository;
+        this.authService = authService;
     }
 
     public async updateClassInfo(classInfo: ClassInfo): Promise<ClassInfo> {
         const attendanceLog = await this.getAttendance(classInfo.info.manaboClassId);
-        const news = await this.classRepository.getClassNews(classInfo.info.manaboClassId);
-        const detail = await this.classRepository.getClassSyllabus(classInfo.info.manaboClassId);
+        const news = await this.classRepository.getClassNews(this.authService.shibAuth, classInfo.info.manaboClassId);
+        const detail = await this.classRepository.getClassSyllabus(
+            this.authService.shibAuth,
+            classInfo.info.manaboClassId
+        );
 
         return {
             info: classInfo.info,
@@ -69,8 +76,8 @@ export class IntegratedClassService implements ClassService {
 
         const info = classInfo.info;
         const attendanceLog = await this.getAttendance(classId);
-        const news = await this.classRepository.getClassNews(classId);
-        const detail = await this.classRepository.getClassSyllabus(classId);
+        const news = await this.classRepository.getClassNews(this.authService.shibAuth, classId);
+        const detail = await this.classRepository.getClassSyllabus(this.authService.shibAuth, classId);
         return {
             info,
             attendanceLog,
@@ -189,7 +196,7 @@ export class IntegratedClassService implements ClassService {
      */
     private async getAttendance(manaboClassId: string): Promise<AttendanceInfo[]> {
         // TODO: 将来的に手動での出席確認にも対応する
-        return this.classRepository.getClassEntry(manaboClassId);
+        return this.classRepository.getClassEntry(this.authService.shibAuth, manaboClassId);
     }
 }
 

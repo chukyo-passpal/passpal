@@ -8,6 +8,7 @@ import cubicsProviderInstance from "@/src/data/providers/chukyo-univ/cubicsProvi
 import manaboProviderInstance from "@/src/data/providers/chukyo-univ/manaboProvider";
 import authRepositoryInstance from "@/src/data/repositories/authRepository";
 import useAuth from "./useAuth";
+import authServiceInstance from "@/src/domain/services/authService";
 
 export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef | null>) {
     /* フックでしか行えない初期化処理があればここに記述する */
@@ -17,12 +18,11 @@ export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef
     cubicsProviderInstance.setAuthStore(useAuth());
 
     // Shibbolethの認証関数を設定
-    const { authService } = useAuth();
     useEffect(() => {
         if (shibRef.current) {
-            authService.setChukyoShibbolethAuthFunction(shibRef.current.auth);
+            authServiceInstance.setChukyoShibbolethAuthFunction(shibRef.current.auth);
         }
-    }, [shibRef, authService]);
+    }, [shibRef]);
 
     /* 一時的にユーザー情報をサーバーへ送る処理 TODO: 消す */
     useEffect(() => {

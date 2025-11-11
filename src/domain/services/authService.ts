@@ -21,7 +21,7 @@ export interface AuthService {
      * @returns 認証結果のPromise
      * @throws NotSetError 認証関数が設定されていない場合
      */
-    shibAuth: (...params: Parameters<shibbolethWebViewAuthFunction>) => ReturnType<shibbolethWebViewAuthFunction>;
+    shibAuth: shibbolethWebViewAuthFunction;
 
     /**
      * Shibboleth認証に利用するWebViewの実装を設定します。
@@ -55,7 +55,7 @@ export class IntegratedAuthService implements AuthService {
     };
 
     public authTest(studentId: string, cuIdPass: string): Promise<boolean> {
-        return this.authRepository.authTest(studentId, cuIdPass);
+        return this.authRepository.authTest(this.shibAuth, studentId, cuIdPass);
     }
 
     public shibAuth = (

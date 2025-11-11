@@ -1,6 +1,7 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
 import { ManaboMailInfo } from "@/src/domain/models/mail";
+import { shibbolethWebViewAuthFunction } from "../clients/chukyoShibboleth";
 import { ParseError } from "../errors/ParseError";
 import { receivedMailToDomain } from "../mappers/mailMapper";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
@@ -8,42 +9,47 @@ import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ
 export interface MailRepository {
     /**
      * 受信メールの一覧を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param page 取得するページ番号（初期値は1）
      * @returns ドメイン変換済みの受信メール一覧
      * @throws ParseError 解析に失敗した場合
      */
-    getReceivedMailList(page?: number): Promise<ManaboMailInfo[]>;
+    getReceivedMailList(authFunc: shibbolethWebViewAuthFunction, page?: number): Promise<ManaboMailInfo[]>;
 
     /**
      * 送信済みメールの一覧を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param page 取得するページ番号（初期値は1）
      * @returns 送信メールの解析結果
      * @throws ParseError 解析に失敗した場合
      */
-    getSentMailList(page?: number): Promise<parser.ManaboSentMailDTO>;
+    getSentMailList(authFunc: shibbolethWebViewAuthFunction, page?: number): Promise<parser.ManaboSentMailDTO>;
 
     /**
      * 指定したメールの詳細を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param mailId メールID
      * @returns メール詳細の解析結果
      * @throws ParseError 解析に失敗した場合
      */
-    getMailDetail(mailId: string): Promise<parser.ManaboMailViewDTO>;
+    getMailDetail(authFunc: shibbolethWebViewAuthFunction, mailId: string): Promise<parser.ManaboMailViewDTO>;
 
     /**
      * メール作成フォームの情報を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @returns メール送信フォームの解析結果
      * @throws ParseError 解析に失敗した場合
      */
-    getMailSendForm(): Promise<parser.ManaboMailSendDTO>;
+    getMailSendForm(authFunc: shibbolethWebViewAuthFunction): Promise<parser.ManaboMailSendDTO>;
 
     /**
      * メール宛先を検索します。
+     * @param authFunc shibboleth認証を行う関数
      * @param query 検索クエリ
      * @returns 検索結果の解析データ
      * @throws ParseError 解析に失敗した場合
      */
-    getMailMember(query: string): Promise<parser.ManaboMailMemberDTO>;
+    getMailMember(authFunc: shibbolethWebViewAuthFunction, query: string): Promise<parser.ManaboMailMemberDTO>;
 }
 
 export class IntegratedClassRepositoryMailRepository implements MailRepository {
@@ -57,8 +63,9 @@ export class IntegratedClassRepositoryMailRepository implements MailRepository {
         this.manaboProvider = manaboProvider;
     }
 
-    public async getReceivedMailList(page: number = 1) {
+    public async getReceivedMailList(authFunc: shibbolethWebViewAuthFunction, page: number = 1) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -74,8 +81,9 @@ export class IntegratedClassRepositoryMailRepository implements MailRepository {
         }
     }
 
-    public async getSentMailList(page: number = 1) {
+    public async getSentMailList(authFunc: shibbolethWebViewAuthFunction, page: number = 1) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -92,8 +100,9 @@ export class IntegratedClassRepositoryMailRepository implements MailRepository {
         }
     }
 
-    public async getMailDetail(mailId: string) {
+    public async getMailDetail(authFunc: shibbolethWebViewAuthFunction, mailId: string) {
         const response = await this.manaboProvider.get(
+            authFunc,
             `/?mail_id=${mailId}&action=glexa_modal_mail_view&_=${Date.now()}`
         );
         const dto = parser.parseManaboMailView(response);
@@ -105,8 +114,9 @@ export class IntegratedClassRepositoryMailRepository implements MailRepository {
         }
     }
 
-    public async getMailSendForm() {
+    public async getMailSendForm(authFunc: shibbolethWebViewAuthFunction) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -121,8 +131,9 @@ export class IntegratedClassRepositoryMailRepository implements MailRepository {
         }
     }
 
-    public async getMailMember(query: string) {
+    public async getMailMember(authFunc: shibbolethWebViewAuthFunction, query: string) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({

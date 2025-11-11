@@ -4,14 +4,12 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { UserData } from "@/src/domain/models/user";
-import authServiceInstance, { AuthService } from "@/src/domain/services/authService";
 import { SecureStorage } from "@/src/utils/secureStorage";
 
 export interface authState {
     user: UserData | null;
     firebaseUser: User | null;
     isTermsAccepted: boolean;
-    authService: AuthService;
 
     signIn: (studentId: string, cuIdPass: string) => void;
     signOut: () => void;
@@ -29,7 +27,6 @@ const useAuth = create<authState>()(
             user: null,
             firebaseUser: null,
             isTermsAccepted: false,
-            authService: authServiceInstance,
 
             /**
              * 認証情報を保存し、サインイン状態にします。

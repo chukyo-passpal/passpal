@@ -20,7 +20,7 @@ import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
-import authServiceInstance from "./authService";
+import authServiceInstance, { AuthService } from "./authService";
 
 export type GoogleSignInFlowResult =
     | { kind: "success"; studentId: string; firebaseUser: SignInSuccessResponse["data"] }
@@ -66,6 +66,16 @@ export interface AuthCoordinator {
 }
 
 export class IntegratedAuthService implements AuthCoordinator {
+    protected readonly authService: AuthService;
+
+    /**
+     * 認証コーディネーターを初期化します。
+     * @param authService 認証を処理するサービス
+     */
+    constructor(authService = authServiceInstance) {
+        this.authService = authService;
+    }
+
     public configure(): void {
         GoogleSignin.configure({
             hostedDomain: authServiceInstance.allowedMailDomain,
@@ -153,8 +163,7 @@ export class IntegratedAuthService implements AuthCoordinator {
     }
 
     public async signInWithCredentials(studentId: string, password: string): Promise<void> {
-        const authStore = useAuth.getState();
-        await authStore.authService.authTest(studentId, password);
+        await this.authService.authTest(studentId, password);
         useAuth.getState().signIn(studentId, password);
     }
 

@@ -1,6 +1,7 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
 import { AlboNewsInfo } from "@/src/domain/models/news";
+import { shibbolethWebViewAuthFunction } from "../clients/chukyoShibboleth";
 import { ParseError } from "../errors/ParseError";
 import { alboNewsToDomain } from "../mappers/newsMapper";
 import alboProviderInstance, { AlboProvider } from "../providers/chukyo-univ/alboProvider";
@@ -9,17 +10,19 @@ import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ
 export interface NewsRepository {
     /**
      * Manaboから最新ニュース一覧を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @returns ニュース一覧の解析結果
      * @throws ParseError 解析に失敗した場合
      */
-    getManaboNews(): Promise<parser.ManaboNewsDTO>;
+    getManaboNews(authFunc: shibbolethWebViewAuthFunction): Promise<parser.ManaboNewsDTO>;
 
     /**
      * Alboから最新ニュース一覧を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @returns ドメイン変換済みのニュース一覧
      * @throws ParseError 解析に失敗した場合
      */
-    getAlboNews(): Promise<AlboNewsInfo[]>;
+    getAlboNews(authFunc: shibbolethWebViewAuthFunction): Promise<AlboNewsInfo[]>;
 }
 
 export class IntegratedNewsRepository implements NewsRepository {
@@ -39,8 +42,9 @@ export class IntegratedNewsRepository implements NewsRepository {
         this.alboProvider = alboProvider;
     }
 
-    public async getManaboNews() {
+    public async getManaboNews(authFunc: shibbolethWebViewAuthFunction) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -56,8 +60,11 @@ export class IntegratedNewsRepository implements NewsRepository {
         }
     }
 
-    public async getAlboNews() {
-        const response = await this.alboProvider.get("/uniprove_pt/portal/_ns:YXJldHJvLXN0dWRlbnQtMTAwMDN8ZDI_");
+    public async getAlboNews(authFunc: shibbolethWebViewAuthFunction) {
+        const response = await this.alboProvider.get(
+            authFunc,
+            "/uniprove_pt/portal/_ns:YXJldHJvLXN0dWRlbnQtMTAwMDN8ZDI_"
+        );
         const dto = parser.parseCubicsPtNews(response);
         if (dto.success) {
             return alboNewsToDomain(dto.data);

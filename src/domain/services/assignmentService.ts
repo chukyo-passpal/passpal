@@ -4,6 +4,7 @@ import { AssignmentStatus } from "../constants/assignment";
 import { AssignmentClassData, AssignmentDirectoryData, AssignmentInfo } from "../models/assignment";
 import { ManaboContentData, ManaboDirectoryInfo, ManaboReportContentData } from "../models/class";
 import { TimetableData } from "../models/timetable";
+import authServiceInstance, { AuthService } from "./authService";
 
 export interface AssignmentService {
     /**
@@ -101,17 +102,20 @@ export interface AssignmentService {
 
 export class IntegratedAssignmentService implements AssignmentService {
     protected readonly classRepository: ClassRepository;
+    protected readonly authService: AuthService;
 
     /**
      * 課題サービスを初期化します。
      * @param classRepository 授業情報を扱うリポジトリ
+     * @param authService 認証を処理するサービス
      */
-    constructor(classRepository = classRepositoryInstance) {
+    constructor(classRepository = classRepositoryInstance, authService = authServiceInstance) {
         this.classRepository = classRepository;
+        this.authService = authService;
     }
 
     public async getDirectory(manaboClassId: string): Promise<ManaboDirectoryInfo> {
-        return this.classRepository.getClassDirectory(manaboClassId);
+        return this.classRepository.getClassDirectory(this.authService.shibAuth, manaboClassId);
     }
 
     public async getAssignments(manaboClassId: string): Promise<AssignmentClassData> {
@@ -120,7 +124,11 @@ export class IntegratedAssignmentService implements AssignmentService {
         const assignment: AssignmentDirectoryData[] = [];
 
         for (const directory of directories.directories) {
-            const contents = await this.classRepository.getClassContent(manaboClassId, directory.directoryId);
+            const contents = await this.classRepository.getClassContent(
+                this.authService.shibAuth,
+                manaboClassId,
+                directory.directoryId
+            );
 
             assignment.push({
                 directoryId: directory.directoryId,

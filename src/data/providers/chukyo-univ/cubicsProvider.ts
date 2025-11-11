@@ -1,17 +1,19 @@
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { CUBICS_URLS } from "@/src/utils/urls";
+import { shibbolethWebViewAuthFunction } from "../../clients/chukyoShibboleth";
 import { ExpiredSessionError } from "../../errors/AuthError";
 import { AbstractChukyoProvider, IntegratedAbstractChukyoProvider } from "./abstractChukyoProvider";
 
 export interface CubicsProvider extends AbstractChukyoProvider {
     /**
      * CubicsポータルにGETリクエストを送り、必要に応じて再認証を実行します。
+     * @param authFunc shibboleth認証を行う関数
      * @param path リクエスト先のパス
      * @returns 応答本文のテキスト
      * @throws ExpiredSessionError セッション再取得に失敗した場合
      */
-    get(path: string): Promise<string>;
+    get(authFunc: shibbolethWebViewAuthFunction, path: string): Promise<string>;
 }
 
 export class IntegratedCubicsProvider extends IntegratedAbstractChukyoProvider implements CubicsProvider {
@@ -24,14 +26,14 @@ export class IntegratedCubicsProvider extends IntegratedAbstractChukyoProvider i
     protected retryAuthDelayMs = 200;
     protected retryAuthDelayRandomMs = 300;
 
-    public async get(path: string): Promise<string> {
+    public async get(authFunc: shibbolethWebViewAuthFunction, path: string): Promise<string> {
         for (let attempt = 0; attempt <= this.retryAuthCount; attempt++) {
             const response = await httpClient(`${this.baseUrl}${path}`, {
                 clientMode: "portal",
                 method: "GET",
                 credentials: "omit",
                 headers: {
-                    cookie: await this.getAuthedCookie(),
+                    cookie: await this.getAuthedCookie(authFunc),
                     "Accept-Language": "ja",
                 },
             });

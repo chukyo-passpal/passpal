@@ -7,6 +7,7 @@ import {
     ManaboDirectoryInfo,
     PortalRecordedAttendance,
 } from "@/src/domain/models/class";
+import { shibbolethWebViewAuthFunction } from "../clients/chukyoShibboleth";
 import { ParseError } from "../errors/ParseError";
 import {
     classDirectoryToDomain,
@@ -20,66 +21,87 @@ import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ
 export interface ClassRepository {
     /**
      * 指定した授業のお知らせ一覧を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param classId 授業ID
      * @param directoryId ディレクトリID（初期値は`0`）
      * @returns ドメイン変換済みのお知らせデータ
      * @throws ParseError 解析に失敗した場合
      */
-    getClassNews(classId: string, directoryId?: string): Promise<ClassNewsInfo[]>;
+    getClassNews(
+        authFunc: shibbolethWebViewAuthFunction,
+        classId: string,
+        directoryId?: string
+    ): Promise<ClassNewsInfo[]>;
 
     /**
      * 指定授業のシラバス情報を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param classId 授業ID
      * @returns ドメイン変換済みのシラバスデータ
      * @throws ParseError 解析に失敗した場合
      */
-    getClassSyllabus(classId: string): Promise<ClassDetailInfo>;
+    getClassSyllabus(authFunc: shibbolethWebViewAuthFunction, classId: string): Promise<ClassDetailInfo>;
 
     /**
      * 授業の出席状況を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param classId 授業ID
      * @returns ドメイン変換済みの出席情報
      * @throws ParseError 解析に失敗した場合
      */
-    getClassEntry(classId: string): Promise<PortalRecordedAttendance[]>;
+    getClassEntry(authFunc: shibbolethWebViewAuthFunction, classId: string): Promise<PortalRecordedAttendance[]>;
 
     /**
      * 授業内のコンテンツディレクトリ一覧を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param classId 授業ID
      * @param directoryId ディレクトリID（初期値は`0`）
      * @returns ドメイン変換済みのディレクトリ情報
      * @throws ParseError 解析に失敗した場合
      */
-    getClassDirectory(classId: string, directoryId?: string): Promise<ManaboDirectoryInfo>;
+    getClassDirectory(
+        authFunc: shibbolethWebViewAuthFunction,
+        classId: string,
+        directoryId?: string
+    ): Promise<ManaboDirectoryInfo>;
 
     /**
      * 授業の教材コンテンツを取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param classId 授業ID
      * @param directoryId ディレクトリID
      * @param viewType 取得する表示モード（任意）
      * @returns ドメイン変換済みのコンテンツ情報
      * @throws ParseError 解析に失敗した場合
      */
-    getClassContent(classId: string, directoryId: string, viewType?: string): Promise<ManaboContentData[]>;
+    getClassContent(
+        authFunc: shibbolethWebViewAuthFunction,
+        classId: string,
+        directoryId: string,
+        viewType?: string
+    ): Promise<ManaboContentData[]>;
 
     /**
      * 指定授業に出席フォームが存在するか確認します。
+     * @param authFunc shibboleth認証を行う関数
      * @param classId 授業ID
      * @returns 出席フォーム有無を示す解析結果
      * @throws ParseError 解析に失敗した場合
      */
-    getEntryExist(classId: string): Promise<parser.ManaboEntryResponseDTO>;
+    getEntryExist(authFunc: shibbolethWebViewAuthFunction, classId: string): Promise<parser.ManaboEntryResponseDTO>;
 
     /**
      * 指定授業の出席フォーム詳細を取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param classId 授業ID
      * @returns 出席フォームの解析結果
      * @throws ParseError 解析に失敗した場合
      */
-    getEntryForm(classId: string): Promise<parser.ManaboEntryFormDTO>;
+    getEntryForm(authFunc: shibbolethWebViewAuthFunction, classId: string): Promise<parser.ManaboEntryFormDTO>;
 
     /**
      * 出席フォームを送信して出席登録を行います。
+     * @param authFunc shibboleth認証を行う関数
      * @param classId 授業ID
      * @param directoryId ディレクトリID
      * @param entryId 出席ID
@@ -88,6 +110,7 @@ export interface ClassRepository {
      * @throws ParseError 解析に失敗した場合
      */
     submitEntry(
+        authFunc: shibbolethWebViewAuthFunction,
         classId: string,
         directoryId: string,
         entryId: string,
@@ -106,8 +129,9 @@ export class IntegratedClassRepository implements ClassRepository {
         this.manaboProvider = manaboProvider;
     }
 
-    public async getClassNews(classId: string, directoryId: string = "0") {
+    public async getClassNews(authFunc: shibbolethWebViewAuthFunction, classId: string, directoryId: string = "0") {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -124,8 +148,9 @@ export class IntegratedClassRepository implements ClassRepository {
         }
     }
 
-    public async getClassSyllabus(classId: string) {
+    public async getClassSyllabus(authFunc: shibbolethWebViewAuthFunction, classId: string) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -141,8 +166,9 @@ export class IntegratedClassRepository implements ClassRepository {
         }
     }
 
-    public async getClassEntry(classId: string) {
+    public async getClassEntry(authFunc: shibbolethWebViewAuthFunction, classId: string) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -158,8 +184,13 @@ export class IntegratedClassRepository implements ClassRepository {
         }
     }
 
-    public async getClassDirectory(classId: string, directoryId: string = "0") {
+    public async getClassDirectory(
+        authFunc: shibbolethWebViewAuthFunction,
+        classId: string,
+        directoryId: string = "0"
+    ) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -177,7 +208,12 @@ export class IntegratedClassRepository implements ClassRepository {
         }
     }
 
-    public async getClassContent(classId: string, directoryId: string, viewType?: string) {
+    public async getClassContent(
+        authFunc: shibbolethWebViewAuthFunction,
+        classId: string,
+        directoryId: string,
+        viewType?: string
+    ) {
         let searchParams = new URLSearchParams({
             class_id: classId,
             directory_id: directoryId,
@@ -188,7 +224,12 @@ export class IntegratedClassRepository implements ClassRepository {
             searchParams.append("view_type", viewType);
         }
 
-        const response = await this.manaboProvider.post("/", "application/x-www-form-urlencoded", searchParams);
+        const response = await this.manaboProvider.post(
+            authFunc,
+            "/",
+            "application/x-www-form-urlencoded",
+            searchParams
+        );
         const dto = parser.parseManaboClassContent(response);
         if (dto.success) {
             return manaboContentToDomain(dto.data);
@@ -197,8 +238,9 @@ export class IntegratedClassRepository implements ClassRepository {
         }
     }
 
-    public async getEntryExist(classId: string) {
+    public async getEntryExist(authFunc: shibbolethWebViewAuthFunction, classId: string) {
         const response = await this.manaboProvider.post(
+            authFunc,
             "/",
             "application/x-www-form-urlencoded",
             new URLSearchParams({
@@ -216,8 +258,9 @@ export class IntegratedClassRepository implements ClassRepository {
         }
     }
 
-    public async getEntryForm(classId: string) {
+    public async getEntryForm(authFunc: shibbolethWebViewAuthFunction, classId: string) {
         const response = await this.manaboProvider.get(
+            authFunc,
             `/?class_id=${classId}&action=glexa_modal_entry_form&_=${Date.now()}`
         );
         const dto = parser.parseManaboEntryForm(response);
@@ -229,8 +272,15 @@ export class IntegratedClassRepository implements ClassRepository {
         }
     }
 
-    public async submitEntry(classId: string, directoryId: string, entryId: string, uniqueId: string) {
+    public async submitEntry(
+        authFunc: shibbolethWebViewAuthFunction,
+        classId: string,
+        directoryId: string,
+        entryId: string,
+        uniqueId: string
+    ) {
         const response = await this.manaboProvider.get(
+            authFunc,
             `/?action=glexa_modal_entry_form_accept&class_id=${classId}&directory_id=${directoryId}&entry_id=${entryId}&uniqid=${uniqueId}&_=${Date.now()}`
         );
         const dto = parser.parseManaboEntryResponse(response);

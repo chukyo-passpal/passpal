@@ -1,17 +1,19 @@
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { ALBO_URLS } from "@/src/utils/urls";
+import { shibbolethWebViewAuthFunction } from "../../clients/chukyoShibboleth";
 import { ExpiredSessionError } from "../../errors/AuthError";
 import { AbstractChukyoProvider, IntegratedAbstractChukyoProvider } from "./abstractChukyoProvider";
 
 export interface AlboProvider extends AbstractChukyoProvider {
     /**
      * AlboポータルにGETリクエストを送り、必要に応じて再認証を行います。
+     * @param authFunc shibboleth認証を行う関数
      * @param path リクエスト先のパス
      * @returns 応答ボディのテキスト
      * @throws ExpiredSessionError 再試行してもセッションが復旧しない場合
      */
-    get(path: string): Promise<string>;
+    get(authFunc: shibbolethWebViewAuthFunction, path: string): Promise<string>;
 }
 
 export class IntegratedAlboProvider extends IntegratedAbstractChukyoProvider implements AlboProvider {
@@ -24,14 +26,14 @@ export class IntegratedAlboProvider extends IntegratedAbstractChukyoProvider imp
     protected retryAuthDelayMs = 200;
     protected retryAuthDelayRandomMs = 300;
 
-    public async get(path: string): Promise<string> {
+    public async get(authFunc: shibbolethWebViewAuthFunction, path: string): Promise<string> {
         for (let attempt = 0; attempt <= this.retryAuthCount; attempt++) {
             const response = await httpClient(`${this.baseUrl}${path}`, {
                 clientMode: "portal",
                 method: "GET",
                 credentials: "omit",
                 headers: {
-                    cookie: await this.getAuthedCookie(),
+                    cookie: await this.getAuthedCookie(authFunc),
                     "Accept-Language": "ja",
                 },
             });

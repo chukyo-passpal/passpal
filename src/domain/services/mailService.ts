@@ -1,5 +1,6 @@
 import mailRepositoryInstance, { MailRepository } from "@/src/data/repositories/mailRepository";
 import { MailData } from "../models/mail";
+import authServiceInstance, { AuthService } from "./authService";
 
 export interface MailService {
     /**
@@ -12,17 +13,20 @@ export interface MailService {
 
 export class IntegratedMailService implements MailService {
     protected readonly mailRepository: MailRepository;
+    protected readonly authService: AuthService;
 
     /**
      * メールサービスを初期化します。
      * @param mailRepository メール取得に利用するリポジトリ
+     * @param authService 認証を処理するサービス
      */
-    constructor(mailRepository = mailRepositoryInstance) {
+    constructor(mailRepository = mailRepositoryInstance, authService = authServiceInstance) {
         this.mailRepository = mailRepository;
+        this.authService = authService;
     }
 
     public async getMails(page: number = 1): Promise<MailData> {
-        return { manaboMails: await this.mailRepository.getReceivedMailList(page) };
+        return { manaboMails: await this.mailRepository.getReceivedMailList(this.authService.shibAuth, page) };
     }
 }
 

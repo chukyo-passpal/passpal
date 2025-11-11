@@ -1,11 +1,13 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
+import { shibbolethWebViewAuthFunction } from "../clients/chukyoShibboleth";
 import { ParseError } from "../errors/ParseError";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
 
 export interface AssignmentRepository {
     /**
      * クイズ結果をManaboから取得します。
+     * @param authFunc shibboleth認証を行う関数
      * @param pluginId プラグインID
      * @param classId 授業ID
      * @param id クイズID
@@ -17,6 +19,7 @@ export interface AssignmentRepository {
      * @throws ParseError 解析に失敗した場合
      */
     getClassQuizResult(
+        authFunc: shibbolethWebViewAuthFunction,
         pluginId: string,
         classId: string,
         id: string,
@@ -39,6 +42,7 @@ export class IntegratedAssignmentRepository implements AssignmentRepository {
     }
 
     public async getClassQuizResult(
+        authFunc: shibbolethWebViewAuthFunction,
         pluginId: string,
         classId: string,
         id: string,
@@ -48,6 +52,7 @@ export class IntegratedAssignmentRepository implements AssignmentRepository {
         page: number = 0
     ) {
         const response = await this.manaboProvider.get(
+            authFunc,
             `/?plugin_id=${pluginId}&classId=${classId}&id=${id}&directory_id=${directoryId}&attend_id=${attendId}&result=${result}&p=${page}&action=plugin_quiz_ajax_result_list&_=${Date.now()}`
         );
         const dto = parser.parseManaboClassQuizResult(response);

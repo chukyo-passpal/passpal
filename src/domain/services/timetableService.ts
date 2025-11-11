@@ -3,6 +3,7 @@ import { Campus } from "../constants/chukyo-univ";
 import { Period } from "../constants/period";
 import { Weekday } from "../constants/week";
 import { PeriodData, TimetableData } from "../models/timetable";
+import authServiceInstance, { AuthService } from "./authService";
 
 /**
  * 時間文字列から基準日のDateオブジェクトを生成します。
@@ -40,6 +41,7 @@ export interface TimetableService {
 
 export class IntegratedTimetableService implements TimetableService {
     private readonly timetableRepository: TimetableRepository;
+    private readonly authService: AuthService;
 
     private _periodData: PeriodData = {
         nagoya: {
@@ -79,14 +81,16 @@ export class IntegratedTimetableService implements TimetableService {
     /**
      * サービスを初期化し、時間割リポジトリを設定します。
      * @param timetableRepository 時間割取得に利用するリポジトリ
+     * @param authService 認証を処理するサービス
      */
-    constructor(timetableRepository: TimetableRepository = timetableRepositoryInstance) {
+    constructor(timetableRepository = timetableRepositoryInstance, authService = authServiceInstance) {
         this.timetableRepository = timetableRepository;
+        this.authService = authService;
     }
 
     public async getTimetable(): Promise<TimetableData> {
-        const manaboTimetable = await this.timetableRepository.getManaboTimetable();
-        const cubicsTimetable = await this.timetableRepository.getCubicsTimetable();
+        const manaboTimetable = await this.timetableRepository.getManaboTimetable(this.authService.shibAuth);
+        const cubicsTimetable = await this.timetableRepository.getCubicsTimetable(this.authService.shibAuth);
 
         // マナボとキュービックスの時間割をマージするロジックをここに実装
         const mergedTimetable = this.mergeTimetables(manaboTimetable, cubicsTimetable);

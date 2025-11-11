@@ -6,6 +6,7 @@ import { CookieCredentials } from "@/src/domain/models/auth";
 import { UserData } from "@/src/domain/models/user";
 import { authState } from "@/src/presentation/hooks/useAuth";
 import { cookiesToString } from "@/src/utils/cookie";
+import { shibbolethWebViewAuthFunction } from "../../clients/chukyoShibboleth";
 
 export interface AbstractChukyoProvider {
     /**
@@ -72,14 +73,15 @@ export abstract class IntegratedAbstractChukyoProvider implements AbstractChukyo
 
     /**
      * ユーザー情報をもとにShibboleth認証を行い、利用可能なクッキーを返します。
+     * @param authFunc shibboleth認証を行う関数
      * @param user 認証に利用するユーザー情報
      * @returns 認証後に利用可能なクッキー集合
      */
-    protected async authentication(user: UserData): Promise<Cookies> {
+    protected async authentication(authFunc: shibbolethWebViewAuthFunction, user: UserData): Promise<Cookies> {
         const { studentId, cuIdPass } = user;
 
         // SSOログイン
-        const authFunc = this.auth.authService.shibAuth;
+        // const authFunc = this.auth.authService.shibAuth;
         const cookies = await authFunc({
             enterUrl: `${this.baseUrl}${this.authEnterPath}`,
             goalUrl: `${this.baseUrl}${this.authGoalPath}`,
@@ -105,10 +107,11 @@ export abstract class IntegratedAbstractChukyoProvider implements AbstractChukyo
 
     /**
      * 有効期限内のクッキーを取得し、必要に応じて再認証を実行します。
+     * @param authFunc shibboleth認証を行う関数
      * @returns HTTPヘッダー用に整形されたクッキー文字列
      * @throws NotSetError ユーザー情報が未設定の場合
      */
-    protected async getAuthedCookie() {
+    protected async getAuthedCookie(authFunc: shibbolethWebViewAuthFunction) {
         if (!this.auth.user) {
             throw new NotSetError({
                 cause: new Error("ユーザー情報が設定されていません"),
@@ -117,7 +120,7 @@ export abstract class IntegratedAbstractChukyoProvider implements AbstractChukyo
 
         let cookies: Cookies;
         if (this.authCookie.lastRefreshedAt.getTime() + this.credentialsRottenTime < Date.now()) {
-            cookies = await this.authentication(this.auth.user);
+            cookies = await this.authentication(authFunc, this.auth.user);
         } else {
             cookies = this.authCookie.cookies;
         }

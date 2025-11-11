@@ -1,12 +1,10 @@
 import { getRemoteConfig, getValue } from "@react-native-firebase/remote-config";
 
-
-
+import { shibbolethWebViewAuthFunction } from "../clients/chukyoShibboleth";
+import alboProviderInstance from "../providers/chukyo-univ/alboProvider";
+import cubicsProviderInstance from "../providers/chukyo-univ/cubicsProvider";
 import manaboProviderInstance from "../providers/chukyo-univ/manaboProvider";
 import palAPIProviderInstance from "../providers/palapi/palapiProvider";
-import cubicsProviderInstance from "../providers/chukyo-univ/cubicsProvider";
-import alboProviderInstance from "../providers/chukyo-univ/alboProvider";
-
 
 export interface AuthRepository {
     /**
@@ -21,11 +19,12 @@ export interface AuthRepository {
 
     /**
      * 指定した資格情報で認証テストを実行します。
+     * @param authFunc shibboleth認証を行う関数
      * @param studentId 学籍番号
      * @param cuIdPass CU-IDのパスワード
      * @returns 認証成功可否のPromise
      */
-    authTest: (studentId: string, cuIdPass: string) => Promise<boolean>;
+    authTest: (authFunc: shibbolethWebViewAuthFunction, studentId: string, cuIdPass: string) => Promise<boolean>;
 }
 
 export class IntegratedAuthRepository implements AuthRepository {
@@ -41,8 +40,8 @@ export class IntegratedAuthRepository implements AuthRepository {
         return getValue(getRemoteConfig(), "webClientId").asString();
     }
 
-    public authTest(studentId: string, cuIdPass: string): Promise<boolean> {
-        return this.manaboProvider.authTest(studentId, cuIdPass);
+    public authTest(authFunc: shibbolethWebViewAuthFunction, studentId: string, cuIdPass: string): Promise<boolean> {
+        return this.manaboProvider.authTest(authFunc, studentId, cuIdPass);
     }
 
     public login(firebaseIdToken: string) {
