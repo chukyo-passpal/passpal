@@ -1,9 +1,9 @@
 import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { MANABO_URLS } from "@/src/utils/urls";
-import { abstractChukyoProvider } from "./abstractChukyoProvider";
+import { AbstractChukyoProvider, IntegratedAbstractChukyoProvider } from "./abstractChukyoProvider";
 
-export interface ManaboProvider {
+export interface ManaboProvider extends AbstractChukyoProvider {
     /**
      * Manaboの指定パスにGETリクエストを送り、内容を取得します。
      * @param path 取得したいリソースのパス
@@ -28,7 +28,7 @@ export interface ManaboProvider {
     authTest(studentId: string, cuIdPass: string): Promise<boolean>;
 }
 
-export class IntegratedManaboProvider extends abstractChukyoProvider implements ManaboProvider {
+export class IntegratedManaboProvider extends IntegratedAbstractChukyoProvider implements ManaboProvider {
     protected baseUrl = MANABO_URLS.base;
     protected authEnterPath = "/auth/shibboleth/";
     protected authGoalPath = "/auth/shibboleth/";

@@ -1,10 +1,8 @@
-import { Cookies } from "@react-native-cookies/cookies";
 import { User } from "@react-native-google-signin/google-signin";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { CookieCredentials } from "@/src/domain/models/auth";
 import { UserData } from "@/src/domain/models/user";
 import authServiceInstance, { AuthService } from "@/src/domain/services/authService";
 import { SecureStorage } from "@/src/utils/secureStorage";
@@ -13,7 +11,6 @@ export interface authState {
     user: UserData | null;
     firebaseUser: User | null;
     isTermsAccepted: boolean;
-
     authService: AuthService;
 
     signIn: (studentId: string, cuIdPass: string) => void;
@@ -21,15 +18,6 @@ export interface authState {
     acceptTerms: () => void;
     setFirebaseUser: (user: User) => void;
     setFirebaseIdToken: (idToken: string) => void;
-    setManaboCookie: (cookies: Cookies) => void;
-    setAlboCookie: (cookies: Cookies) => void;
-    setCubicsCookie: (cookies: Cookies) => void;
-
-    purgeCache: () => void;
-
-    manaboCredentials?: CookieCredentials;
-    alboCredentials?: CookieCredentials;
-    cubicsCredentials?: CookieCredentials;
 }
 
 /**
@@ -41,7 +29,6 @@ const useAuth = create<authState>()(
             user: null,
             firebaseUser: null,
             isTermsAccepted: false,
-
             authService: authServiceInstance,
 
             /**
@@ -61,8 +48,6 @@ const useAuth = create<authState>()(
                     state.user = null;
                     state.firebaseUser = null;
                     state.isTermsAccepted = false;
-                    state.manaboCredentials = undefined;
-                    state.alboCredentials = undefined;
                 }),
             /**
              * 利用規約に同意した状態を保存します。
@@ -89,41 +74,6 @@ const useAuth = create<authState>()(
                     if (state.firebaseUser?.idToken) {
                         state.firebaseUser.idToken = idToken;
                     }
-                }),
-
-            /**
-             * Manabo用のCookie資格情報を保存します。
-             * @param cookies 保存するCookie
-             */
-            setManaboCookie: (cookies) =>
-                set((state) => {
-                    state.manaboCredentials = { cookies, lastRefreshedAt: new Date() };
-                }),
-            /**
-             * Albo用のCookie資格情報を保存します。
-             * @param cookies 保存するCookie
-             */
-            setAlboCookie: (cookies) =>
-                set((state) => {
-                    state.alboCredentials = { cookies, lastRefreshedAt: new Date() };
-                }),
-            /**
-             * Cubics用のCookie資格情報を保存します。
-             * @param cookies 保存するCookie
-             */
-            setCubicsCookie: (cookies) =>
-                set((state) => {
-                    state.cubicsCredentials = { cookies, lastRefreshedAt: new Date() };
-                }),
-
-            /**
-             * キャッシュとしてクリアできる情報を消します。
-             */
-            purgeCache: () =>
-                set((state) => {
-                    state.manaboCredentials = undefined;
-                    state.alboCredentials = undefined;
-                    state.cubicsCredentials = undefined;
                 }),
         })),
         {

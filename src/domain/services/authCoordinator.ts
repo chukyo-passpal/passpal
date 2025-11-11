@@ -160,12 +160,13 @@ export class IntegratedAuthService implements AuthCoordinator {
 
     public async signOut(): Promise<void> {
         this.clearContentStores();
+        authRepositoryInstance.clearAuthCookies();
         await GoogleSignin.signOut();
         useAuth.getState().signOut();
     }
 
     public purgeCaches(): void {
-        useAuth.getState().purgeCache();
+        authRepositoryInstance.clearAuthCookies();
         useMail.getState().clear();
         useNews.getState().clear();
         useClass.getState().clear();

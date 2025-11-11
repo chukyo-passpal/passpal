@@ -2,9 +2,9 @@ import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { ALBO_URLS } from "@/src/utils/urls";
 import { ExpiredSessionError } from "../../errors/AuthError";
-import { abstractChukyoProvider } from "./abstractChukyoProvider";
+import { AbstractChukyoProvider, IntegratedAbstractChukyoProvider } from "./abstractChukyoProvider";
 
-export interface AlboProvider {
+export interface AlboProvider extends AbstractChukyoProvider {
     /**
      * AlboポータルにGETリクエストを送り、必要に応じて再認証を行います。
      * @param path リクエスト先のパス
@@ -14,7 +14,7 @@ export interface AlboProvider {
     get(path: string): Promise<string>;
 }
 
-export class IntegratedAlboProvider extends abstractChukyoProvider implements AlboProvider {
+export class IntegratedAlboProvider extends IntegratedAbstractChukyoProvider implements AlboProvider {
     protected baseUrl = ALBO_URLS.base;
     protected authEnterPath = "/uniprove_pt/UnLoginControl";
     protected authGoalPath = "/uniprove_pt/portal";

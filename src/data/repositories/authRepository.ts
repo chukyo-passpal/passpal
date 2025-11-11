@@ -1,7 +1,12 @@
 import { getRemoteConfig, getValue } from "@react-native-firebase/remote-config";
 
+
+
 import manaboProviderInstance from "../providers/chukyo-univ/manaboProvider";
 import palAPIProviderInstance from "../providers/palapi/palapiProvider";
+import cubicsProviderInstance from "../providers/chukyo-univ/cubicsProvider";
+import alboProviderInstance from "../providers/chukyo-univ/alboProvider";
+
 
 export interface AuthRepository {
     /**
@@ -25,6 +30,8 @@ export interface AuthRepository {
 
 export class IntegratedAuthRepository implements AuthRepository {
     private manaboProvider = manaboProviderInstance;
+    private alboProvider = alboProviderInstance;
+    private cubicsProvider = cubicsProviderInstance;
 
     get allowedMailDomain(): string {
         return getValue(getRemoteConfig(), "allowedMailDomain").asString();
@@ -42,6 +49,12 @@ export class IntegratedAuthRepository implements AuthRepository {
         palAPIProviderInstance.post("/account/login", {
             bearer: firebaseIdToken,
         });
+    }
+
+    public clearAuthCookies() {
+        this.manaboProvider.clearAuthCookie();
+        this.alboProvider.clearAuthCookie();
+        this.cubicsProvider.clearAuthCookie();
     }
 }
 

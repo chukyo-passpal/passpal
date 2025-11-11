@@ -2,9 +2,9 @@ import { httpClient } from "@/src/data/clients/httpClient";
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { CUBICS_URLS } from "@/src/utils/urls";
 import { ExpiredSessionError } from "../../errors/AuthError";
-import { abstractChukyoProvider } from "./abstractChukyoProvider";
+import { AbstractChukyoProvider, IntegratedAbstractChukyoProvider } from "./abstractChukyoProvider";
 
-export interface CubicsProvider {
+export interface CubicsProvider extends AbstractChukyoProvider {
     /**
      * CubicsポータルにGETリクエストを送り、必要に応じて再認証を実行します。
      * @param path リクエスト先のパス
@@ -14,7 +14,7 @@ export interface CubicsProvider {
     get(path: string): Promise<string>;
 }
 
-export class IntegratedCubicsProvider extends abstractChukyoProvider implements CubicsProvider {
+export class IntegratedCubicsProvider extends IntegratedAbstractChukyoProvider implements CubicsProvider {
     protected baseUrl = CUBICS_URLS.base;
     protected authEnterPath = "/unias/UnSSOLoginControl2";
     protected authGoalPath = "/unias/UnSSOLoginControl2";

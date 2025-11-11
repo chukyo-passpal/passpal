@@ -7,12 +7,40 @@ import { UserData } from "@/src/domain/models/user";
 import { authState } from "@/src/presentation/hooks/useAuth";
 import { cookiesToString } from "@/src/utils/cookie";
 
-export abstract class abstractChukyoProvider {
+export interface AbstractChukyoProvider {
+    /**
+     * 認証に使用するクッキーをクリアします
+     */
+    clearAuthCookie(): void;
+
+    /**
+     * 認証関連の状態ストアをセットします。
+     * @param auth 認証状態を管理するストア
+     */
+    setAuthStore(auth: authState): void;
+}
+
+export abstract class IntegratedAbstractChukyoProvider implements AbstractChukyoProvider {
     protected abstract baseUrl: string;
     protected abstract authEnterPath: string;
     protected abstract authGoalPath: string;
     protected abstract serviceName: CUService;
     protected credentialsRottenTime: number = 25 * 60 * 1000; // 25分
+
+    protected authCookie: CookieCredentials = {
+        cookies: {},
+        lastRefreshedAt: new Date(0),
+    };
+    protected setAuthCookie(cookies: Cookies) {
+        this.authCookie.cookies = cookies;
+        this.authCookie.lastRefreshedAt = new Date();
+    }
+    public clearAuthCookie() {
+        this.authCookie = {
+            cookies: {},
+            lastRefreshedAt: new Date(0),
+        };
+    }
 
     private _auth: authState | undefined;
     /**
@@ -27,51 +55,8 @@ export abstract class abstractChukyoProvider {
         }
         return this._auth;
     }
-    /**
-     * 認証関連の状態ストアをセットします。
-     * @param auth 認証状態を管理するストア
-     */
     public setAuthStore(auth: authState) {
         this._auth = auth;
-    }
-
-    /**
-     * サービスごとのクッキー保存メソッドを呼び出します。
-     * @param cookies 保存するクッキー
-     * @param service クッキーを紐づけるサービス種別
-     */
-    private async setCredentialCookies(cookies: Cookies, service: CUService) {
-        switch (service) {
-            case "manabo":
-                this.auth.setManaboCookie(cookies);
-                break;
-            case "albo":
-                this.auth.setAlboCookie(cookies);
-                break;
-            case "cubics":
-                this.auth.setCubicsCookie(cookies);
-                break;
-            default:
-                throw new Error("Unknown service");
-        }
-    }
-
-    /**
-     * サービスに対応する最新のクッキー資格情報を取得します。
-     * @param service 参照したいサービス種別
-     * @returns クッキー資格情報または未設定の場合はundefined
-     */
-    private async getCredentialCookies(service: CUService): Promise<CookieCredentials | undefined> {
-        switch (service) {
-            case "manabo":
-                return this.auth.manaboCredentials;
-            case "albo":
-                return this.auth.alboCredentials;
-            case "cubics":
-                return this.auth.cubicsCredentials;
-            default:
-                throw new Error("Unknown service");
-        }
     }
 
     /**
@@ -114,8 +99,7 @@ export abstract class abstractChukyoProvider {
             throw new Error("No valid cookies found after authentication.");
         }
 
-        await this.setCredentialCookies(cleanedCookies, this.serviceName);
-
+        this.setAuthCookie(cleanedCookies);
         return cleanedCookies;
     }
 
@@ -131,13 +115,11 @@ export abstract class abstractChukyoProvider {
             });
         }
 
-        const credentials = await this.getCredentialCookies(this.serviceName);
-
         let cookies: Cookies;
-        if (!credentials || credentials.lastRefreshedAt.getTime() + this.credentialsRottenTime < Date.now()) {
+        if (this.authCookie.lastRefreshedAt.getTime() + this.credentialsRottenTime < Date.now()) {
             cookies = await this.authentication(this.auth.user);
         } else {
-            cookies = credentials.cookies;
+            cookies = this.authCookie.cookies;
         }
 
         return `; ${cookiesToString(cookies)}`;
