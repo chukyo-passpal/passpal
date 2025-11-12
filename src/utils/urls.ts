@@ -25,6 +25,14 @@ export const PALAPI_URLS = {
 } as const;
 
 // ============================================
+// ChukyoLinkバックエンド関連
+// ============================================
+export const ChukyoLink_URLS = {
+    /** ベースURL */
+    base: "https://link.lanet.sist.chukyo-u.ac.jp",
+} as const;
+
+// ============================================
 // アプリストア関連
 // ============================================
 export const STORE_URLS = {
@@ -103,6 +111,9 @@ export type PassPalUrlKey = keyof typeof PASSPAL_URLS;
 
 /** PALAPI URLのキー */
 export type PalapiUrlKey = keyof typeof PALAPI_URLS;
+
+/** ChukyoLink URLのキー */
+export type ChukyoLinkUrlKey = keyof typeof ChukyoLink_URLS;
 
 /** ストアURLのキー */
 export type StoreUrlKey = keyof typeof STORE_URLS;
