@@ -31,8 +31,6 @@ export class IntegratedBusRepository implements BusRepository {
         if (parsed.success) {
             return parsed.data;
         } else {
-            console.log(parsed.error);
-            console.log(json);
             throw new ParseError({ cause: parsed.error });
         }
     }

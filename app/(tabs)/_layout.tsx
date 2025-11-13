@@ -2,9 +2,11 @@ import { Tabs } from "expo-router";
 
 import { Icon } from "@/src/presentation/components/Icon";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useSetting from "@/src/presentation/hooks/useSetting";
 
 export default function TabLayout() {
     const { theme } = useTheme();
+    const { campus } = useSetting();
 
     return (
         <Tabs
@@ -35,6 +37,14 @@ export default function TabLayout() {
                 options={{
                     title: "時間割",
                     tabBarIcon: ({ color, size }) => <Icon name="calendar" size={size} color={color} />,
+                }}
+            />
+            <Tabs.Screen
+                name="bus"
+                options={{
+                    title: "バス",
+                    tabBarIcon: ({ color, size }) => <Icon name="bus" size={size} color={color} />,
+                    href: campus === "toyota" ? "/(tabs)/bus" : null,
                 }}
             />
             <Tabs.Screen

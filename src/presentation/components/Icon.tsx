@@ -34,6 +34,7 @@ import {
     MessageCircleQuestionMark,
     Palette,
     RefreshCw,
+    School,
     Settings,
     Sticker,
     Train,
@@ -71,6 +72,7 @@ export type IconName =
     | "message-circle-question-mark"
     | "palette"
     | "refresh-cw"
+    | "school"
     | "settings"
     | "sticker"
     | "train"
@@ -113,6 +115,7 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     "message-circle-question-mark": MessageCircleQuestionMark,
     palette: Palette,
     "refresh-cw": RefreshCw,
+    school: School,
     settings: Settings,
     sticker: Sticker,
     train: Train,
