@@ -3,11 +3,12 @@ import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View }
 import { router } from "expo-router";
 
 import { TRAIN_INFO_SERVICE, TrainInfoService, TrainInfoServiceName } from "@/src/domain/constants/bus";
+import { Campus, CAMPUSES, campusNames } from "@/src/domain/constants/chukyo-univ";
 import appServiceInstance from "@/src/domain/services/appService";
 import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
-import { Icon } from "@/src/presentation/components/Icon";
+import { Icon, IconName } from "@/src/presentation/components/Icon";
 import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
@@ -124,221 +125,26 @@ export default function Settings() {
                             </Typography>
 
                             <View style={{ gap: theme.spacing.xs }}>
-                                {/* StoryBook Item */}
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        router.push("/storybook");
-                                    }}
-                                    activeOpacity={0.7}
-                                >
-                                    <Card
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                            padding: theme.spacing.md,
-                                            height: 56,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body"
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontWeight: "600",
-                                                }}
-                                            >
-                                                StoryBookを開く
-                                            </Typography>
-                                        </View>
-                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                                    </Card>
-                                </TouchableOpacity>
-
-                                {/* Toast Item */}
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        toast.success("これは成功のトーストです");
-                                    }}
-                                    activeOpacity={0.7}
-                                >
-                                    <Card
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                            padding: theme.spacing.md,
-                                            height: 56,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body"
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontWeight: "600",
-                                                }}
-                                            >
-                                                トーストを表示
-                                            </Typography>
-                                        </View>
-                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                                    </Card>
-                                </TouchableOpacity>
-
-                                {/* Error Item */}
-                                <TouchableOpacity
+                                <SettingActionItem label="StoryBookを開く" onPress={() => router.push("/storybook")} />
+                                <SettingActionItem
+                                    label="トーストを表示"
+                                    onPress={() => toast.success("これは成功のトーストです")}
+                                />
+                                <SettingActionItem
+                                    label="エラーを発生させる"
                                     onPress={() => {
                                         throw new Error("これはテスト用のエラーです");
                                     }}
-                                    activeOpacity={0.7}
-                                >
-                                    <Card
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                            padding: theme.spacing.md,
-                                            height: 56,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body"
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontWeight: "600",
-                                                }}
-                                            >
-                                                エラーを発生させる
-                                            </Typography>
-                                        </View>
-                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                                    </Card>
-                                </TouchableOpacity>
-
-                                {/* Maintenance Screen */}
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        router.push("/maintenance");
-                                    }}
-                                    activeOpacity={0.7}
-                                >
-                                    <Card
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                            padding: theme.spacing.md,
-                                            height: 56,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body"
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontWeight: "600",
-                                                }}
-                                            >
-                                                メンテナンス画面を表示
-                                            </Typography>
-                                        </View>
-                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                                    </Card>
-                                </TouchableOpacity>
-
-                                {/* Force update screen */}
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        router.push("/force-update");
-                                    }}
-                                    activeOpacity={0.7}
-                                >
-                                    <Card
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                            padding: theme.spacing.md,
-                                            height: 56,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body"
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontWeight: "600",
-                                                }}
-                                            >
-                                                強制アップデート画面を表示
-                                            </Typography>
-                                        </View>
-                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                                    </Card>
-                                </TouchableOpacity>
-
-                                {/* Debug Item */}
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        router.push("/debug");
-                                    }}
-                                    activeOpacity={0.7}
-                                >
-                                    <Card
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                            padding: theme.spacing.md,
-                                            height: 56,
-                                        }}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body"
-                                                style={{
-                                                    fontSize: 16,
-                                                    fontWeight: "600",
-                                                }}
-                                            >
-                                                デバッグ画面を開く
-                                            </Typography>
-                                        </View>
-                                        <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                                    </Card>
-                                </TouchableOpacity>
+                                />
+                                <SettingActionItem
+                                    label="メンテナンス画面を表示"
+                                    onPress={() => router.push("/maintenance")}
+                                />
+                                <SettingActionItem
+                                    label="強制アップデート画面を表示"
+                                    onPress={() => router.push("/force-update")}
+                                />
+                                <SettingActionItem label="デバッグ画面を開く" onPress={() => router.push("/debug")} />
                             </View>
                         </View>
                     </>
@@ -399,33 +205,13 @@ export default function Settings() {
                         </Card>
 
                         {/* Logout Item */}
-                        <TouchableOpacity onPress={handleLogout} activeOpacity={0.7}>
-                            <Card
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    padding: theme.spacing.md,
-                                    height: 56,
-                                }}
-                            >
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Icon name="log-out" size={24} color={theme.colors.status.error} />
-                                    <Typography
-                                        variant="body"
-                                        style={{
-                                            color: theme.colors.status.error,
-                                            fontSize: 16,
-                                            fontWeight: "600",
-                                            marginLeft: theme.spacing.sm,
-                                        }}
-                                    >
-                                        ログアウト
-                                    </Typography>
-                                </View>
-                                <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                            </Card>
-                        </TouchableOpacity>
+                        <SettingActionItem
+                            icon="log-out"
+                            label="ログアウト"
+                            onPress={handleLogout}
+                            iconColor={theme.colors.status.error}
+                            labelColor={theme.colors.status.error}
+                        />
                     </View>
                 </View>
 
@@ -443,170 +229,43 @@ export default function Settings() {
                         アプリ設定
                     </Typography>
 
-                    <Card
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: theme.spacing.md,
-                            height: 64,
-                        }}
-                    >
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                width: "100%",
-                            }}
-                        >
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Icon name="building" size={24} color={theme.colors.text.primary} />
-                                <Typography
-                                    variant="body"
-                                    style={{
-                                        color: theme.colors.text.primary,
-                                        fontSize: 16,
-                                        fontWeight: "600",
-                                        marginLeft: theme.spacing.sm,
-                                    }}
-                                >
-                                    キャンパス選択
-                                </Typography>
-                            </View>
-                            <Select
-                                value={campus}
-                                onValueChange={(value) => setCampus(value as "nagoya" | "toyota")}
-                                items={[
-                                    { label: "名古屋キャンパス", value: "nagoya" },
-                                    { label: "豊田キャンパス", value: "toyota" },
-                                ]}
-                                maxWidth={160}
-                            />
-                        </View>
-                    </Card>
-                    <Card
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: theme.spacing.md,
-                            height: 64,
-                        }}
-                    >
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                width: "100%",
-                            }}
-                        >
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Icon name="calendar" size={24} color={theme.colors.text.primary} />
-                                <Typography
-                                    variant="body"
-                                    style={{
-                                        color: theme.colors.text.primary,
-                                        fontSize: 16,
-                                        fontWeight: "600",
-                                        marginLeft: theme.spacing.sm,
-                                    }}
-                                >
-                                    時間割表示
-                                </Typography>
-                            </View>
-                            <Select
-                                value={initTimetableViewMode}
-                                onValueChange={(value) => setInitTimetableViewMode(value as "day" | "week")}
-                                items={[
-                                    { label: "1日", value: "day" },
-                                    { label: "1週間", value: "week" },
-                                ]}
-                                maxWidth={160}
-                            />
-                        </View>
-                    </Card>
+                    {/* キャンパス選択 */}
+                    <SettingSelectItem
+                        icon="building"
+                        label="キャンパス選択"
+                        value={campus}
+                        onValueChange={(value) => setCampus(value as Campus)}
+                        items={CAMPUSES.map((e) => ({ label: campusNames[e], value: e }))}
+                    />
+
+                    {/* 時間割表示 */}
+                    <SettingSelectItem
+                        icon="calendar"
+                        label="時間割表示"
+                        value={initTimetableViewMode}
+                        onValueChange={(value) => setInitTimetableViewMode(value as "day" | "week")}
+                        items={[
+                            { label: "1日", value: "day" },
+                            { label: "1週間", value: "week" },
+                        ]}
+                    />
 
                     {/* 乗換案内サービスの選択 */}
-                    <Card
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: theme.spacing.md,
-                            height: 64,
-                        }}
-                    >
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                width: "100%",
-                            }}
-                        >
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Icon name="building" size={24} color={theme.colors.text.primary} />
-                                <Typography
-                                    variant="body"
-                                    style={{
-                                        color: theme.colors.text.primary,
-                                        fontSize: 16,
-                                        fontWeight: "600",
-                                        marginLeft: theme.spacing.sm,
-                                    }}
-                                >
-                                    使う乗換案内
-                                </Typography>
-                            </View>
-                            <Select
-                                value={trainInfoService}
-                                onValueChange={(value) => setTrainInfoService(value as TrainInfoService)}
-                                items={TRAIN_INFO_SERVICE.map((e) => ({ label: TrainInfoServiceName[e], value: e }))}
-                                maxWidth={160}
-                            />
-                        </View>
-                    </Card>
+                    <SettingSelectItem
+                        icon="train"
+                        label="使う乗換案内"
+                        value={trainInfoService}
+                        onValueChange={(value) => setTrainInfoService(value as TrainInfoService)}
+                        items={TRAIN_INFO_SERVICE.map((e) => ({ label: TrainInfoServiceName[e], value: e }))}
+                    />
 
-                    <TouchableOpacity onPress={handleSetHomeStation} activeOpacity={0.7}>
-                        <Card
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                padding: theme.spacing.md,
-                                height: 72,
-                            }}
-                        >
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Icon name="trash-2" size={24} color={theme.colors.text.primary} />
-                                <View style={{ marginLeft: theme.spacing.sm }}>
-                                    <Typography
-                                        variant="body"
-                                        style={{
-                                            color: theme.colors.text.primary,
-                                            fontSize: 16,
-                                            fontWeight: "600",
-                                            marginBottom: theme.spacing.xs,
-                                        }}
-                                    >
-                                        最寄駅: {homeStation ? homeStation : "未設定"}
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        style={{
-                                            color: theme.colors.text.secondary,
-                                            fontSize: 14,
-                                        }}
-                                    >
-                                        最寄駅を変更・設定する
-                                    </Typography>
-                                </View>
-                            </View>
-                            <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                        </Card>
-                    </TouchableOpacity>
+                    {/* 最寄駅設定 */}
+                    <SettingActionItem
+                        icon="map-pin"
+                        label={`最寄駅: ${homeStation ? homeStation : "未設定"}`}
+                        description="最寄駅を変更・設定する"
+                        onPress={handleSetHomeStation}
+                    />
                 </View>
 
                 {/* Data Management Section */}
@@ -623,126 +282,19 @@ export default function Settings() {
                         データ管理
                     </Typography>
 
-                    <TouchableOpacity onPress={handlePurgeCache} activeOpacity={0.7}>
-                        <Card
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                padding: theme.spacing.md,
-                                height: 72,
-                            }}
-                        >
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Icon name="trash-2" size={24} color={theme.colors.text.primary} />
-                                <View style={{ marginLeft: theme.spacing.sm }}>
-                                    <Typography
-                                        variant="body"
-                                        style={{
-                                            color: theme.colors.text.primary,
-                                            fontSize: 16,
-                                            fontWeight: "600",
-                                            marginBottom: theme.spacing.xs,
-                                        }}
-                                    >
-                                        キャッシュ削除
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        style={{
-                                            color: theme.colors.text.secondary,
-                                            fontSize: 14,
-                                        }}
-                                    >
-                                        キャッシュされたデータを削除する
-                                    </Typography>
-                                </View>
-                            </View>
-                            <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                        </Card>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity onPress={handleRefetchTimetable} activeOpacity={0.7}>
-                        <Card
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                padding: theme.spacing.md,
-                                height: 72,
-                            }}
-                        >
-                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                <Icon name="calendar" size={24} color={theme.colors.text.primary} />
-                                <View style={{ marginLeft: theme.spacing.sm }}>
-                                    <Typography
-                                        variant="body"
-                                        style={{
-                                            color: theme.colors.text.primary,
-                                            fontSize: 16,
-                                            fontWeight: "600",
-                                            marginBottom: theme.spacing.xs,
-                                        }}
-                                    >
-                                        時間割更新
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        style={{
-                                            color: theme.colors.text.secondary,
-                                            fontSize: 14,
-                                        }}
-                                    >
-                                        ポータルサイトから最新の時間割を取得する
-                                    </Typography>
-                                </View>
-                            </View>
-                            <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                        </Card>
-                    </TouchableOpacity>
+                    <SettingActionItem
+                        icon="trash-2"
+                        label="キャッシュ削除"
+                        description="キャッシュされたデータを削除する"
+                        onPress={handlePurgeCache}
+                    />
+                    <SettingActionItem
+                        icon="calendar"
+                        label="時間割更新"
+                        description="ポータルサイトから最新の時間割を取得する"
+                        onPress={handleRefetchTimetable}
+                    />
                 </View>
-
-                {/* Appearance Section */}
-                {/* <View style={{ marginBottom: theme.spacing.xl }}>
-                    <Typography
-                        variant="h3"
-                        style={{
-                            color: theme.colors.primary.main,
-                            fontSize: 18,
-                            fontWeight: "bold",
-                            marginBottom: theme.spacing.md,
-                        }}
-                    >
-                        外観
-                    </Typography>
-
-                    <Card
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            padding: theme.spacing.md,
-                            height: 56,
-                        }}
-                    >
-                        <View style={{ flexDirection: "row", alignItems: "center" }}>
-                            <Moon size={24} color={theme.colors.text.primary} />
-                            <Typography
-                                variant="body"
-                                style={{
-                                    color: theme.colors.text.primary,
-                                    fontSize: 16,
-                                    fontWeight: "600",
-                                    marginLeft: theme.spacing.sm,
-                                }}
-                            >
-                                ダークモード
-                            </Typography>
-                        </View>
-
-                        <Switch />
-                    </Card>
-                </View> */}
 
                 {/* About Section */}
                 <View style={{ marginBottom: theme.spacing.xl }}>
@@ -759,156 +311,145 @@ export default function Settings() {
                     </Typography>
 
                     <View style={{ gap: theme.spacing.xs }}>
-                        <TouchableOpacity onPress={handleFeedback} activeOpacity={0.7}>
-                            <Card
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    padding: theme.spacing.md,
-                                    height: 72,
-                                }}
-                            >
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Icon name="sticker" size={24} color={theme.colors.text.primary} />
-                                    <View style={{ marginLeft: theme.spacing.sm }}>
-                                        <Typography
-                                            variant="body"
-                                            style={{
-                                                color: theme.colors.text.primary,
-                                                fontSize: 16,
-                                                fontWeight: "600",
-                                                marginBottom: theme.spacing.xs,
-                                            }}
-                                        >
-                                            フィードバック
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            style={{
-                                                color: theme.colors.text.secondary,
-                                                fontSize: 14,
-                                            }}
-                                        >
-                                            ご意見・ご要望をお聞かせください
-                                        </Typography>
-                                    </View>
-                                </View>
-                                <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                            </Card>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={handleContact} activeOpacity={0.7}>
-                            <Card
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    padding: theme.spacing.md,
-                                    height: 72,
-                                }}
-                            >
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Icon
-                                        name="message-circle-question-mark"
-                                        size={24}
-                                        color={theme.colors.text.primary}
-                                    />
-                                    <View style={{ marginLeft: theme.spacing.sm }}>
-                                        <Typography
-                                            variant="body"
-                                            style={{
-                                                color: theme.colors.text.primary,
-                                                fontSize: 16,
-                                                fontWeight: "600",
-                                                marginBottom: theme.spacing.xs,
-                                            }}
-                                        >
-                                            問い合わせ
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            style={{
-                                                color: theme.colors.text.secondary,
-                                                fontSize: 14,
-                                            }}
-                                        >
-                                            不明点などがあればこちらから
-                                        </Typography>
-                                    </View>
-                                </View>
-                                <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                            </Card>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity onPress={handleAboutPress} activeOpacity={0.7}>
-                            <Card
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    padding: theme.spacing.md,
-                                    height: 72,
-                                }}
-                            >
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Icon name="info" size={24} color={theme.colors.text.primary} />
-                                    <View style={{ marginLeft: theme.spacing.sm }}>
-                                        <Typography
-                                            variant="body"
-                                            style={{
-                                                color: theme.colors.text.primary,
-                                                fontSize: 16,
-                                                fontWeight: "600",
-                                                marginBottom: theme.spacing.xs,
-                                            }}
-                                        >
-                                            About PassPal
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            style={{
-                                                color: theme.colors.text.secondary,
-                                                fontSize: 14,
-                                            }}
-                                        >
-                                            {appServiceInstance.versionInfo}
-                                        </Typography>
-                                    </View>
-                                </View>
-                            </Card>
-                        </TouchableOpacity>
-
-                        <TouchableWithoutFeedback onPress={handleLicenseInfo}>
-                            <Card
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    justifyContent: "space-between",
-                                    padding: theme.spacing.md,
-                                    height: 72,
-                                }}
-                            >
-                                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <View style={{ marginLeft: theme.spacing.sm }}>
-                                        <Typography
-                                            variant="body"
-                                            style={{
-                                                color: theme.colors.text.primary,
-                                                fontSize: 16,
-                                                fontWeight: "600",
-                                            }}
-                                        >
-                                            ライセンス情報
-                                        </Typography>
-                                    </View>
-                                </View>
-                                <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
-                            </Card>
-                        </TouchableWithoutFeedback>
+                        <SettingActionItem
+                            icon="sticker"
+                            label="フィードバック"
+                            description="ご意見・ご要望をお聞かせください"
+                            onPress={handleFeedback}
+                        />
+                        <SettingActionItem
+                            icon="message-circle-question-mark"
+                            label="問い合わせ"
+                            description="不明点などがあればこちらから"
+                            onPress={handleContact}
+                        />
+                        <SettingActionItem
+                            icon="info"
+                            label="About PassPal"
+                            description={appServiceInstance.versionInfo}
+                            onPress={handleAboutPress}
+                            isTouchable={false}
+                        />
+                        <SettingActionItem label="ライセンス情報" onPress={handleLicenseInfo} />
                     </View>
                 </View>
             </ScrollView>
         </View>
+    );
+}
+
+interface SettingSelectItemProps {
+    icon: IconName;
+    label: string;
+    value: string;
+    onValueChange: (value: string) => void;
+    items: { label: string; value: string }[];
+}
+
+function SettingSelectItem({ icon, label, value, onValueChange, items }: SettingSelectItemProps) {
+    const { theme } = useTheme();
+
+    return (
+        <Card
+            style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: theme.spacing.md,
+                height: 64,
+            }}
+        >
+            <View
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    width: "100%",
+                }}
+            >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Icon name={icon} size={24} color={theme.colors.text.primary} />
+                    <Typography
+                        variant="body"
+                        style={{
+                            color: theme.colors.text.primary,
+                            fontSize: 16,
+                            fontWeight: "600",
+                            marginLeft: theme.spacing.sm,
+                        }}
+                    >
+                        {label}
+                    </Typography>
+                </View>
+                <Select value={value} onValueChange={onValueChange} items={items} maxWidth={160} />
+            </View>
+        </Card>
+    );
+}
+
+interface SettingActionItemProps {
+    icon?: IconName;
+    label: string;
+    description?: string;
+    onPress: () => void;
+    iconColor?: string;
+    labelColor?: string;
+    isTouchable?: boolean;
+}
+
+function SettingActionItem({
+    icon,
+    label,
+    description,
+    onPress,
+    iconColor,
+    labelColor,
+    isTouchable = true,
+}: SettingActionItemProps) {
+    const { theme } = useTheme();
+
+    const TouchableContainer = isTouchable ? TouchableOpacity : TouchableWithoutFeedback;
+
+    return (
+        <TouchableContainer onPress={onPress} activeOpacity={0.7}>
+            <Card
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: theme.spacing.md,
+                    height: description ? 72 : 56,
+                }}
+            >
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    {icon && <Icon name={icon} size={24} color={iconColor || theme.colors.text.primary} />}
+                    <View style={{ marginLeft: icon ? theme.spacing.sm : 0 }}>
+                        <Typography
+                            variant="body"
+                            style={{
+                                color: labelColor || theme.colors.text.primary,
+                                fontSize: 16,
+                                fontWeight: "600",
+                                marginBottom: description ? theme.spacing.xs : 0,
+                            }}
+                        >
+                            {label}
+                        </Typography>
+                        {description && (
+                            <Typography
+                                variant="caption"
+                                style={{
+                                    color: theme.colors.text.secondary,
+                                    fontSize: 14,
+                                }}
+                            >
+                                {description}
+                            </Typography>
+                        )}
+                    </View>
+                </View>
+                {isTouchable ? <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} /> : <View />}
+            </Card>
+        </TouchableContainer>
     );
 }
