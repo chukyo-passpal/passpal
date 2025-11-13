@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { router } from "expo-router";
 
+import { TRAIN_INFO_SERVICE, TrainInfoService, TrainInfoServiceName } from "@/src/domain/constants/bus";
 import appServiceInstance from "@/src/domain/services/appService";
 import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
 import { Card } from "@/src/presentation/components/Card";
@@ -21,7 +22,16 @@ export default function Settings() {
     const { theme } = useTheme();
     const toast = useToast();
     const { user } = useAuth();
-    const { campus, setCampus, initTimetableViewMode, setInitTimetableViewMode } = useSetting();
+    const {
+        campus,
+        setCampus,
+        homeStation,
+        setHomeStation,
+        trainInfoService,
+        setTrainInfoService,
+        initTimetableViewMode,
+        setInitTimetableViewMode,
+    } = useSetting();
     const { refetch: refetchTimetable } = useTimetable();
     const { setFromTimetable } = useClass();
 
@@ -51,6 +61,10 @@ export default function Settings() {
 
     const handleLogout = async () => {
         await authCoordinatorInstance.signOut();
+    };
+
+    const handleSetHomeStation = () => {
+        // 文字入力のモーダルを出し、最寄駅を入力させて後にsetHomeStationする
     };
 
     const handlePurgeCache = () => {
@@ -513,6 +527,86 @@ export default function Settings() {
                             />
                         </View>
                     </Card>
+
+                    {/* 乗換案内サービスの選択 */}
+                    <Card
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            padding: theme.spacing.md,
+                            height: 64,
+                        }}
+                    >
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                width: "100%",
+                            }}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <Icon name="building" size={24} color={theme.colors.text.primary} />
+                                <Typography
+                                    variant="body"
+                                    style={{
+                                        color: theme.colors.text.primary,
+                                        fontSize: 16,
+                                        fontWeight: "600",
+                                        marginLeft: theme.spacing.sm,
+                                    }}
+                                >
+                                    使う乗換案内
+                                </Typography>
+                            </View>
+                            <Select
+                                value={trainInfoService}
+                                onValueChange={(value) => setTrainInfoService(value as TrainInfoService)}
+                                items={TRAIN_INFO_SERVICE.map((e) => ({ label: TrainInfoServiceName[e], value: e }))}
+                                maxWidth={160}
+                            />
+                        </View>
+                    </Card>
+
+                    <TouchableOpacity onPress={handleSetHomeStation} activeOpacity={0.7}>
+                        <Card
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                                padding: theme.spacing.md,
+                                height: 72,
+                            }}
+                        >
+                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                <Icon name="trash-2" size={24} color={theme.colors.text.primary} />
+                                <View style={{ marginLeft: theme.spacing.sm }}>
+                                    <Typography
+                                        variant="body"
+                                        style={{
+                                            color: theme.colors.text.primary,
+                                            fontSize: 16,
+                                            fontWeight: "600",
+                                            marginBottom: theme.spacing.xs,
+                                        }}
+                                    >
+                                        最寄駅: {homeStation ? homeStation : "未設定"}
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        style={{
+                                            color: theme.colors.text.secondary,
+                                            fontSize: 14,
+                                        }}
+                                    >
+                                        最寄駅を変更・設定する
+                                    </Typography>
+                                </View>
+                            </View>
+                            <Icon name="chevron-right" size={20} color={theme.colors.text.secondary} />
+                        </Card>
+                    </TouchableOpacity>
                 </View>
 
                 {/* Data Management Section */}

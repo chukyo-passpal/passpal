@@ -3,13 +3,18 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
+import { TrainInfoService } from "@/src/domain/constants/bus";
 import { Campus } from "@/src/domain/constants/chukyo-univ";
 import { TimetableViewMode } from "@/src/domain/constants/timetable";
 
 export interface settingState {
     campus: Campus;
+    homeStation: string;
+    trainInfoService: TrainInfoService;
     initTimetableViewMode: TimetableViewMode;
     setCampus: (campus: Campus) => void;
+    setHomeStation: (station: string) => void;
+    setTrainInfoService: (service: TrainInfoService) => void;
     setInitTimetableViewMode: (mode: TimetableViewMode) => void;
     reset: () => void;
 }
@@ -21,6 +26,8 @@ const useSetting = create<settingState>()(
     persist(
         immer((set) => ({
             campus: "nagoya" as Campus,
+            homeStation: "",
+            trainInfoService: "google-map" as TrainInfoService,
             initTimetableViewMode: "week" as TimetableViewMode,
 
             /**
@@ -30,6 +37,22 @@ const useSetting = create<settingState>()(
             setCampus: (campus: Campus) =>
                 set((state) => {
                     state.campus = campus;
+                }),
+            /**
+             * バスの時刻表示で使う目的地の駅名を設定します
+             * @param station 設定する駅名
+             */
+            setHomeStation: (station: string) =>
+                set((state) => {
+                    state.homeStation = station;
+                }),
+            /**
+             * バスの時刻表示で使うサービスを設定します
+             * @param service 設定する駅名
+             */
+            setTrainInfoService: (service: TrainInfoService) =>
+                set((state) => {
+                    state.trainInfoService = service;
                 }),
             /**
              * 初期表示の時間割モードを更新します。
@@ -45,6 +68,8 @@ const useSetting = create<settingState>()(
             reset: () =>
                 set((state) => {
                     state.campus = "nagoya";
+                    state.homeStation = "";
+                    state.trainInfoService = "google-map";
                     state.initTimetableViewMode = "week";
                 }),
         })),

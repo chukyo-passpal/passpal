@@ -45,10 +45,6 @@ export class IntegratedBusRepository implements BusRepository {
             throw new ParseError({ cause: parsed.error });
         }
     }
-
-    public getMapUrl(): string {
-        return "https://www.pal-system.coop/corporate/company/traffic/schoolbus.html";
-    }
 }
 
 const busRepositoryInstance = new IntegratedBusRepository();

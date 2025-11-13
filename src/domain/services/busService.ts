@@ -1,6 +1,7 @@
 import busRepositoryInstance, { BusRepository } from "@/src/data/repositories/busRepository";
 import { CalenderDiagramType, SpecialDiagramType } from "@/src/data/types/busCalender";
 import { TimetableBusDiagramType } from "@/src/data/types/busTimetable";
+import useSetting from "@/src/presentation/hooks/useSetting";
 
 export interface BusService {
     /**
@@ -41,6 +42,19 @@ export class IntegratedBusService implements BusService {
      */
     constructor(busRepository = busRepositoryInstance) {
         this.busRepository = busRepository;
+    }
+
+    public getTrainInfoUrl(time: Date): string {
+        const destination = useSetting.getState().homeStation;
+        const trainInfoService = useSetting.getState().trainInfoService;
+
+        switch (trainInfoService) {
+            case "google-map":
+                // TODO: 時刻指定に対応する
+                return `https://www.google.com/maps/dir/?api=1&origin=浄水駅&destination=${destination}&travelmode=transit`;
+            case "yahoo-transit":
+                return ``; // TODO: あとでかく
+        }
     }
 
     public async getTodayDiagram(): Promise<TimetableBusDiagramType> {

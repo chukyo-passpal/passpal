@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Linking, ScrollView, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { TimetableBusDiagramType } from "@/src/data/types/busTimetable";
-import busServiceInstance, { BusTimetable } from "@/src/domain/services/busService";
+import busServiceInstance, { BusTimetable, BusTimetableCell } from "@/src/domain/services/busService";
 import { Button } from "@/src/presentation/components/Button";
 import { Card, CardDivider } from "@/src/presentation/components/Card";
 import { Icon, IconName } from "@/src/presentation/components/Icon";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useSetting from "@/src/presentation/hooks/useSetting";
+import { useToast } from "@/src/presentation/hooks/useToast";
 
 export default function Bus() {
     const { theme } = useTheme();
+    const { homeStation } = useSetting();
+    const { error } = useToast();
 
     const [diagram, setDiagram] = useState<TimetableBusDiagramType | null>(null);
     const [timetable, setTimetable] = useState<BusTimetable | null>(null);
@@ -40,7 +44,9 @@ export default function Bus() {
     // Update current time every second for countdown
     useEffect(() => {
         const timer = setInterval(() => {
-            setCurrentTime(new Date());
+            const current = new Date();
+            current.setMinutes(current.getMinutes() + 0); // MEMO: デバッグ用
+            setCurrentTime(current);
         }, 1000);
         return () => clearInterval(timer);
     }, []);
@@ -49,7 +55,13 @@ export default function Bus() {
         setIsForward(!isForward);
     };
 
-    const handleNextBusPress = (bus: { departureAt: Date; arrivalAt: Date }) => {};
+    const handleNextBusPress = (bus: BusTimetableCell) => {
+        if (homeStation === "") {
+            error("最寄駅が設定されていません。\n設定画面から最寄駅を設定してください。");
+            return;
+        }
+        Linking.openURL(busServiceInstance.getTrainInfoUrl(bus.departureAt));
+    };
 
     // Get next buses (showing current direction)
     const getNextBuses = () => {
@@ -186,7 +198,7 @@ export default function Bus() {
                             index={index}
                             departure={departure}
                             arrival={arrival}
-                            canPress={isForward === true}
+                            canPress={isForward === false}
                             handleNextBusPress={handleNextBusPress}
                             formatTime={formatTime}
                         />
@@ -278,7 +290,8 @@ function NoBusAvailable() {
                     marginBottom: 40,
                 }}
             >
-                明日の運行カレンダーと時刻表は{"\n"}以下から確認できます
+                {/* 明日の運行カレンダーと時刻表は{"\n"}以下から確認できます */}
+                また明日もよろしくお願いします！
             </Typography>
         </View>
     );
