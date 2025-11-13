@@ -21,7 +21,7 @@ export const PASSPAL_URLS = {
 // ============================================
 export const PALAPI_URLS = {
     /** ベースURL */
-    base: "https://api.chukyo-passpal.app/v1",
+    base: "https://api.chukyo-passpal.app",
 } as const;
 
 // ============================================

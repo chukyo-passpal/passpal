@@ -45,7 +45,7 @@ export class IntegratedAuthRepository implements AuthRepository {
     }
 
     public login(firebaseIdToken: string) {
-        palAPIProviderInstance.post("/account/login", {
+        palAPIProviderInstance.post("/v1/account/login", {
             bearer: firebaseIdToken,
         });
     }
