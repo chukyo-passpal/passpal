@@ -67,9 +67,10 @@ export default function Bus() {
     const getNextBuses = () => {
         if (!timetable) return [];
         const now = currentTime;
+        const maxTime = new Date(now.getTime() + 120 * 60 * 1000); // 120分後
         const buses = isForward ? timetable.forward : timetable.reverse;
         return buses
-            .filter((cell) => cell.departureAt > now)
+            .filter((cell) => cell.departureAt > now && cell.departureAt <= maxTime)
             .sort((a, b) => a.departureAt.getTime() - b.departureAt.getTime())
             .slice(0, 5);
     };
