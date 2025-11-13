@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScrollView, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { TimetableBusDiagramType } from "@/src/data/types/busTimetable";
@@ -19,10 +19,10 @@ export default function Bus() {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [isForward, setIsForward] = useState(true); // true: 大学→浄水駅, false: 浄水駅→大学
 
-    const departure: string = isForward ? "大学" : "浄水駅";
-    const arrival: string = isForward ? "浄水駅" : "大学";
-    const depatureIcon: IconName = isForward ? "school" : "train";
-    const arrivalIcon: IconName = isForward ? "train" : "building";
+    const departure: string = isForward ? "浄水駅" : "大学";
+    const arrival: string = isForward ? "大学" : "浄水駅";
+    const departureIcon: IconName = isForward ? "train" : "school";
+    const arrivalIcon: IconName = isForward ? "building" : "train";
 
     const insets = useSafeAreaInsets();
 
@@ -48,6 +48,8 @@ export default function Bus() {
     const handleSwitchDirection = () => {
         setIsForward(!isForward);
     };
+
+    const handleNextBusPress = (bus: { departureAt: Date; arrivalAt: Date }) => {};
 
     // Get next buses (showing current direction)
     const getNextBuses = () => {
@@ -140,7 +142,7 @@ export default function Bus() {
                                     <Typography variant="h2" style={{ fontSize: 28, fontWeight: "bold" }}>
                                         {formatTime(nextBuses[0]!.departureAt)}
                                     </Typography>
-                                    <Icon name={depatureIcon} size={32} color={theme.colors.primary.main} />
+                                    <Icon name={departureIcon} size={32} color={theme.colors.primary.main} />
                                     <Typography variant="body" color={theme.colors.text.secondary}>
                                         {departure}発
                                     </Typography>
@@ -178,55 +180,16 @@ export default function Bus() {
                     </View>
 
                     {nextBuses.map((bus, index) => (
-                        <Card key={index} style={{ marginBottom: 12, padding: 16 }}>
-                            <View
-                                style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}
-                            >
-                                <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
-                                    <View
-                                        style={{
-                                            width: 40,
-                                            height: 40,
-                                            borderRadius: 20,
-                                            backgroundColor: theme.colors.primary.main,
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <Typography variant="h3" color={theme.colors.neutral.white}>
-                                            {index + 1}
-                                        </Typography>
-                                    </View>
-                                    <View>
-                                        <Typography
-                                            variant="body"
-                                            color={theme.colors.text.secondary}
-                                            style={{ fontSize: 12, marginBottom: 4 }}
-                                        >
-                                            {departure}発
-                                        </Typography>
-                                        <Typography variant="h2" style={{ fontSize: 24, fontWeight: "bold" }}>
-                                            {formatTime(bus.departureAt)}
-                                        </Typography>
-                                    </View>
-                                </View>
-
-                                <Icon name="arrow-left-right" size={24} color={theme.colors.primary.main} />
-
-                                <View>
-                                    <Typography
-                                        variant="body"
-                                        color={theme.colors.text.secondary}
-                                        style={{ fontSize: 12, marginBottom: 4 }}
-                                    >
-                                        {arrival}着
-                                    </Typography>
-                                    <Typography variant="h2" style={{ fontSize: 24, fontWeight: "bold" }}>
-                                        {formatTime(bus.arrivalAt)}
-                                    </Typography>
-                                </View>
-                            </View>
-                        </Card>
+                        <NextBusItem
+                            key={index}
+                            bus={bus}
+                            index={index}
+                            departure={departure}
+                            arrival={arrival}
+                            canPress={isForward === true}
+                            handleNextBusPress={handleNextBusPress}
+                            formatTime={formatTime}
+                        />
                     ))}
                 </View>
             </ScrollView>
@@ -277,7 +240,7 @@ function ProgressDots({ departureAt }: { departureAt: Date }) {
     );
 }
 
-export function NoBusAvailable() {
+function NoBusAvailable() {
     const { theme } = useTheme();
 
     return (
@@ -318,5 +281,98 @@ export function NoBusAvailable() {
                 明日の運行カレンダーと時刻表は{"\n"}以下から確認できます
             </Typography>
         </View>
+    );
+}
+
+function NextBusItem({
+    bus,
+    index,
+    departure,
+    arrival,
+    canPress,
+    handleNextBusPress,
+    formatTime,
+}: {
+    bus: { departureAt: Date; arrivalAt: Date };
+    index: number;
+    departure: string;
+    arrival: string;
+    canPress: boolean;
+    handleNextBusPress: (bus: { departureAt: Date; arrivalAt: Date }) => void;
+    formatTime: (date: Date) => string;
+}) {
+    const { theme } = useTheme();
+
+    const BusCard = (
+        <Card style={{ marginBottom: 12, paddingVertical: 16, paddingRight: 8 }}>
+            <View
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+                    <View
+                        style={{
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            backgroundColor: theme.colors.primary.main,
+                            alignItems: "center",
+                            justifyContent: "center",
+                        }}
+                    >
+                        <Typography variant="h3" color={theme.colors.neutral.white}>
+                            {index + 1}
+                        </Typography>
+                    </View>
+                    <View>
+                        <Typography
+                            variant="body"
+                            color={theme.colors.text.secondary}
+                            style={{ fontSize: 12, marginBottom: 4 }}
+                        >
+                            {departure}発
+                        </Typography>
+                        <Typography variant="h2" style={{ fontSize: 24, fontWeight: "bold" }}>
+                            {formatTime(bus.departureAt)}
+                        </Typography>
+                    </View>
+                </View>
+
+                <Icon name="arrow-left-right" size={24} color={theme.colors.primary.main} />
+
+                <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+                    <View>
+                        <Typography
+                            variant="body"
+                            color={theme.colors.text.secondary}
+                            style={{ fontSize: 12, marginBottom: 4 }}
+                        >
+                            {arrival}着
+                        </Typography>
+                        <Typography variant="h2" style={{ fontSize: 24, fontWeight: "bold" }}>
+                            {formatTime(bus.arrivalAt)}
+                        </Typography>
+                    </View>
+                    {canPress ? (
+                        <Icon name="chevron-right" size={24} color={theme.colors.primary.main} />
+                    ) : (
+                        <View style={{ width: 24 }} />
+                    )}
+                </View>
+            </View>
+        </Card>
+    );
+
+    if (!canPress) {
+        return BusCard;
+    }
+
+    return (
+        <TouchableOpacity activeOpacity={0.7} onPress={() => handleNextBusPress(bus)}>
+            {BusCard}
+        </TouchableOpacity>
     );
 }
