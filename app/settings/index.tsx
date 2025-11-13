@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import {
     KeyboardAvoidingView,
     Linking,
@@ -47,31 +47,8 @@ export default function Settings() {
     const { refetch: refetchTimetable } = useTimetable();
     const { setFromTimetable } = useClass();
 
-    const [, setTapCount] = useState(0);
-    const timerRef = useRef<number | null>(null);
     const [isStationModalOpen, setIsStationModalOpen] = useState(false);
     const [tempStationName, setTempStationName] = useState("");
-
-    const handleAboutPress = () => {
-        setTapCount((prev) => {
-            const newCount = prev + 1;
-            if (newCount >= 10) {
-                router.push("/debug");
-                if (timerRef.current) {
-                    clearTimeout(timerRef.current);
-                }
-                return 0;
-            }
-            return newCount;
-        });
-
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-        }
-        timerRef.current = setTimeout(() => {
-            setTapCount(0);
-        }, 500);
-    };
 
     const handleLogout = async () => {
         await authCoordinatorInstance.signOut();
@@ -352,7 +329,6 @@ export default function Settings() {
                             icon="info"
                             label="About PassPal"
                             description={appServiceInstance.versionInfo}
-                            onPress={handleAboutPress}
                             isTouchable={false}
                         />
                         <SettingActionItem label="ライセンス情報" onPress={handleLicenseInfo} />
@@ -542,7 +518,7 @@ interface SettingActionItemProps {
     icon?: IconName;
     label: string;
     description?: string;
-    onPress: () => void;
+    onPress?: () => void;
     iconColor?: string;
     labelColor?: string;
     isTouchable?: boolean;
