@@ -1,14 +1,25 @@
 import { useRef, useState } from "react";
-import { Linking, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import {
+    KeyboardAvoidingView,
+    Linking,
+    Modal,
+    Platform,
+    ScrollView,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+} from "react-native";
 import { router } from "expo-router";
 
 import { TRAIN_INFO_SERVICE, TrainInfoService, TrainInfoServiceName } from "@/src/domain/constants/bus";
 import { Campus, CAMPUSES, campusNames } from "@/src/domain/constants/chukyo-univ";
 import appServiceInstance from "@/src/domain/services/appService";
 import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
+import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon, IconName } from "@/src/presentation/components/Icon";
+import { Input } from "@/src/presentation/components/Input";
 import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
@@ -38,6 +49,8 @@ export default function Settings() {
 
     const [, setTapCount] = useState(0);
     const timerRef = useRef<number | null>(null);
+    const [isStationModalOpen, setIsStationModalOpen] = useState(false);
+    const [tempStationName, setTempStationName] = useState("");
 
     const handleAboutPress = () => {
         setTapCount((prev) => {
@@ -65,7 +78,19 @@ export default function Settings() {
     };
 
     const handleSetHomeStation = () => {
-        // 文字入力のモーダルを出し、最寄駅を入力させて後にsetHomeStationする
+        setTempStationName(homeStation || "");
+        setIsStationModalOpen(true);
+    };
+
+    const handleSaveHomeStation = () => {
+        setHomeStation(tempStationName.trim());
+        setIsStationModalOpen(false);
+        toast.success("最寄駅を設定しました");
+    };
+
+    const handleCancelStationModal = () => {
+        setIsStationModalOpen(false);
+        setTempStationName("");
     };
 
     const handlePurgeCache = () => {
@@ -334,6 +359,132 @@ export default function Settings() {
                     </View>
                 </View>
             </ScrollView>
+
+            {/* 最寄駅入力モーダル */}
+            <Modal
+                visible={isStationModalOpen}
+                transparent
+                animationType="fade"
+                onRequestClose={handleCancelStationModal}
+            >
+                <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={{ flex: 1 }}>
+                    <TouchableWithoutFeedback onPress={handleCancelStationModal}>
+                        <View
+                            style={{
+                                flex: 1,
+                                backgroundColor: "rgba(0, 0, 0, 0.5)",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                padding: theme.spacing.lg,
+                            }}
+                        >
+                            <TouchableWithoutFeedback>
+                                <View
+                                    style={{
+                                        backgroundColor: theme.colors.background.primary,
+                                        borderRadius: theme.spacing.borderRadius.lg,
+                                        padding: theme.spacing.lg,
+                                        width: "100%",
+                                        maxWidth: 400,
+                                        ...theme.components.shadows.large,
+                                    }}
+                                >
+                                    {/* タイトルとクローズボタン */}
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            marginBottom: theme.spacing.md,
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="h3"
+                                            style={{
+                                                color: theme.colors.text.primary,
+                                                fontSize: 20,
+                                                fontWeight: "bold",
+                                            }}
+                                        >
+                                            最寄駅を設定
+                                        </Typography>
+                                        <TouchableOpacity
+                                            onPress={handleCancelStationModal}
+                                            style={{
+                                                padding: theme.spacing.xs,
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="body"
+                                                style={{
+                                                    color: theme.colors.text.secondary,
+                                                    fontSize: 24,
+                                                    lineHeight: 24,
+                                                }}
+                                            >
+                                                ×
+                                            </Typography>
+                                        </TouchableOpacity>
+                                    </View>
+
+                                    {/* 説明 */}
+                                    <Typography
+                                        variant="body"
+                                        style={{
+                                            color: theme.colors.text.secondary,
+                                            fontSize: 14,
+                                            marginBottom: theme.spacing.lg,
+                                        }}
+                                    >
+                                        乗換案内で使用する最寄駅を入力してください
+                                    </Typography>
+
+                                    {/* 入力フィールド */}
+                                    <Input
+                                        value={tempStationName}
+                                        onChangeText={setTempStationName}
+                                        placeholder="例: 名古屋駅"
+                                        autoFocus
+                                        containerStyle={{ marginBottom: theme.spacing.lg }}
+                                    />
+
+                                    {/* ボタン */}
+                                    <View
+                                        style={{
+                                            flexDirection: "row",
+                                            gap: theme.spacing.sm,
+                                        }}
+                                    >
+                                        <View style={{ flex: 1 }}>
+                                            <Button
+                                                variant="secondary"
+                                                onPress={handleCancelStationModal}
+                                                style={{
+                                                    height: 48,
+                                                }}
+                                            >
+                                                キャンセル
+                                            </Button>
+                                        </View>
+                                        <View style={{ flex: 1 }}>
+                                            <Button
+                                                variant="primary"
+                                                onPress={handleSaveHomeStation}
+                                                disabled={!tempStationName.trim()}
+                                                style={{
+                                                    height: 48,
+                                                }}
+                                            >
+                                                保存
+                                            </Button>
+                                        </View>
+                                    </View>
+                                </View>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </KeyboardAvoidingView>
+            </Modal>
         </View>
     );
 }
