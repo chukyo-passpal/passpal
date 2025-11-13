@@ -12,10 +12,12 @@ import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
-import { ALBO_URLS, MANABO_URLS } from "@/src/utils/urls";
+import useSetting from "@/src/presentation/hooks/useSetting";
+import { ALBO_URLS, CHUKYO_UNIVERSITY_LINKS, MANABO_URLS } from "@/src/utils/urls";
 
 export default function HomeScreen() {
     const { theme } = useTheme();
+    const { campus } = useSetting();
     const router = useRouter();
     const { newsData, refetch: refetchNews, loading: loadingNews, lastFetch: newsLastFetch } = useNews();
     const { mailData, refetch: refetchMail, loading: mailLoading, lastFetch: mailLastFetch } = useMail();
@@ -26,6 +28,14 @@ export default function HomeScreen() {
 
     const handleOpenMaNaBo = () => {
         Linking.openURL(MANABO_URLS.auth);
+    };
+
+    const handleOpenCampusMap = () => {
+        if (campus === "toyota") {
+            Linking.openURL(CHUKYO_UNIVERSITY_LINKS.toyotaCampusMap);
+        } else {
+            Linking.openURL(CHUKYO_UNIVERSITY_LINKS.nagoyaCampusMap);
+        }
     };
 
     const handleOpenSettings = () => {
@@ -233,6 +243,21 @@ export default function HomeScreen() {
                     <View style={{ flex: 1 }}>
                         <Button variant="primary" fullWidth onPress={handleOpenMaNaBo}>
                             MaNaBoを開く
+                        </Button>
+                    </View>
+                </View>
+
+                {/* Link Buttons */}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        gap: theme.spacing.md,
+                        marginBottom: theme.spacing.md,
+                    }}
+                >
+                    <View style={{ flex: 1 }}>
+                        <Button variant="primary" fullWidth onPress={handleOpenCampusMap}>
+                            キャンパスマップを開く
                         </Button>
                     </View>
                 </View>

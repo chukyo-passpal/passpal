@@ -80,6 +80,16 @@ export const SHIBBOLETH_URLS = {
     loginForm: "https://shib.chukyo-u.ac.jp/cloudlink/module.php/core/loginuserpass.php",
 } as const;
 
+/** 中京大学のリンク集 */
+export const CHUKYO_UNIVERSITY_LINKS = {
+    /** m.mail */
+    mMail: "https://mail.google.com/a/m.chukyo-u.ac.jp",
+    /** 豊田キャンパスマップ */
+    toyotaCampusMap: "https://www.chukyo-u.ac.jp/information/facility/g2.html",
+    /** 名古屋キャンパスマップ */
+    nagoyaCampusMap: "https://www.chukyo-u.ac.jp/information/facility/g1.html",
+};
+
 // ============================================
 // URLヘルパー関数
 // ============================================
