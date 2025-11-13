@@ -50,6 +50,8 @@ export default function Settings() {
     const [isStationModalOpen, setIsStationModalOpen] = useState(false);
     const [tempStationName, setTempStationName] = useState("");
 
+    const isToyotaCampus = campus === "toyota";
+
     const handleLogout = async () => {
         await authCoordinatorInstance.signOut();
     };
@@ -252,22 +254,26 @@ export default function Settings() {
                         ]}
                     />
 
-                    {/* 乗換案内サービスの選択 */}
-                    <SettingSelectItem
-                        icon="train"
-                        label="使う乗換案内"
-                        value={trainInfoService}
-                        onValueChange={(value) => setTrainInfoService(value as TrainInfoService)}
-                        items={TRAIN_INFO_SERVICE.map((e) => ({ label: TrainInfoServiceName[e], value: e }))}
-                    />
+                    {isToyotaCampus && (
+                        <>
+                            {/* 乗換案内サービスの選択 */}
+                            <SettingSelectItem
+                                icon="train"
+                                label="使う乗換案内"
+                                value={trainInfoService}
+                                onValueChange={(value) => setTrainInfoService(value as TrainInfoService)}
+                                items={TRAIN_INFO_SERVICE.map((e) => ({ label: TrainInfoServiceName[e], value: e }))}
+                            />
 
-                    {/* 最寄駅設定 */}
-                    <SettingActionItem
-                        icon="map-pin"
-                        label={`最寄駅: ${homeStation ? homeStation : "未設定"}`}
-                        description="最寄駅を変更・設定する"
-                        onPress={handleSetHomeStation}
-                    />
+                            {/* 最寄駅設定 */}
+                            <SettingActionItem
+                                icon="map-pin"
+                                label={`最寄駅: ${homeStation ? homeStation : "未設定"}`}
+                                description="最寄駅を変更・設定する"
+                                onPress={handleSetHomeStation}
+                            />
+                        </>
+                    )}
                 </View>
 
                 {/* Data Management Section */}
