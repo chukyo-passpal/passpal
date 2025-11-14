@@ -208,10 +208,6 @@ export default function ClassAssignments() {
                                     variant="default"
                                     style={{
                                         gap: 12,
-                                        borderLeftWidth: 4,
-                                        borderLeftColor: isOverdue
-                                            ? theme.colors.status.error
-                                            : theme.colors.primary.main,
                                     }}
                                 >
                                     {/* タイトルとステータス */}
