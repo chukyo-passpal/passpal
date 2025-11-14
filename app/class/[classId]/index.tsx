@@ -164,7 +164,7 @@ export default function ClassDetail() {
 
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
-            <Header title="授業詳細" shownBackButton />
+            <Header title="授業詳細" shownBackButton subButtonIcon="edit" onPressSubButton={handleOpenEditModal} />
 
             <ScrollView style={{ flex: 1 }} contentContainerStyle={{ padding: 20, gap: 24 }}>
                 {/* Class Header Card */}
@@ -183,25 +183,6 @@ export default function ClassDetail() {
                             </Typography>
                             <Icon name="clipboard-list" size={24} color={theme.colors.primary.main} />
                         </View>
-                        <TouchableOpacity
-                            onPress={handleOpenEditModal}
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: 6,
-                                paddingHorizontal: 12,
-                                paddingVertical: 8,
-                                borderRadius: 999,
-                                borderWidth: 1,
-                                borderColor: theme.colors.border.default,
-                                backgroundColor: theme.colors.background.primary,
-                            }}
-                        >
-                            <Icon name="settings" size={16} color={theme.colors.primary.main} />
-                            <Typography variant="label" color={theme.colors.primary.main}>
-                                編集
-                            </Typography>
-                        </TouchableOpacity>
                     </View>
 
                     <View style={{ gap: 8 }}>

@@ -21,6 +21,7 @@ import {
     Clock,
     CloudUpload,
     Construction,
+    Edit,
     Eye,
     EyeOff,
     Flag,
@@ -60,6 +61,7 @@ export type IconName =
     | "clock"
     | "cloud-upload"
     | "construction"
+    | "edit"
     | "eye"
     | "eye-off"
     | "flag"
@@ -103,6 +105,7 @@ const iconMap: Record<IconName, React.ComponentType<LucideProps>> = {
     clock: Clock,
     "cloud-upload": CloudUpload,
     construction: Construction,
+    edit: Edit,
     eye: Eye,
     "eye-off": EyeOff,
     flag: Flag,
