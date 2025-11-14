@@ -383,6 +383,8 @@ export default function TimetableScreen() {
                                                             <Typography
                                                                 variant="caption"
                                                                 color={theme.colors.text.primary}
+                                                                numberOfLines={1}
+                                                                style={{ overflow: "hidden" }}
                                                             >
                                                                 {classInfo.room}
                                                             </Typography>
