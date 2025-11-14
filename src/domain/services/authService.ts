@@ -41,7 +41,11 @@ export interface AuthService {
 export class IntegratedAuthService implements AuthService {
     protected chukyoShibbolethAuth?: shibbolethWebViewAuthFunction;
     protected shibAuthQueue: Promise<void> = Promise.resolve();
-    protected authRepository = authRepositoryInstance;
+    protected authRepository;
+
+    constructor(authRepository = authRepositoryInstance) {
+        this.authRepository = authRepository;
+    }
 
     public get allowedMailDomain(): string {
         return this.authRepository.allowedMailDomain;
