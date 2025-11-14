@@ -31,14 +31,14 @@ export default function ClassAssignments() {
 
     // 初回読み込み
     useEffect(() => {
-        if (classId && classInfo) {
+        if (classId) {
             fetchClassAssignments(classId);
         }
-    }, [classId, classInfo, fetchClassAssignments]);
+    }, [classId, fetchClassAssignments]);
 
     // 課題を更新
     const handleRefresh = () => {
-        if (classId && classInfo) {
+        if (classId) {
             fetchClassAssignments(classId);
         }
     };
@@ -59,27 +59,6 @@ export default function ClassAssignments() {
         return <LoadingScreen message="課題を読み込んでいます" helperText="最新の課題情報を取得しています" />;
     }
 
-    // 授業が見つからない場合
-    if (!classInfo) {
-        return (
-            <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
-                <Header title="課題一覧" shownBackButton />
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        padding: 20,
-                    }}
-                >
-                    <Typography variant="body" color={theme.colors.text.secondary}>
-                        授業データが見つかりません
-                    </Typography>
-                </View>
-            </View>
-        );
-    }
-
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
             <Header title="課題一覧" shownBackButton />
@@ -98,15 +77,26 @@ export default function ClassAssignments() {
                 {/* 授業情報ヘッダー */}
                 <Card variant="feature" style={{ gap: 12 }}>
                     <Typography variant="h2" color={theme.colors.primary.main}>
-                        {classInfo.info.name}
+                        {classInfo?.info.name ?? "授業情報を取得しています"}
                     </Typography>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                         <Icon name="user" size={16} color={theme.colors.text.secondary} />
                         <Typography variant="bodySmall" color={theme.colors.text.secondary}>
-                            {classInfo.info.teacher}
+                            {classInfo?.info.teacher ?? "教員情報を取得しています"}
                         </Typography>
                     </View>
                 </Card>
+
+                {!classInfo && (
+                    <Card variant="default" style={{ gap: 8 }}>
+                        <Typography variant="body" color={theme.colors.text.primary}>
+                            授業情報の取得に失敗したため、課題情報のみ表示しています。
+                        </Typography>
+                        <Typography variant="caption" color={theme.colors.text.secondary}>
+                            時間割から再同期すると授業情報が更新されます。
+                        </Typography>
+                    </Card>
+                )}
 
                 {/* 統計情報 */}
                 <Card variant="default" style={{ gap: 16 }}>
