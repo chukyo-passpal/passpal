@@ -9,10 +9,12 @@ import { Input } from "@/src/presentation/components/Input";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
+import { useToast } from "@/src/presentation/hooks/useToast";
 
 export default function Index() {
     const { theme } = useTheme();
     const { signIn } = useAuth();
+    const toast = useToast();
     const { studentId } = useLocalSearchParams<{ studentId: string }>();
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +33,7 @@ export default function Index() {
             if (error instanceof Error) {
                 alert(error.message);
             } else {
-                alert("不明なエラーが発生しました。");
+                toast.error("不明なエラーが発生しました。");
             }
             setIsLoading(false);
             return;

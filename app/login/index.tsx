@@ -5,10 +5,12 @@ import appServiceInstance from "@/src/domain/services/appService";
 import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import { useToast } from "@/src/presentation/hooks/useToast";
 
 export default function Login() {
     const { theme } = useTheme();
     const router = useRouter();
+    const toast = useToast();
 
     const handleNext = (studentId: string) => {
         router.push({
@@ -25,11 +27,11 @@ export default function Login() {
                 break;
             }
             case "invalid-domain": {
-                alert("中京大学のアカウントでログインしてください");
+                toast.error("中京大学のアカウントでログインしてください");
                 break;
             }
             case "cancelled": {
-                alert("ログインがキャンセルされました");
+                toast.info("ログインがキャンセルされました");
                 break;
             }
             case "error": {
