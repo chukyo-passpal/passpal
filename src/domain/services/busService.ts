@@ -52,6 +52,7 @@ export class IntegratedBusService implements BusService {
 
         switch (trainInfoService) {
             case "google-map":
+                // 参考: https://mstickles.wordpress.com/2015/06/12/gmaps-urls-intro/
                 const departureTimestamp = time.getTime() / 1000 + 9 * 60 * 60; // JSTに変換
                 return `https://www.google.com/maps/dir/${departure}/${destination}/data=!4m6!4m5!2m3!6e0!7e2!8j${departureTimestamp}!3e3`;
             case "yahoo-transit":

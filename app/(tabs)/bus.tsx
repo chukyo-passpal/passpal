@@ -23,10 +23,14 @@ export default function Bus() {
     const [currentTime, setCurrentTime] = useState(new Date());
     const [isForward, setIsForward] = useState(true); // true: 大学→浄水駅, false: 浄水駅→大学
 
-    const departure: string = isForward ? "浄水駅" : "大学";
-    const arrival: string = isForward ? "大学" : "浄水駅";
-    const departureIcon: IconName = isForward ? "train" : "school";
-    const arrivalIcon: IconName = isForward ? "building" : "train";
+    const univName = "大学";
+    const univIcon = "school";
+    const stationName = "浄水駅";
+    const stationIcon = "train";
+    const departure: string = isForward ? stationName : univName;
+    const arrival: string = isForward ? univName : stationName;
+    const departureIcon: IconName = isForward ? stationIcon : univIcon;
+    const arrivalIcon: IconName = isForward ? univIcon : stationIcon;
 
     const insets = useSafeAreaInsets();
 
@@ -60,7 +64,7 @@ export default function Bus() {
             error("最寄駅が設定されていません。\n設定画面から最寄駅を設定してください。");
             return;
         }
-        Linking.openURL(busServiceInstance.getTrainInfoUrl(bus.departureAt));
+        Linking.openURL(busServiceInstance.getTrainInfoUrl(bus.arrivalAt));
     };
 
     // Get next buses (showing current direction)
