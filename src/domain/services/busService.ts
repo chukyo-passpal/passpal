@@ -3,7 +3,6 @@ import { CalenderDiagramType, SpecialDiagramType } from "@/src/data/types/busCal
 import { TimetableBusDiagramType } from "@/src/data/types/busTimetable";
 import useSetting from "@/src/presentation/hooks/useSetting";
 
-
 export interface BusService {
     /**
      * 今日のダイヤ種別を取得します。
@@ -111,7 +110,7 @@ export class IntegratedBusService implements BusService {
                         // バスの運行時間を設定する
                         let elapsedMinutes: number;
                         if (direction === "forward") {
-                            if (item.via === "kaidu") {
+                            if (item.via) {
                                 elapsedMinutes = 17;
                             } else {
                                 elapsedMinutes = 15;
