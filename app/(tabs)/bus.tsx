@@ -224,7 +224,7 @@ export default function Bus() {
                     elevation: 8,
                 }}
             >
-                <Button onPress={handleSwitchDirection}>{isForward ? "浄水駅発をみる" : "大学発をみる"}</Button>
+                <Button onPress={handleSwitchDirection}>{arrival}発をみる</Button>
             </View>
         </View>
     );
