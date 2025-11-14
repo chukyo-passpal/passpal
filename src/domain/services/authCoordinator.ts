@@ -13,6 +13,7 @@ import {
 
 import { AuthProcessError } from "@/src/data/errors/AuthError";
 import authRepositoryInstance from "@/src/data/repositories/authRepository";
+import cacheRepositoryInstance from "@/src/data/repositories/cacheRepository";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import useClass from "@/src/presentation/hooks/useClass";
@@ -20,7 +21,7 @@ import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
-import authServiceInstance, { AuthService } from "./authService";
+import authServiceInstance from "./authService";
 
 export type GoogleSignInFlowResult =
     | { kind: "success"; studentId: string; firebaseUser: SignInSuccessResponse["data"] }
@@ -66,20 +67,30 @@ export interface AuthCoordinator {
 }
 
 export class IntegratedAuthService implements AuthCoordinator {
-    protected readonly authService: AuthService;
+    protected readonly authService;
+    protected readonly authRepository;
+    protected readonly cacheRepository;
 
     /**
      * 認証コーディネーターを初期化します。
      * @param authService 認証を処理するサービス
+     * @param cacheRepository キャッシュを処理するリポジトリ
+     * @param authRepository 認証データを処理するリポジトリ
      */
-    constructor(authService = authServiceInstance) {
+    constructor(
+        authService = authServiceInstance,
+        cacheRepository = cacheRepositoryInstance,
+        authRepository = authRepositoryInstance
+    ) {
         this.authService = authService;
+        this.cacheRepository = cacheRepository;
+        this.authRepository = authRepository;
     }
 
     public configure(): void {
         GoogleSignin.configure({
-            hostedDomain: authServiceInstance.allowedMailDomain,
-            webClientId: authServiceInstance.webClientId,
+            hostedDomain: this.authService.allowedMailDomain,
+            webClientId: this.authService.webClientId,
             offlineAccess: true,
         });
     }
@@ -108,11 +119,11 @@ export class IntegratedAuthService implements AuthCoordinator {
 
             // メールドメインの検証
             const email = response.data.user.email;
-            if (!email.endsWith(authServiceInstance.allowedMailDomain)) {
+            if (!email.endsWith(this.authService.allowedMailDomain)) {
                 return {
                     kind: "invalid-domain",
                     email,
-                    allowedDomain: authServiceInstance.allowedMailDomain,
+                    allowedDomain: this.authService.allowedMailDomain,
                 };
             }
 
@@ -120,7 +131,7 @@ export class IntegratedAuthService implements AuthCoordinator {
             const firebaseIdToken = await this.getFirebaseIdToken();
             const firebaseUser = response.data;
             // PalAPIにログイン
-            authRepositoryInstance.login(firebaseIdToken);
+            this.authRepository.login(firebaseIdToken);
             // Firebaseユーザー情報をストアに保存
             useAuth.getState().setFirebaseUser(firebaseUser);
 
@@ -169,17 +180,19 @@ export class IntegratedAuthService implements AuthCoordinator {
 
     public async signOut(): Promise<void> {
         this.clearContentStores();
-        authRepositoryInstance.clearAuthCookies();
+        this.cacheRepository.clearCache();
+        this.authRepository.clearAuthCookies();
         await GoogleSignin.signOut();
         useAuth.getState().signOut();
     }
 
     public purgeCaches(): void {
-        authRepositoryInstance.clearAuthCookies();
+        this.authRepository.clearAuthCookies();
         useMail.getState().clear();
         useNews.getState().clear();
         useClass.getState().clear();
         useAssignment.getState().clear();
+        this.cacheRepository.clearCache();
     }
 
     private clearContentStores(): void {
