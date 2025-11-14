@@ -2,7 +2,7 @@ import React, { useEffect, useMemo } from "react";
 import { Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
-import assignmentServiceInstance, { AssignmentStatsSummary } from "@/src/domain/services/assignmentService";
+import assignmentUsecaseInstance, { AssignmentStatsSummary } from "@/src/domain/usecase/assignmentUsecase";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
@@ -25,7 +25,7 @@ export default function ClassAssignments() {
     const classAssignmentInfo = assignmentData?.classes[classId || ""];
 
     const assignments = useMemo(
-        () => assignmentServiceInstance.flattenClassAssignments(classAssignmentInfo),
+        () => assignmentUsecaseInstance.flattenClassAssignments(classAssignmentInfo),
         [classAssignmentInfo]
     );
 
@@ -51,7 +51,7 @@ export default function ClassAssignments() {
     };
 
     const stats = useMemo<AssignmentStatsSummary>(
-        () => assignmentServiceInstance.calculateClassAssignmentStats(assignments),
+        () => assignmentUsecaseInstance.calculateClassAssignmentStats(assignments),
         [assignments]
     );
 
@@ -191,16 +191,16 @@ export default function ClassAssignments() {
 
                         {assignments.map((assignment, index) => {
                             const dueDate = assignment.duration.deadline.end;
-                            const isOverdue = assignmentServiceInstance.isOverdue(assignment);
-                            const contentTitle = assignmentServiceInstance.resolveContentTitle(assignment);
-                            const manaboUrl = assignmentServiceInstance.getPrimaryActionUrl(assignment);
-                            const contentStatus = assignmentServiceInstance.resolveContentStatus(assignment);
-                            const statusColor = assignmentServiceInstance.getStatusColor(contentStatus, theme);
-                            const statusBackgroundColor = assignmentServiceInstance.getStatusBGColor(
+                            const isOverdue = assignmentUsecaseInstance.isOverdue(assignment);
+                            const contentTitle = assignmentUsecaseInstance.resolveContentTitle(assignment);
+                            const manaboUrl = assignmentUsecaseInstance.getPrimaryActionUrl(assignment);
+                            const contentStatus = assignmentUsecaseInstance.resolveContentStatus(assignment);
+                            const statusColor = assignmentUsecaseInstance.getStatusColor(contentStatus, theme);
+                            const statusBackgroundColor = assignmentUsecaseInstance.getStatusBGColor(
                                 contentStatus,
                                 theme
                             );
-                            const statusLabel = assignmentServiceInstance.getStatusLabel(contentStatus);
+                            const statusLabel = assignmentUsecaseInstance.getStatusLabel(contentStatus);
 
                             return (
                                 <Card

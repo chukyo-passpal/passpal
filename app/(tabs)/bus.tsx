@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { TimetableBusDiagramType } from "@/src/data/types/busTimetable";
 import busServiceInstance, { BusTimetable, BusTimetableCell } from "@/src/domain/services/busService";
+import busUsecaseInstance from "@/src/domain/usecase/busUsecase";
 import { Button } from "@/src/presentation/components/Button";
 import { Card, CardDivider } from "@/src/presentation/components/Card";
 import { Icon, IconName } from "@/src/presentation/components/Icon";
@@ -65,7 +66,7 @@ export default function Bus() {
             error("最寄駅が設定されていません。\n設定画面から最寄駅を設定してください。");
             return;
         }
-        Linking.openURL(busServiceInstance.getTrainInfoUrl(bus.arrivalAt));
+        Linking.openURL(busUsecaseInstance.getTrainInfoUrl(bus.arrivalAt));
     };
 
     // Get next buses (showing current direction)

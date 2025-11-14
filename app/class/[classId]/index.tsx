@@ -11,7 +11,7 @@ import {
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { ClassInfo } from "@/src/domain/models/class";
-import classServiceInstance, { AttendanceStatsSummary } from "@/src/domain/services/classService";
+import classUsecaseInstance, { AttendanceStatsSummary } from "@/src/domain/usecase/classUsecase";
 import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
@@ -76,7 +76,7 @@ export default function ClassDetail() {
 
     // 出席情報を集計
     const attendanceStats = useMemo<AttendanceStatsSummary>(
-        () => classServiceInstance.calculateAttendanceStats(classInfo?.attendanceLog ?? []),
+        () => classUsecaseInstance.calculateAttendanceStats(classInfo?.attendanceLog ?? []),
         [classInfo?.attendanceLog]
     );
 
@@ -106,7 +106,7 @@ export default function ClassDetail() {
     }
 
     const { info, detail, news } = classInfo;
-    const schedule = classServiceInstance.buildScheduleLabel(classInfo);
+    const schedule = classUsecaseInstance.buildScheduleLabel(classInfo);
 
     const finalClassData = {
         title: info.name,

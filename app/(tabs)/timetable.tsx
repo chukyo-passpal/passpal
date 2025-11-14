@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { TimetableViewMode } from "@/src/domain/constants/timetable";
 import { Weekday } from "@/src/domain/constants/week";
 import timetableServiceInstance from "@/src/domain/services/timetableService";
+import timetableUsecaseInstance from "@/src/domain/usecase/timetableUsecase";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
 import { LoadingScreen } from "@/src/presentation/components/LoadingScreen";
@@ -33,13 +34,13 @@ export default function TimetableScreen() {
 
     const displayWeekdays = useMemo(() => {
         if (!timetableData) return [];
-        return tService.getShouldDisplayWeekdays(timetableData);
-    }, [tService, timetableData]);
+        return timetableUsecaseInstance.getShouldDisplayWeekdays(timetableData);
+    }, [timetableData]);
 
     const displayPeriods = useMemo(() => {
         if (!timetableData) return [];
-        return tService.getShouldDisplayPeriods(timetableData, campus);
-    }, [tService, timetableData, campus]);
+        return timetableUsecaseInstance.getShouldDisplayPeriods(timetableData, campus);
+    }, [timetableData, campus]);
 
     const handleChangeViewMode = () => {
         const newMode = timetableViewMode === "day" ? "week" : "day";

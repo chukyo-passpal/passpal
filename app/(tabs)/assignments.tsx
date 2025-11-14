@@ -1,10 +1,10 @@
 import React from "react";
 import { Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
-import assignmentServiceInstance, {
+import assignmentUsecaseInstance, {
     AssignmentFilter,
     AssignmentOverviewItem,
-} from "@/src/domain/services/assignmentService";
+} from "@/src/domain/usecase/assignmentUsecase";
 import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
@@ -36,11 +36,11 @@ export default function Assignments() {
     };
 
     const flattenedAssignments = React.useMemo(
-        () => assignmentServiceInstance.buildAssignmentOverview(assignmentData),
+        () => assignmentUsecaseInstance.buildAssignmentOverview(assignmentData),
         [assignmentData]
     );
     const filteredAssignments = React.useMemo(
-        () => assignmentServiceInstance.filterAssignmentOverview(flattenedAssignments, filter),
+        () => assignmentUsecaseInstance.filterAssignmentOverview(flattenedAssignments, filter),
         [flattenedAssignments, filter]
     );
 
@@ -67,7 +67,7 @@ export default function Assignments() {
                     <Typography variant="body" style={{ marginTop: 16 }} color={theme.colors.text.secondary}>
                         {filter === "all"
                             ? "課題はありません"
-                            : `${assignmentServiceInstance.getAssignmentFilterLabel(filter)}の課題はありません`}
+                            : `${assignmentUsecaseInstance.getAssignmentFilterLabel(filter)}の課題はありません`}
                     </Typography>
                     <Button variant="text" style={{ marginTop: 16 }} onPress={handleRefresh}>
                         更新する
@@ -140,7 +140,7 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: AssignmentOve
                     </View>
                     <View
                         style={{
-                            backgroundColor: assignmentServiceInstance.getStatusBGColor(assignment.status, theme),
+                            backgroundColor: assignmentUsecaseInstance.getStatusBGColor(assignment.status, theme),
                             paddingHorizontal: 12,
                             paddingVertical: 6,
                             borderRadius: 16,
@@ -148,9 +148,9 @@ function AssignmentCard({ assignment, handleTouch }: { assignment: AssignmentOve
                     >
                         <Typography
                             variant="caption"
-                            color={assignmentServiceInstance.getStatusColor(assignment.status, theme)}
+                            color={assignmentUsecaseInstance.getStatusColor(assignment.status, theme)}
                         >
-                            {assignmentServiceInstance.getStatusLabel(assignment.status)}
+                            {assignmentUsecaseInstance.getStatusLabel(assignment.status)}
                         </Typography>
                     </View>
                 </View>

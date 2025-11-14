@@ -1,7 +1,4 @@
 import timetableRepositoryInstance, { TimetableRepository } from "@/src/data/repositories/timetableRepository";
-import { Campus } from "../constants/chukyo-univ";
-import { Period } from "../constants/period";
-import { Weekday } from "../constants/week";
 import { PeriodData, TimetableData } from "../models/timetable";
 import authServiceInstance, { AuthService } from "./authService";
 
@@ -22,21 +19,6 @@ export interface TimetableService {
      * @returns マージ済みの時間割データ
      */
     getTimetable(): Promise<TimetableData>;
-
-    /**
-     * 時間割に基づいて表示すべき曜日を算出します。
-     * @param Timetable 判定対象の時間割
-     * @returns 表示対象の曜日配列
-     */
-    getShouldDisplayWeekdays(timetable: TimetableData): Weekday[];
-
-    /**
-     * 表示すべき時限を算出します。
-     * @param timetable 判定対象の時間割
-     * @param campus 対象キャンパス
-     * @returns 表示する時限リスト
-     */
-    getShouldDisplayPeriods(timetable: TimetableData, campus: Campus): Period[];
 }
 
 export class IntegratedTimetableService implements TimetableService {
@@ -96,27 +78,6 @@ export class IntegratedTimetableService implements TimetableService {
         const mergedTimetable = this.mergeTimetables(manaboTimetable, cubicsTimetable);
 
         return mergedTimetable;
-    }
-
-    public getShouldDisplayWeekdays(Timetable: TimetableData): Weekday[] {
-        const shouldDisplay: Weekday[] = ["月", "火", "水", "木", "金"];
-
-        const isSaturdayUsed = Object.values(Timetable.timetable["土"]).some((entry) => entry !== null);
-        const isSundayUsed = Object.values(Timetable.timetable["日"]).some((entry) => entry !== null);
-
-        if (isSundayUsed) {
-            shouldDisplay.push("土");
-            shouldDisplay.push("日");
-        } else if (isSaturdayUsed) {
-            shouldDisplay.push("土");
-        }
-
-        return shouldDisplay;
-    }
-
-    public getShouldDisplayPeriods(timetable: TimetableData, campus: Campus): Period[] {
-        // TODO: ちゃんと実装する
-        return ["1", "2", "3", "4", "5"];
     }
 
     /**

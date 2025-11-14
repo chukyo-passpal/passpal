@@ -3,9 +3,10 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { ClassData, ClassInfo } from "@/src/domain/models/class";
+import { ClassInfo } from "@/src/domain/models/class";
 import { TimetableData } from "@/src/domain/models/timetable";
 import classServiceInstance from "@/src/domain/services/classService";
+import classUsecaseInstance, { ClassData } from "@/src/domain/usecase/classUsecase";
 
 export interface ClassState {
     lastFetch: Date | null;
@@ -42,7 +43,7 @@ const useClass = create<ClassState>()(
              */
             setFromTimetable: (timetableData: TimetableData) => {
                 set((state) => {
-                    state.classData = classServiceInstance.buildClassDataFromTimetable(timetableData);
+                    state.classData = classUsecaseInstance.buildClassDataFromTimetable(timetableData);
                 });
                 return timetableData;
             },
