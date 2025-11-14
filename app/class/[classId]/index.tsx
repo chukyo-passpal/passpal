@@ -7,6 +7,7 @@ import classServiceInstance, { AttendanceStatsSummary } from "@/src/domain/servi
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
+import { LoadingScreen } from "@/src/presentation/components/LoadingScreen";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useClass from "@/src/presentation/hooks/useClass";
@@ -20,15 +21,39 @@ export default function ClassDetail() {
     const { refetchClassInfo } = useClass();
 
     const [classInfo, setClassInfo] = React.useState<ClassInfo | null>(null);
+    const [isLoading, setIsLoading] = React.useState(true);
 
     // useClassから授業データを取得
     useEffect(() => {
-        (async () => {
-            if (classId && timetableData) {
-                const fetchedClass = await refetchClassInfo(timetableData, classId);
-                setClassInfo(fetchedClass);
+        let isMounted = true;
+
+        const loadClassData = async () => {
+            if (!classId || !timetableData) {
+                return;
             }
-        })();
+
+            if (isMounted) {
+                setIsLoading(true);
+                setClassInfo(null);
+            }
+
+            try {
+                const fetchedClass = await refetchClassInfo(timetableData, classId);
+                if (isMounted) {
+                    setClassInfo(fetchedClass);
+                }
+            } finally {
+                if (isMounted) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        loadClassData();
+
+        return () => {
+            isMounted = false;
+        };
     }, [classId, refetchClassInfo, timetableData]);
 
     // 出席情報を集計
@@ -36,6 +61,10 @@ export default function ClassDetail() {
         () => classServiceInstance.calculateAttendanceStats(classInfo?.attendanceLog ?? []),
         [classInfo?.attendanceLog]
     );
+
+    if (isLoading) {
+        return <LoadingScreen message="授業データを読み込んでいます" helperText="しばらくお待ちください" />;
+    }
 
     // 授業が見つからない場合
     if (!classInfo) {

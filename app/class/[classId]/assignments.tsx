@@ -1,11 +1,12 @@
 import React, { useEffect, useMemo } from "react";
-import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
+import { Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 
 import assignmentServiceInstance, { AssignmentStatsSummary } from "@/src/domain/services/assignmentService";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
+import { LoadingScreen } from "@/src/presentation/components/LoadingScreen";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
@@ -53,6 +54,10 @@ export default function ClassAssignments() {
         () => assignmentServiceInstance.calculateClassAssignmentStats(assignments),
         [assignments]
     );
+
+    if (loading && assignments.length === 0) {
+        return <LoadingScreen message="課題を読み込んでいます" helperText="最新の課題情報を取得しています" />;
+    }
 
     // 授業が見つからない場合
     if (!classInfo) {
@@ -166,16 +171,6 @@ export default function ClassAssignments() {
                         </View>
                     )}
                 </Card>
-
-                {/* 読み込み中 */}
-                {loading && assignments?.length === 0 && (
-                    <View style={{ paddingVertical: 40, alignItems: "center" }}>
-                        <ActivityIndicator size="large" color={theme.colors.primary.main} />
-                        <Typography variant="body" color={theme.colors.text.secondary} style={{ marginTop: 16 }}>
-                            課題を読み込み中...
-                        </Typography>
-                    </View>
-                )}
 
                 {/* 課題一覧 */}
                 {!loading && assignments?.length === 0 ? (

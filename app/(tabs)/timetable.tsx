@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { ActivityIndicator, ScrollView, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { router } from "expo-router";
 
 import { TimetableViewMode } from "@/src/domain/constants/timetable";
@@ -7,6 +7,7 @@ import { Weekday } from "@/src/domain/constants/week";
 import timetableServiceInstance from "@/src/domain/services/timetableService";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
+import { LoadingScreen } from "@/src/presentation/components/LoadingScreen";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useSetting from "@/src/presentation/hooks/useSetting";
@@ -58,14 +59,7 @@ export default function TimetableScreen() {
 
     // ローディング中の表示
     if (loading && !timetableData) {
-        return (
-            <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
-                <Header title="時間割" subButtonIcon="arrow-left-right" onPressSubButton={handleChangeViewMode} />
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                    <ActivityIndicator size="large" color={theme.colors.primary.main} />
-                </View>
-            </View>
-        );
+        return <LoadingScreen message="時間割を読み込んでいます" helperText="最新の時間割データを取得しています" />;
     }
 
     // データがない場合の表示

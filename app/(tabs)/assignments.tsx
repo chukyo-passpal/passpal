@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
+import { Linking, RefreshControl, ScrollView, TouchableOpacity, View } from "react-native";
 
 import assignmentServiceInstance, {
     AssignmentFilter,
@@ -9,6 +9,7 @@ import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
+import { LoadingScreen } from "@/src/presentation/components/LoadingScreen";
 import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
@@ -43,19 +44,17 @@ export default function Assignments() {
         [flattenedAssignments, filter]
     );
 
+    const hasLoadedAssignments = flattenedAssignments.length > 0;
+
+    if (loading && !hasLoadedAssignments) {
+        return <LoadingScreen message="課題を読み込んでいます" helperText="最新の課題情報を取得しています" />;
+    }
+
     return (
         <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
             <Header title="課題一覧" subButtonIcon="refresh-cw" onPressSubButton={handleRefresh} />
 
-            {/* 読み込み中 */}
-            {loading ? (
-                <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-                    <ActivityIndicator size="large" color={theme.colors.primary.main} />
-                    <Typography variant="body" style={{ marginTop: 16 }} color={theme.colors.text.secondary}>
-                        課題を読み込み中...
-                    </Typography>
-                </View>
-            ) : filteredAssignments.length === 0 ? (
+            {filteredAssignments.length === 0 ? (
                 <View
                     style={{
                         flex: 1,
@@ -104,16 +103,13 @@ export default function Assignments() {
                             />
                         }
                     >
-                        {filteredAssignments?.map((a) => {
-                            // 元の課題データを取得してmanaboUrlを渡す
-                            return (
-                                <AssignmentCard
-                                    key={`${a.classId},${a.directoryId}${a.title}`}
-                                    assignment={a}
-                                    handleTouch={() => handleTouch(a.classId, a.directoryId, a.contentId)}
-                                />
-                            );
-                        })}
+                        {filteredAssignments?.map((a) => (
+                            <AssignmentCard
+                                key={`${a.classId},${a.directoryId}${a.title}`}
+                                assignment={a}
+                                handleTouch={() => handleTouch(a.classId, a.directoryId, a.contentId)}
+                            />
+                        ))}
                     </ScrollView>
                 </View>
             )}

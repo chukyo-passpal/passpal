@@ -7,6 +7,7 @@ import busServiceInstance, { BusTimetable, BusTimetableCell } from "@/src/domain
 import { Button } from "@/src/presentation/components/Button";
 import { Card, CardDivider } from "@/src/presentation/components/Card";
 import { Icon, IconName } from "@/src/presentation/components/Icon";
+import { LoadingScreen } from "@/src/presentation/components/LoadingScreen";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useSetting from "@/src/presentation/hooks/useSetting";
@@ -98,7 +99,7 @@ export default function Bus() {
     const timeUntil = getTimeUntilNextBus();
 
     if (loading) {
-        return <View style={{ flex: 1 }} />;
+        return <LoadingScreen message="バスダイヤを読み込んでいます" helperText="最新の運行情報を取得しています" />;
     }
 
     // Show "No Bus Available" screen when there are no more buses
