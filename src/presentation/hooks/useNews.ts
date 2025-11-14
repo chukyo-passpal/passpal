@@ -4,14 +4,12 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { NewsData } from "@/src/domain/models/news";
-import newsServiceInstance, { NewsService } from "@/src/domain/services/newsService";
+import newsServiceInstance from "@/src/domain/services/newsService";
 
 export interface NewsState {
     lastFetch: Date | null;
     newsData: NewsData | null;
     loading: boolean;
-
-    newsService: NewsService;
 
     clear: () => void;
     refetch: () => Promise<NewsData>;
@@ -22,12 +20,10 @@ export interface NewsState {
  */
 const useNews = create<NewsState>()(
     persist(
-        immer((set, get) => ({
+        immer((set) => ({
             lastFetch: null,
             newsData: null,
             loading: false,
-
-            newsService: newsServiceInstance,
 
             /**
              * 保存しているニュースの状態を初期化します。
@@ -48,7 +44,7 @@ const useNews = create<NewsState>()(
                 });
 
                 try {
-                    const news = await get().newsService.getNews();
+                    const news = await newsServiceInstance.getNews();
 
                     set((state) => {
                         state.newsData = news;

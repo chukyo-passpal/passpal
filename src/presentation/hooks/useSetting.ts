@@ -12,6 +12,7 @@ export interface settingState {
     homeStation: string;
     trainInfoService: TrainInfoService;
     initTimetableViewMode: TimetableViewMode;
+
     setCampus: (campus: Campus) => void;
     setHomeStation: (station: string) => void;
     setTrainInfoService: (service: TrainInfoService) => void;

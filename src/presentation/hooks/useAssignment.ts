@@ -5,7 +5,7 @@ import { immer } from "zustand/middleware/immer";
 
 import { AssignmentClassData, AssignmentInfo } from "@/src/domain/models/assignment";
 import { TimetableData } from "@/src/domain/models/timetable";
-import assignmentServiceInstance, { AssignmentService } from "@/src/domain/services/assignmentService";
+import assignmentServiceInstance from "@/src/domain/services/assignmentService";
 
 /**
  * Assignment State
@@ -14,8 +14,6 @@ export interface AssignmentState {
     lastFetch: Date | null;
     assignmentData: AssignmentInfo | null;
     loading: boolean;
-
-    assignmentService: AssignmentService;
 
     /**
      * 課題データを直接設定
@@ -38,12 +36,10 @@ export interface AssignmentState {
  */
 const useAssignment = create<AssignmentState>()(
     persist(
-        immer((set, get) => ({
+        immer((set) => ({
             lastFetch: null,
             assignmentData: null,
             loading: false,
-
-            assignmentService: assignmentServiceInstance,
 
             /**
              * 保存している課題データを初期化します。
@@ -64,7 +60,7 @@ const useAssignment = create<AssignmentState>()(
                 });
 
                 try {
-                    const data = await get().assignmentService.getAssignments(classId);
+                    const data = await assignmentServiceInstance.getAssignments(classId);
                     set((state) => {
                         // データがない時に作る
                         if (!state.assignmentData) {
@@ -99,7 +95,7 @@ const useAssignment = create<AssignmentState>()(
                 });
 
                 try {
-                    const data = await get().assignmentService.getAllAssignments(timetable);
+                    const data = await assignmentServiceInstance.getAllAssignments(timetable);
 
                     set((state) => {
                         state.assignmentData = data;

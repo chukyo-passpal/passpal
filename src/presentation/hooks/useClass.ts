@@ -5,14 +5,12 @@ import { immer } from "zustand/middleware/immer";
 
 import { ClassData, ClassInfo } from "@/src/domain/models/class";
 import { TimetableData } from "@/src/domain/models/timetable";
-import classServiceInstance, { ClassService } from "@/src/domain/services/classService";
+import classServiceInstance from "@/src/domain/services/classService";
 
 export interface ClassState {
     lastFetch: Date | null;
     classData: ClassData | null;
     loading: boolean;
-
-    classService: ClassService;
 
     clear: () => void;
     setFromTimetable: (timetableData: TimetableData) => TimetableData;
@@ -29,8 +27,6 @@ const useClass = create<ClassState>()(
             classData: null,
             loading: false,
 
-            classService: classServiceInstance,
-
             /**
              * 保存している授業データをリセットします。
              */
@@ -46,7 +42,7 @@ const useClass = create<ClassState>()(
              */
             setFromTimetable: (timetableData: TimetableData) => {
                 set((state) => {
-                    state.classData = get().classService.buildClassDataFromTimetable(timetableData);
+                    state.classData = classServiceInstance.buildClassDataFromTimetable(timetableData);
                 });
                 return timetableData;
             },
@@ -68,9 +64,9 @@ const useClass = create<ClassState>()(
                     const oldClassInfo = nowClassData.classes[manaboClassId];
                     let newClassInfo: ClassInfo;
                     if (oldClassInfo) {
-                        newClassInfo = await get().classService.updateClassInfo(oldClassInfo);
+                        newClassInfo = await classServiceInstance.updateClassInfo(oldClassInfo);
                     } else {
-                        newClassInfo = await get().classService.fetchAndBuildClassInfo(manaboClassId, timetableData);
+                        newClassInfo = await classServiceInstance.fetchAndBuildClassInfo(manaboClassId, timetableData);
                     }
                     set((state) => {
                         if (state.classData) {

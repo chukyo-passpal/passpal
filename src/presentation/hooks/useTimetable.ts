@@ -6,14 +6,12 @@ import { immer } from "zustand/middleware/immer";
 import { Period } from "@/src/domain/constants/period";
 import { Weekday } from "@/src/domain/constants/week";
 import { TimetableClassInfo, TimetableData } from "@/src/domain/models/timetable";
-import timetableServiceInstance, { TimetableService } from "@/src/domain/services/timetableService";
+import timetableServiceInstance from "@/src/domain/services/timetableService";
 
 export interface TimetableState {
     lastFetch: Date | null;
     timetableData: TimetableData | null;
     loading: boolean;
-
-    timetableService: TimetableService;
 
     clear: () => void;
     setClass: (day: Weekday, period: Period, classInfo: TimetableClassInfo | null) => void;
@@ -25,12 +23,10 @@ export interface TimetableState {
  */
 const useTimetable = create<TimetableState>()(
     persist(
-        immer((set, get) => ({
+        immer((set) => ({
             lastFetch: null,
             timetableData: null,
             loading: false,
-
-            timetableService: timetableServiceInstance,
 
             /**
              * 時間割と取得時刻を初期化します。
@@ -63,7 +59,7 @@ const useTimetable = create<TimetableState>()(
                 });
 
                 try {
-                    const timetable = await get().timetableService.getTimetable();
+                    const timetable = await timetableServiceInstance.getTimetable();
 
                     set((state) => {
                         state.timetableData = timetable;

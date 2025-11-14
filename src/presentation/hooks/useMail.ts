@@ -4,14 +4,12 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { MailData } from "@/src/domain/models/mail";
-import mailServiceInstance, { MailService } from "@/src/domain/services/mailService";
+import mailServiceInstance from "@/src/domain/services/mailService";
 
 export interface MailState {
     lastFetch: Date | null;
     mailData: MailData | null;
     loading: boolean;
-
-    mailService: MailService;
 
     clear: () => void;
     refetch: (page?: number) => Promise<MailData>;
@@ -22,12 +20,10 @@ export interface MailState {
  */
 const useMail = create<MailState>()(
     persist(
-        immer((set, get) => ({
+        immer((set) => ({
             lastFetch: null,
             mailData: null,
             loading: false,
-
-            mailService: mailServiceInstance,
 
             /**
              * 保存しているメールデータを初期化します。
@@ -48,7 +44,7 @@ const useMail = create<MailState>()(
                 });
 
                 try {
-                    const data = await get().mailService.getMails(page);
+                    const data = await mailServiceInstance.getMails(page);
                     set((state) => {
                         state.mailData = data;
                         state.loading = false;
