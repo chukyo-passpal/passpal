@@ -110,13 +110,13 @@ export class IntegratedBusService implements BusService {
                         // バスの運行時間を設定する
                         let elapsedMinutes: number;
                         if (direction === "forward") {
+                            elapsedMinutes = 15;
+                        } else {
                             if (item.via) {
                                 elapsedMinutes = 17;
                             } else {
-                                elapsedMinutes = 15;
+                                elapsedMinutes = 14;
                             }
-                        } else {
-                            elapsedMinutes = 14;
                         }
 
                         const departureAt = new Date();
