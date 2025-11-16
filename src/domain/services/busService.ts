@@ -7,14 +7,14 @@ export interface BusService {
      * 今日のダイヤ種別を取得します。
      * @returns 今日のダイヤ種別のPromise
      */
-    getTodayDiagram(): Promise<TimetableBusDiagramType>;
+    getTodayDiagram(current: Date): Promise<TimetableBusDiagramType>;
 
     /**
      * 指定したダイヤ種別の時刻表を取得します。
      * @param diagram ダイヤ種別
      * @returns 指定したダイヤ種別の時刻表のPromise
      */
-    getTimetable(diagram: TimetableBusDiagramType): Promise<BusTimetable>;
+    getTimetable(current: Date, diagram: TimetableBusDiagramType): Promise<BusTimetable>;
 }
 
 export interface BusTimetableCell {
@@ -43,12 +43,11 @@ export class IntegratedBusService implements BusService {
         this.busRepository = busRepository;
     }
 
-    public async getTodayDiagram(): Promise<TimetableBusDiagramType> {
+    public async getTodayDiagram(current: Date): Promise<TimetableBusDiagramType> {
         const calendar = await this.busRepository.getDiagram();
-        const today = new Date();
-        const year = today.getFullYear();
-        const month = today.getMonth() + 1;
-        const day = today.getDate();
+        const year = current.getFullYear();
+        const month = current.getMonth() + 1;
+        const day = current.getDate();
 
         const yearData = calendar.calendar.find((y) => y.year === year);
         if (!yearData) {
@@ -66,7 +65,7 @@ export class IntegratedBusService implements BusService {
         return this.calenderDiagramToTimetableDiagram(dayData.diagram, dayData.special);
     }
 
-    public async getTimetable(diagram: TimetableBusDiagramType): Promise<BusTimetable> {
+    public async getTimetable(current: Date, diagram: TimetableBusDiagramType): Promise<BusTimetable> {
         const timetable = await this.busRepository.getTimetable();
         const diagramData = timetable.timetable.find((d) => d.diagram === diagram);
         if (!diagramData) {
@@ -99,7 +98,7 @@ export class IntegratedBusService implements BusService {
                             }
                         }
 
-                        const departureAt = new Date();
+                        const departureAt = new Date(current);
                         departureAt.setHours(hour, item.minute, 0, 0);
                         const arrivalAt = new Date(departureAt.getTime() + elapsedMinutes * 60 * 1000);
                         const cell: BusTimetableCell = {

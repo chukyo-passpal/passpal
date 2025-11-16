@@ -14,6 +14,15 @@ import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import { useToast } from "@/src/presentation/hooks/useToast";
 
+const viaToName = (via: { name: string; arrivalAt: Date }) => {
+    switch (via?.name) {
+        case "kaidu":
+            return "貝津";
+        default:
+            return via.name;
+    }
+};
+
 export default function Bus() {
     const { theme } = useTheme();
     const { homeStation } = useSetting();
@@ -23,7 +32,7 @@ export default function Bus() {
     const [timetable, setTimetable] = useState<BusTimetable | null>(null);
     const [loading, setLoading] = useState(true);
     const [currentTime, setCurrentTime] = useState(new Date());
-    const [isForward, setIsForward] = useState(true); // true: 大学→浄水駅, false: 浄水駅→大学
+    const [isForward, setIsForward] = useState(false); // true: 浄水駅→大学, false: 大学→浄水駅
 
     const univName = "大学";
     const univIcon = "school";
@@ -37,10 +46,10 @@ export default function Bus() {
     const insets = useSafeAreaInsets();
 
     useEffect(() => {
-        busServiceInstance.getTodayDiagram().then((d) => {
+        busServiceInstance.getTodayDiagram(currentTime).then((d) => {
             setDiagram(d);
 
-            busServiceInstance.getTimetable(d).then((tt) => {
+            busServiceInstance.getTimetable(currentTime, d).then((tt) => {
                 setTimetable(tt);
                 setLoading(false);
             });
@@ -75,10 +84,17 @@ export default function Bus() {
         const now = currentTime;
         const maxTime = new Date(now.getTime() + 120 * 60 * 1000); // 120分後
         const buses = isForward ? timetable.forward : timetable.reverse;
-        return buses
-            .filter((cell) => cell.departureAt > now && cell.departureAt <= maxTime)
+
+        const nextBuses = buses
+            .filter((cell) => cell.departureAt > now)
             .sort((a, b) => a.departureAt.getTime() - b.departureAt.getTime())
             .slice(0, 5);
+
+        if (nextBuses[0] && nextBuses[0].departureAt > maxTime) {
+            return [];
+        }
+
+        return nextBuses;
     };
 
     // Get time until next bus
@@ -166,7 +182,7 @@ export default function Bus() {
                                         {departure}発
                                     </Typography>
                                 </View>
-                                <ProgressDots departureAt={nextBuses[0]!.departureAt} />
+                                <ProgressDots currentTime={currentTime} nextBus={nextBuses[0]!} />
                                 <View style={{ alignItems: "center" }}>
                                     <Typography variant="h2" style={{ fontSize: 28, fontWeight: "bold" }}>
                                         {formatTime(nextBuses[0]!.arrivalAt)}
@@ -232,29 +248,44 @@ export default function Bus() {
     );
 }
 
-function ProgressDots({ departureAt }: { departureAt: Date }) {
+function ProgressDots({ currentTime, nextBus }: { currentTime: Date; nextBus: BusTimetableCell }) {
     const { theme } = useTheme();
 
-    const now = new Date();
+    const departureAt = nextBus.departureAt;
+    const via = nextBus.via;
+
     // 1ドット2分として、出発までのドット数を計算
     const totalDots = 5;
-    const minutesUntilDeparture = Math.max(0, Math.ceil((departureAt.getTime() - now.getTime()) / 60000));
+    const minutesUntilDeparture = Math.max(0, Math.ceil((departureAt.getTime() - currentTime.getTime()) / 60000));
     const filledDots = Math.min(totalDots, Math.ceil(minutesUntilDeparture / 2) - 1);
 
     return (
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginVertical: 8 }}>
-            {Array.from({ length: totalDots }).map((_, index) => (
-                <View
-                    key={index}
-                    style={{
-                        width: 12,
-                        height: 12,
-                        borderRadius: 6,
-                        backgroundColor:
-                            index >= totalDots - filledDots ? theme.colors.primary.main : theme.colors.text.secondary,
-                    }}
-                />
-            ))}
+        <View>
+            {via && (
+                <Typography
+                    variant="bodySmall"
+                    color={theme.colors.text.secondary}
+                    style={{ textAlign: "center", marginBottom: 4 }}
+                >
+                    {`${viaToName(via)}経由`}
+                </Typography>
+            )}
+            <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginVertical: 8 }}>
+                {Array.from({ length: totalDots }).map((_, index) => (
+                    <View
+                        key={index}
+                        style={{
+                            width: 12,
+                            height: 12,
+                            borderRadius: 6,
+                            backgroundColor:
+                                index >= totalDots - filledDots
+                                    ? theme.colors.primary.main
+                                    : theme.colors.text.secondary,
+                        }}
+                    />
+                ))}
+            </View>
         </View>
     );
 }
@@ -313,12 +344,12 @@ function NextBusItem({
     handleNextBusPress,
     formatTime,
 }: {
-    bus: { departureAt: Date; arrivalAt: Date };
+    bus: BusTimetableCell;
     index: number;
     departure: string;
     arrival: string;
     canPress: boolean;
-    handleNextBusPress: (bus: { departureAt: Date; arrivalAt: Date }) => void;
+    handleNextBusPress: (bus: BusTimetableCell) => void;
     formatTime: (date: Date) => string;
 }) {
     const { theme } = useTheme();
@@ -361,7 +392,18 @@ function NextBusItem({
                     </View>
                 </View>
 
-                <Icon name="arrow-left-right" size={24} color={theme.colors.primary.main} />
+                <View style={{ alignItems: "center" }}>
+                    {bus.via && (
+                        <Typography
+                            variant="bodySmall"
+                            color={theme.colors.text.secondary}
+                            style={{ fontSize: 10, textAlign: "center", marginBottom: 4 }}
+                        >
+                            {`${viaToName(bus.via)}経由`}
+                        </Typography>
+                    )}
+                    <Icon name="arrow-left-right" size={24} color={theme.colors.primary.main} />
+                </View>
 
                 <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
                     <View>
