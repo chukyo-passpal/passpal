@@ -1,5 +1,16 @@
 {
-    "cSpell.words": ["ALBO", "Chukyo", "glexa", "jorudan", "manabo", "navitime", "PALAPI", "passpal"],
+    "cSpell.words": [
+        "ALBO",
+        "Chukyo",
+        "glexa",
+        "jorudan",
+        "kaidu",
+        "manabo",
+        "navitime",
+        "PALAPI",
+        "passpal",
+        "Usecase"
+    ],
     "editor.codeActionsOnSave": {
         "source.fixAll": "explicit",
         "source.organizeImports": "explicit",

@@ -14,15 +14,6 @@ import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import { useToast } from "@/src/presentation/hooks/useToast";
 
-const viaToName = (via: { name: string; arrivalAt: Date }) => {
-    switch (via?.name) {
-        case "kaidu":
-            return "貝津";
-        default:
-            return via.name;
-    }
-};
-
 export default function Bus() {
     const { theme } = useTheme();
     const { homeStation } = useSetting();
@@ -54,6 +45,7 @@ export default function Bus() {
                 setLoading(false);
             });
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Update current time every second for countdown
@@ -79,41 +71,8 @@ export default function Bus() {
     };
 
     // Get next buses (showing current direction)
-    const getNextBuses = () => {
-        if (!timetable) return [];
-        const now = currentTime;
-        const maxTime = new Date(now.getTime() + 120 * 60 * 1000); // 120分後
-        const buses = isForward ? timetable.forward : timetable.reverse;
-
-        const nextBuses = buses
-            .filter((cell) => cell.departureAt > now)
-            .sort((a, b) => a.departureAt.getTime() - b.departureAt.getTime())
-            .slice(0, 5);
-
-        if (nextBuses[0] && nextBuses[0].departureAt > maxTime) {
-            return [];
-        }
-
-        return nextBuses;
-    };
-
-    // Get time until next bus
-    const getTimeUntilNextBus = () => {
-        const nextBuses = getNextBuses();
-        if (nextBuses.length === 0 || !nextBuses[0]) return null;
-
-        const diff = nextBuses[0].departureAt.getTime() - currentTime.getTime();
-        const minutes = Math.floor(diff / 60000);
-        const seconds = Math.floor((diff % 60000) / 1000);
-        return { minutes, seconds };
-    };
-
-    const formatTime = (date: Date) => {
-        return `${date.getHours().toString().padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}`;
-    };
-
-    const nextBuses = getNextBuses();
-    const timeUntil = getTimeUntilNextBus();
+    const nextBuses = timetable ? busUsecaseInstance.getNextBuses(timetable, currentTime, isForward) : [];
+    const timeUntil = busUsecaseInstance.getTimeUntilNextBus(nextBuses, currentTime);
 
     if (loading) {
         return <LoadingScreen message="バスダイヤを読み込んでいます" helperText="最新の運行情報を取得しています" />;
@@ -175,7 +134,7 @@ export default function Bus() {
                             >
                                 <View style={{ alignItems: "center" }}>
                                     <Typography variant="h2" style={{ fontSize: 28, fontWeight: "bold" }}>
-                                        {formatTime(nextBuses[0]!.departureAt)}
+                                        {busUsecaseInstance.formatTime(nextBuses[0]!.departureAt)}
                                     </Typography>
                                     <Icon name={departureIcon} size={32} color={theme.colors.primary.main} />
                                     <Typography variant="body" color={theme.colors.text.secondary}>
@@ -185,7 +144,7 @@ export default function Bus() {
                                 <ProgressDots currentTime={currentTime} nextBus={nextBuses[0]!} />
                                 <View style={{ alignItems: "center" }}>
                                     <Typography variant="h2" style={{ fontSize: 28, fontWeight: "bold" }}>
-                                        {formatTime(nextBuses[0]!.arrivalAt)}
+                                        {busUsecaseInstance.formatTime(nextBuses[0]!.arrivalAt)}
                                     </Typography>
                                     <Icon name={arrivalIcon} size={32} color={theme.colors.primary.main} />
                                     <Typography variant="body" color={theme.colors.text.secondary}>
@@ -223,7 +182,6 @@ export default function Bus() {
                             arrival={arrival}
                             canPress={isForward === false}
                             handleNextBusPress={handleNextBusPress}
-                            formatTime={formatTime}
                         />
                     ))}
                 </View>
@@ -267,7 +225,7 @@ function ProgressDots({ currentTime, nextBus }: { currentTime: Date; nextBus: Bu
                     color={theme.colors.text.secondary}
                     style={{ textAlign: "center", marginBottom: 4 }}
                 >
-                    {`${viaToName(via)}経由`}
+                    {`${busUsecaseInstance.getViaName(via)}経由`}
                 </Typography>
             )}
             <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginVertical: 8 }}>
@@ -342,7 +300,6 @@ function NextBusItem({
     arrival,
     canPress,
     handleNextBusPress,
-    formatTime,
 }: {
     bus: BusTimetableCell;
     index: number;
@@ -350,7 +307,6 @@ function NextBusItem({
     arrival: string;
     canPress: boolean;
     handleNextBusPress: (bus: BusTimetableCell) => void;
-    formatTime: (date: Date) => string;
 }) {
     const { theme } = useTheme();
 
@@ -387,7 +343,7 @@ function NextBusItem({
                             {departure}発
                         </Typography>
                         <Typography variant="h2" style={{ fontSize: 24, fontWeight: "bold" }}>
-                            {formatTime(bus.departureAt)}
+                            {busUsecaseInstance.formatTime(bus.departureAt)}
                         </Typography>
                     </View>
                 </View>
@@ -399,7 +355,7 @@ function NextBusItem({
                             color={theme.colors.text.secondary}
                             style={{ fontSize: 10, textAlign: "center", marginBottom: 4 }}
                         >
-                            {`${viaToName(bus.via)}経由`}
+                            {`${busUsecaseInstance.getViaName(bus.via)}経由`}
                         </Typography>
                     )}
                     <Icon name="arrow-left-right" size={24} color={theme.colors.primary.main} />
@@ -415,7 +371,7 @@ function NextBusItem({
                             {arrival}着
                         </Typography>
                         <Typography variant="h2" style={{ fontSize: 24, fontWeight: "bold" }}>
-                            {formatTime(bus.arrivalAt)}
+                            {busUsecaseInstance.formatTime(bus.arrivalAt)}
                         </Typography>
                     </View>
                     {canPress ? (
