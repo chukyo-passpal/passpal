@@ -7,16 +7,35 @@ PassPalは、中京大学の各種システム（ALBO / MaNaBo / ポータル等
 [![App Store](https://img.shields.io/badge/App%20Store-Download-blue)](https://apps.apple.com/app/passpal/id6754452343)
 [![Google Play](https://img.shields.io/badge/Google%20Play-Download-green)](https://play.google.com/store/apps/details?id=app.chukyopasspal.passpal)
 
-## 📋 目次
+## 🛠️ セットアップ
 
-- [技術スタック](#-技術スタック)
-- [プロジェクト構成](#-プロジェクト構成)
-- [アーキテクチャ](#-アーキテクチャ)
-- [セットアップ](#-セットアップ)
-- [開発](#-開発)
-- [ビルドとデプロイ](#-ビルドとデプロイ)
-- [コーディング規約](#-コーディング規約)
-- [トラブルシューティング](#-トラブルシューティング)
+### 前提条件
+
+- **Node.js** 24(LTS) [公式サイト](https://nodejs.org/ja/download)
+- **Bun** [公式サイト](https://bun.sh/)
+- **Xcode** (iOS開発)
+- **Android Studio** (Android開発)
+- **Expo CLI** (`npm install -g expo-cli`)
+- **Github アカウント** [公式サイト](https://github.com/)
+- **Expo アカウント** [公式サイト](https://expo.dev/)
+
+#### 参考記事
+[macOSのローカル上でExpoをbuildできるようになるまで](https://qiita.com/dokimiki/items/5273b50a4eacd2ce2fa1)
+[まっさらなUbuntu 24.04 wsl上にExpoのローカルビルド環境を作るメモ](https://qiita.com/dokimiki/items/9f5550948ad5667b990c)
+
+### インストール
+
+```bash
+# リポジトリのクローン
+git clone https://github.com/chukyo-passpal/passpal.git
+cd passpal
+
+# 依存関係のインストール
+bun install
+bun run storybook-generate
+# スタートと同時にexpo-env.d.tsを生成する
+bun run start
+```
 
 ## 🚀 技術スタック
 
@@ -130,29 +149,6 @@ PassPalは **Clean Architecture** を採用し、レイヤー間の依存関係�
 - **Provider**: データソース別実装（大学システム、Firebase、APIなど）
 - **Mapper**: 生データ → ドメインモデル変換 + バリデーション
 
-## 🛠️ セットアップ
-
-### 前提条件
-
-- **Node.js** 18以上
-- **Bun** (推奨) または npm/yarn
-- **Xcode** (iOS開発)
-- **Android Studio** (Android開発)
-- **Expo CLI** (`bun install -g expo-cli`)
-
-https://qiita.com/dokimiki/items/9f5550948ad5667b990c
-
-### インストール
-
-```bash
-# リポジトリのクローン
-git clone https://github.com/chukyo-passpal/passpal.git
-cd passpal
-
-# 依存関係のインストール
-bun install
-```
-
 ## 💻 開発
 
 ### 開発サーバーの起動
@@ -183,17 +179,6 @@ bun tsc --noEmit
 
 **重要**: プルリクエスト前に必ず上記3つのコマンドを実行し、すべてパスすることを確認してください。
 
-### Storybookの利用
-
-```bash
-# Storybookストーリーの生成
-bun run storybook-generate
-
-# アプリ内でStorybook表示
-# app/storybook.tsxにアクセス
-```
-
-コンポーネント追加・変更時は必ず `*.stories.tsx` を作成し、`bun run storybook-generate` を実行してください。
 
 ### デバッグ画面
 
@@ -208,22 +193,24 @@ bun run storybook-generate
 
 ```bash
 # 開発用ビルド
-bun run build:ios      # iOS
-bun run build:android  # Android
+bun run devbuild:ios      # iOS
+bun run devbuild:android  # Android
 ```
 
 ### 本番リリース (EAS使用)
 
 ```bash
 # iOS Production Build + App Store Submit
-bun run submit:ios
+bun run build:ios
+eas submit -p ios --path ./production.ipa
 
 # Android Production Build + Google Play Submit
-bun run submit:android
+bun run build:android
+eas submit -p android --path ./production.aab
 ```
 
 **注意**:
-- EAS CLIがインストールされている必要があります (`bun install -g eas-cli`)
+- EAS CLIがインストールされている必要があります
 - EASプロジェクトへのアクセス権限が必要です (Owner: passpal)
 - 本番ビルドは自動的にバージョン番号がインクリメントされます (`eas.json`の`autoIncrement`設定)
 
@@ -236,144 +223,12 @@ Runtime Versionが同じであれば、JavaScriptバンドルのみの更新がW
 eas update
 ```
 
-## 📝 コーディング規約
-
-### レイヤー依存ルール
-
-**厳守事項**: `UI → Domain → Data` の一方向依存
-
-```typescript
-// ✅ 良い例
-// UI層: Serviceを呼び出し
-const { login } = useAuthService();
-await login(email, password);
-
-// ❌ 悪い例
-// UI層で直接Repositoryを呼び出し
-const user = await authRepository.login(email, password); // NG!
-```
-
-### カスタムフック設計
-
-```typescript
-// src/presentation/hooks/useExample.ts
-export const useExample = () => {
-  const state = useExampleStore();
-  const { doSomething } = useExampleService();
-
-  const handleAction = useCallback(async () => {
-    // ビジネスロジックはServiceに委譲
-    await doSomething();
-  }, [doSomething]);
-
-  return { state, handleAction };
-};
-```
-
-**ルール**:
-- フック内にビジネスロジックを書かない
-- Zustand読み取りとService呼び出しのみ
-- ハンドラは `useCallback` でメモ化
-
-### Service設計
-
-```typescript
-// src/domain/services/ExampleService.ts
-export class ExampleService {
-  constructor(
-    private repo: ExampleRepository,
-    private store: ExampleStore
-  ) {}
-
-  async fetchAndUpdate() {
-    // 1. Usecaseで取得
-    const data = await this.fetchDataUsecase.execute();
-    
-    // 2. バリデーション
-    if (!isValid(data)) throw new ServiceError();
-    
-    // 3. 状態更新
-    this.store.setState({ data });
-  }
-}
-```
-
-**ルール**:
-- Usecaseの組み合わせ + 状態更新
-- UIから呼ばれる唯一のエントリーポイント
-- Repository interfaceのみに依存
-
-### コンポーネント設計
-
-```typescript
-// src/presentation/components/atoms/Button.tsx
-interface ButtonProps {
-  label: string;
-  onPress: () => void;
-  variant?: 'primary' | 'secondary';
-}
-
-export const Button: FC<ButtonProps> = ({ label, onPress, variant }) => {
-  // Pure component: propsとcallbackのみで描画
-  return (
-    <TamaguiButton onPress={onPress} variant={variant}>
-      {label}
-    </TamaguiButton>
-  );
-};
-```
-
-**ルール**:
-- Pure componentを目指す（副作用なし）
-- 主要コンポーネントには `*.stories.tsx` を作成
-- Storybookで全パターンを可視化
-
-### エラーハンドリング
-
-```typescript
-// Data層でドメインエラーに変換
-try {
-  const response = await httpClient.get('/api/data');
-  return mapper.toModel(response);
-} catch (error) {
-  if (error instanceof NetworkError) {
-    throw new ServiceError('ネットワークエラー');
-  }
-  throw new ServiceError('予期しないエラー');
-}
-
-// UI層でキャッチして表示
-try {
-  await service.fetchData();
-} catch (error) {
-  if (error instanceof ServiceError) {
-    showToast(error.message);
-  }
-}
-```
-
-### 型安全性
-
-```typescript
-// ❌ anyを避ける
-const data: any = await fetch();
-
-// ✅ Zodでバリデーション
-const DataSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-});
-const data = DataSchema.parse(rawData);
-```
-
 ## 🐛 トラブルシューティング
 
 ### キャッシュクリア
 
 ```bash
 expo start -c
-# または
-bun run start -- --clear
 ```
 
 
@@ -404,27 +259,6 @@ bun run license:summary
 - **App Store**: https://apps.apple.com/app/passpal/id6754452343
 - **Google Play**: https://play.google.com/store/apps/details?id=app.chukyopasspal.passpal
 - **EAS Project**: https://expo.dev/accounts/passpal/projects/passpal
-
-## 🤝 コントリビューション
-
-1. このリポジトリをフォーク
-2. フィーチャーブランチを作成 (`git checkout -b feature/amazing-feature`)
-3. コミット前に品質チェック (`bun run format && bun run lint && bun tsc --noEmit`)
-4. 変更をコミット (`git commit -m 'Add amazing feature'`)
-5. ブランチにプッシュ (`git push origin feature/amazing-feature`)
-6. プルリクエストを作成
-
-### コミットメッセージ規約
-
-```
-feat: 新機能追加
-fix: バグ修正
-docs: ドキュメント変更のみ
-style: コードフォーマット（機能変更なし）
-refactor: リファクタリング
-test: テスト追加・修正
-chore: ビルド・補助ツール変更
-```
 
 ---
 
