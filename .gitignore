@@ -7,7 +7,7 @@
 
 # generated files
 licenses.json
-.\.rnstorybook\storybook.requires.ts
+/.rnstorybook/storybook.requires.ts
 
 # dependencies
 node_modules/
