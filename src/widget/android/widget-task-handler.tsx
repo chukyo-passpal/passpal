@@ -1,4 +1,3 @@
-import React from "react";
 import type { WidgetTaskHandlerProps } from "react-native-android-widget";
 
 import { HelloWidget } from "./HelloWidget";
@@ -14,7 +13,7 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
 
     switch (props.widgetAction) {
         case "WIDGET_ADDED":
-            props.renderWidget(<Widget />);
+            props.renderWidget(Widget);
             break;
 
         case "WIDGET_UPDATE":
