@@ -22,6 +22,14 @@
                     }
                 },
                 {
+                    "client_id": "707651746611-a870lcg8d2pf61sk9s0kmlk1k9bnnfdq.apps.googleusercontent.com",
+                    "client_type": 1,
+                    "android_info": {
+                        "package_name": "app.chukyopasspal.passpal",
+                        "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+                    }
+                },
+                {
                     "client_id": "707651746611-c055v0roeaccv0mmosdh6s3ebk536lb2.apps.googleusercontent.com",
                     "client_type": 1,
                     "android_info": {
