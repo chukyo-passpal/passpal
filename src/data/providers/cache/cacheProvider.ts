@@ -1,9 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
-
 import { CacheKey } from "../../constants/cache";
-
 
 export interface CacheEntry<T> {
     storedAt: number;

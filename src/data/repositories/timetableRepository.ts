@@ -1,14 +1,11 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
-
-
 import { TimetableData } from "@/src/domain/models/timetable";
 import { shibbolethWebViewAuthFunction } from "../clients/chukyoShibboleth";
 import { ParseError } from "../errors/ParseError";
 import { cubicsTimetableToDomain, manaboTimetableToDomain } from "../mappers/timetableMapper";
 import cubicsProviderInstance, { CubicsProvider } from "../providers/chukyo-univ/cubicsProvider";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
-
 
 export interface TimetableRepository {
     // マナボ時間割取得
