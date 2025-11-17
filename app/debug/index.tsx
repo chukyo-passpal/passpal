@@ -22,6 +22,11 @@ export default function DebugIndexScreen() {
                         <Text>Zustand Store Debug</Text>
                     </Button>
                 </Link>
+                <Link href="/debug/android_widget" asChild>
+                    <Button>
+                        <Text>Android Widget Preview</Text>
+                    </Button>
+                </Link>
             </View>
         </View>
     );

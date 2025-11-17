@@ -6,6 +6,7 @@ export default function RootLayout() {
             <Stack.Screen name="index" />
             <Stack.Screen name="update" />
             <Stack.Screen name="zustand" />
+            <Stack.Screen name="android_widget" />
         </Stack>
     );
 }
