@@ -35,6 +35,25 @@ passpal/
 - `clients/` に HTTP/認証、`mappers/` に型変換、`types/` と `constants/` と `errors/` で補助定義を保持。
 - HTML 解析は `@chukyo-passpal/web_parser` パッケージを `parser/` で利用する。
 
+## `src/widget/`
+- `android/` に Android ウィジェット実装を配置。
+- `HelloWidget.tsx` がサンプルウィジェット UI（`react-native-android-widget` 使用）。
+- `widget-task-handler.tsx` で WIDGET_ADDED, WIDGET_UPDATE などのライフサイクルイベントを管理。
+
+## `modules/widget-data/`
+- iOS ウィジェットとメインアプリ間のデータ共有用 Expo Module。
+- `ios/WidgetDataModule.swift` にネイティブモジュール定義。
+- `expo-module.config.json` で iOS 専用モジュールとして設定。
+- App Groups や UserDefaults を使ってウィジェットにデータを渡す。
+
+## `targets/widget/`
+- iOS ウィジェット本体の実装（WidgetKit + SwiftUI）。
+- `index.swift` でウィジェットバンドルをエクスポート。
+- `widgets.swift` にメインウィジェット（Timeline Provider ベース）。
+- `WidgetControl.swift` にコントロールウィジェット。
+- `WidgetLiveActivity.swift` に Live Activity 実装。
+- `expo-target.config.js` で Expo ターゲット設定（type: "widget"）。
+
 ## その他
 - `scripts/` にビルド・ライセンス生成 CLI。
 - `.expo/`, `.rnstorybook/`, `dist/` などは生成物のため基本的に触らない。

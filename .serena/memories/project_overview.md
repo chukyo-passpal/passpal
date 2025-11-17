@@ -13,6 +13,12 @@
 - バリデーションは Zod。ツールは ESLint 9 + Prettier 3 + Storybook 9 + Bun。
 - ビルド/配信は EAS (iOS bundle id `app.chukyopasspal.passpal`, Android package `app.chukyopasspal.passpal`) を使う。
 
+## ウィジェット機能
+- **iOS**: `/targets/widget/` に WidgetKit + SwiftUI で実装。Timeline Provider でデータ更新、App Intents でインタラクティブ操作に対応。
+- **Android**: `/src/widget/android/` に `react-native-android-widget` (^0.17.2) で実装。
+- **データ共有**: `/modules/widget-data/` の Expo Module を使い、iOS ウィジェットとメインアプリ間でデータを共有。
+- ウィジェットは `bun expo prebuild -p ios --clean` 後に Xcode でビルドが必要（iOS）。
+
 ## ビルド/デプロイ戦略
 - Expo Managed Workflow を維持し、EAS で iOS `.ipa` / Android `.aab` を生成。
 - Firebase・Google Service 設定ファイルを常に最新の環境と同期させる。

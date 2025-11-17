@@ -44,6 +44,40 @@ bun expo prebuild -p ios --clean
 xed ios
 ```
 
+## 🎨 ウィジェット機能
+
+PassPalは、iOS・Androidの両方でホーム画面ウィジェット機能を提供しています。
+
+### 構成
+
+#### iOS ウィジェット
+- **ネイティブコード**: `/targets/widget/` にSwiftで実装
+  - `widgets.swift`: メインウィジェット実装（TimelineProvider使用）
+  - `WidgetControl.swift`: コントロールウィジェット
+  - `WidgetLiveActivity.swift`: Live Activity実装
+  - `index.swift`: ウィジェットバンドルのエントリーポイント
+  - `expo-target.config.js`: Expoターゲット設定
+
+- **データ連携モジュール**: `/modules/widget-data/` にExpo Moduleとして実装
+  - アプリからウィジェットへのデータ共有機能
+  - App GroupsまたはUserDefaultsを使用してデータを永続化
+  - `expo-module.config.json`: iOS専用のExpo Module設定
+
+#### Android ウィジェット
+- **実装コード**: `/src/widget/android/`
+  - `HelloWidget.tsx`: サンプルウィジェットUI（`react-native-android-widget`使用）
+  - `widget-task-handler.tsx`: ウィジェットライフサイクル管理
+
+### 使用技術
+- **iOS**: WidgetKit + SwiftUI + App Intents
+- **Android**: `react-native-android-widget` (^0.17.2)
+- **データ共有**: Expo Modules API
+
+### 開発時の注意
+- iOS ウィジェットは `bun expo prebuild -p ios --clean` 後にXcodeでのビルドが必要
+- Android ウィジェットは `index.ts` で `widgetTaskHandler` を登録
+- ウィジェット用のデータ更新は `/modules/widget-data/` のAPIを経由
+
 ## 🚀 技術スタック
 
 ### コアテクノロジー
@@ -95,7 +129,16 @@ passpal/
 ├── src/
 │   ├── presentation/        # UI層（コンポーネント、hooks、tokens）
 │   ├── domain/              # ドメイン層（usecases、services、models）
-│   └── data/                # データ層（repositories、providers、mappers）
+│   ├── data/                # データ層（repositories、providers、mappers）
+│   └── widget/              # ウィジェット実装
+│       └── android/         # Androidウィジェット（React Native）
+│
+├── modules/
+│   └── widget-data/         # iOSウィジェットデータ連携（Expo Module）
+│       └── ios/             # Swift実装
+│
+├── targets/
+│   └── widget/              # iOSウィジェット本体（WidgetKit）
 │
 ├── assets/                  # 画像、アイコン、静的データ
 ├── ios/                     # iOSネイティブコード
