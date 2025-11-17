@@ -37,6 +37,13 @@ bun run storybook-generate
 bun run start
 ```
 
+### iosでウィジェットを動かす場合
+
+```bash
+bun expo prebuild -p ios --clean
+xed ios
+```
+
 ## 🚀 技術スタック
 
 ### コアテクノロジー
