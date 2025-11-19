@@ -57,8 +57,16 @@ export class IntegratedEventService implements EventService {
         // 初回起動時
         if (!storedVersion) {
             console.log(`First launch with version ${currentVersion}`);
+            // 全データ削除
+            const AllItems = await AsyncStorage.getAllKeys();
+            for (const key of AllItems) {
+                await AsyncStorage.removeItem(key);
+            }
             // 初回起動時に認証情報をクリア(iOSはアプリを削除してもSecureStoreのデータが残るため)
             await SecureStore.deleteItemAsync("auth-storage");
+            // データを再読み込み
+            await this.rehydrateAllStores();
+
             setAppVersion(currentVersion);
             return;
         }
