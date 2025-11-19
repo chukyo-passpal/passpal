@@ -3,6 +3,7 @@ import { Pressable, ScrollView, Text, View } from "react-native";
 
 import Header from "@/src/presentation/components/Header";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
+import useAppInfo from "@/src/presentation/hooks/useAppInfo";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import useMail from "@/src/presentation/hooks/useMail";
@@ -252,6 +253,7 @@ export default function ZustandDebugScreen() {
     const { theme } = useTheme();
 
     // 全てのZustandストアを取得
+    const appInfo = useAppInfo();
     const authState = useAuth();
     const assignmentState = useAssignment();
     const mailState = useMail();
@@ -260,6 +262,7 @@ export default function ZustandDebugScreen() {
     const timetableState = useTimetable();
 
     // 各ストアの展開状態を管理
+    const [appInfoExpand, setAppInfoExpand] = useState<ExpandState>({});
     const [authExpand, setAuthExpand] = useState<ExpandState>({});
     const [assignmentExpand, setAssignmentExpand] = useState<ExpandState>({});
     const [mailExpand, setMailExpand] = useState<ExpandState>({});
@@ -268,6 +271,12 @@ export default function ZustandDebugScreen() {
     const [timetableExpand, setTimetableExpand] = useState<ExpandState>({});
 
     const stores = [
+        {
+            name: "useAppInfo",
+            state: appInfo,
+            expandState: appInfoExpand,
+            setExpandState: setAppInfoExpand,
+        },
         {
             name: "useAuth",
             state: authState,
