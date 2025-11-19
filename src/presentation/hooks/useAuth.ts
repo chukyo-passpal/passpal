@@ -3,11 +3,11 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { UserData } from "@/src/domain/models/user";
+import { ChukyoUserAuthData } from "@/src/domain/models/auth";
 import { SecureStorage } from "@/src/utils/secureStorage";
 
 export interface authState {
-    user: UserData | null;
+    user: ChukyoUserAuthData | null;
     firebaseUser: User | null;
     isTermsAccepted: boolean;
 

@@ -2,8 +2,7 @@ import { Cookies } from "@react-native-cookies/cookies";
 
 import { CUService } from "@/src/domain/constants/chukyo-univ";
 import { NotSetError } from "@/src/domain/errors/serviceError";
-import { CookieCredentials } from "@/src/domain/models/auth";
-import { UserData } from "@/src/domain/models/user";
+import { ChukyoUserAuthData, CookieCredentials } from "@/src/domain/models/auth";
 import { authState } from "@/src/presentation/hooks/useAuth";
 import { cookiesToString } from "@/src/utils/cookie";
 import { shibbolethWebViewAuthFunction } from "../../clients/chukyoShibboleth";
@@ -77,7 +76,10 @@ export abstract class IntegratedAbstractChukyoProvider implements AbstractChukyo
      * @param user 認証に利用するユーザー情報
      * @returns 認証後に利用可能なクッキー集合
      */
-    protected async authentication(authFunc: shibbolethWebViewAuthFunction, user: UserData): Promise<Cookies> {
+    protected async authentication(
+        authFunc: shibbolethWebViewAuthFunction,
+        user: ChukyoUserAuthData
+    ): Promise<Cookies> {
         const { studentId, cuIdPass } = user;
 
         // SSOログイン
