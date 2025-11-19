@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { router } from "expo-router";
 
@@ -15,22 +14,14 @@ export default function Index() {
     const handleNext = async () => {
         // 次のステップへ進む処理を実装
         await notificationServiceInstance.ensurePermissions();
+        notificationServiceInstance.registerFcmToken();
         router.push("/setup/step3");
     };
 
     const handleSkip = () => {
-        // 後で設定する処理を実装
+        // スキップして次のステップへ進む処理を実装
         router.push("/setup/step3");
     };
-
-    useEffect(() => {
-        void (async () => {
-            const granted = await notificationServiceInstance.hasPermission();
-            if (granted) {
-                handleSkip();
-            }
-        })();
-    }, []);
 
     return (
         <View

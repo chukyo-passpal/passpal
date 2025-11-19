@@ -15,7 +15,6 @@ export interface authState {
     signOut: () => void;
     acceptTerms: () => void;
     setFirebaseUser: (user: User) => void;
-    setFirebaseIdToken: (idToken: string) => void;
 }
 
 /**
@@ -61,16 +60,6 @@ const useAuth = create<authState>()(
             setFirebaseUser: (user) =>
                 set((state) => {
                     state.firebaseUser = user;
-                }),
-            /**
-             * FirebaseユーザーのIDトークンを更新します。
-             * @param idToken 更新後のIDトークン
-             */
-            setFirebaseIdToken: (idToken) =>
-                set((state) => {
-                    if (state.firebaseUser?.idToken) {
-                        state.firebaseUser.idToken = idToken;
-                    }
                 }),
         })),
         {

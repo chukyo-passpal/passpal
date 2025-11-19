@@ -46,6 +46,16 @@ export interface AuthCoordinator {
     signInWithGoogle(): Promise<GoogleSignInFlowResult>;
 
     /**
+     * FirebaseのIDトークンを取得します。
+     *
+     * ! RNGoogleSignInでsignInした後に呼び出す必要があります。
+     *
+     * @throw AuthProcessError 取得に失敗した場合
+     * @returns FirebaseのIDトークン
+     */
+    getFirebaseIdToken(): Promise<string>;
+
+    /**
      * CU-IDの資格情報でShibboleth認証を行い、成功時にストアへ保存します。
      * 認証に失敗した場合は例外をそのまま呼び出し元へ伝播します。
      * @param studentId 学籍番号
@@ -144,15 +154,7 @@ export class IntegratedAuthService implements AuthCoordinator {
         }
     }
 
-    /**
-     * FirebaseのIDトークンを取得します。
-     *
-     * ! RNGoogleSignInでsignInした後に呼び出す必要があります。
-     *
-     * @throw AuthProcessError 取得に失敗した場合
-     * @returns FirebaseのIDトークン
-     */
-    private async getFirebaseIdToken(): Promise<string> {
+    public async getFirebaseIdToken(): Promise<string> {
         try {
             // 1. Google Sign-Inからトークンを取得
             const { idToken, accessToken } = await GoogleSignin.getTokens();
