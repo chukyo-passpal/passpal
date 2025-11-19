@@ -106,6 +106,8 @@ export const httpClient = async (input: string | URL, options: HttpClientOptions
                 throw new MaintenanceError();
             }
 
+            if (__DEV__) console.error(`HTTP error: ${response.status} ${response.statusText} URL: ${url}`);
+
             throw new NetworkError({
                 cause: new Error(`HTTP error: ${response.status} ${response.statusText}`),
             });
