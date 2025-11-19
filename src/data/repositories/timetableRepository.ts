@@ -1,14 +1,11 @@
 import * as parser from "@chukyo-passpal/web_parser";
 
-
-
-import { TimetableData } from "@/src/domain/models/timetable";
+import { TimetableFetchResult } from "@/src/domain/models/timetable";
 import { shibbolethWebViewAuthFunction } from "../clients/chukyoShibboleth";
 import { ParseError } from "../errors/ParseError";
 import { cubicsTimetableToDomain, manaboTimetableToDomain } from "../mappers/timetableMapper";
 import cubicsProviderInstance, { CubicsProvider } from "../providers/chukyo-univ/cubicsProvider";
 import manaboProviderInstance, { ManaboProvider } from "../providers/chukyo-univ/manaboProvider";
-
 
 export interface TimetableRepository {
     // マナボ時間割取得
@@ -18,7 +15,7 @@ export interface TimetableRepository {
      * @returns ドメイン変換済みの時間割データ
      * @throws ParseError 解析に失敗した場合
      */
-    getManaboTimetable(authFunc: shibbolethWebViewAuthFunction): Promise<TimetableData>;
+    getManaboTimetable(authFunc: shibbolethWebViewAuthFunction): Promise<TimetableFetchResult>;
 
     /**
      * Cubicsから時間割を取得します。
@@ -26,7 +23,7 @@ export interface TimetableRepository {
      * @returns ドメイン変換済みの時間割データ
      * @throws ParseError 解析に失敗した場合
      */
-    getCubicsTimetable(authFunc: shibbolethWebViewAuthFunction): Promise<TimetableData>;
+    getCubicsTimetable(authFunc: shibbolethWebViewAuthFunction): Promise<TimetableFetchResult>;
 }
 
 export class IntegratedTimetableRepository implements TimetableRepository {

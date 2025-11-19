@@ -1,5 +1,5 @@
 import timetableRepositoryInstance, { TimetableRepository } from "@/src/data/repositories/timetableRepository";
-import { PeriodData, TimetableData } from "../models/timetable";
+import { PeriodData, TimetableFetchResult } from "../models/timetable";
 import authServiceInstance, { AuthService } from "./authService";
 
 /**
@@ -18,7 +18,7 @@ export interface TimetableService {
      * ManaboとCubicsの時間割を取得し、マージした結果を返します。
      * @returns マージ済みの時間割データ
      */
-    getTimetable(): Promise<TimetableData>;
+    getTimetable(): Promise<TimetableFetchResult>;
 }
 
 export class IntegratedTimetableService implements TimetableService {
@@ -70,14 +70,11 @@ export class IntegratedTimetableService implements TimetableService {
         this.authService = authService;
     }
 
-    public async getTimetable(): Promise<TimetableData> {
-        const manaboTimetable = await this.timetableRepository.getManaboTimetable(this.authService.shibAuth);
-        const cubicsTimetable = await this.timetableRepository.getCubicsTimetable(this.authService.shibAuth);
+    public async getTimetable(): Promise<TimetableFetchResult> {
+        const manaboResult = await this.timetableRepository.getManaboTimetable(this.authService.shibAuth);
+        const cubicsResult = await this.timetableRepository.getCubicsTimetable(this.authService.shibAuth);
 
-        // マナボとキュービックスの時間割をマージするロジックをここに実装
-        const mergedTimetable = this.mergeTimetables(manaboTimetable, cubicsTimetable);
-
-        return mergedTimetable;
+        return this.mergeTimetables(manaboResult, cubicsResult);
     }
 
     /**
@@ -86,22 +83,41 @@ export class IntegratedTimetableService implements TimetableService {
      * @param cubics Cubics由来の時間割
      * @returns 部室情報などを統合した時間割データ
      */
-    private mergeTimetables(manabo: TimetableData, cubics: TimetableData): TimetableData {
-        const mergedTimetable: TimetableData["timetable"] = { ...manabo.timetable };
+    private mergeTimetables(manabo: TimetableFetchResult, cubics: TimetableFetchResult): TimetableFetchResult {
+        const mergedCourses = { ...manabo.courses };
+        const mergedTimetable = { ...manabo.timetable.timetable };
 
-        for (const day of Object.keys(mergedTimetable) as (keyof typeof mergedTimetable)[]) {
-            for (const period of Object.keys(mergedTimetable[day]) as (keyof (typeof mergedTimetable)[typeof day])[]) {
-                if (mergedTimetable[day][period] !== null) {
-                    const cubicsEntry = cubics.timetable[day][period];
-                    mergedTimetable[day][period].cubicsClassId = cubicsEntry?.cubicsClassId || "";
-                    mergedTimetable[day][period].room = cubicsEntry?.room || "";
+        for (const day of Object.keys(cubics.timetable.timetable) as (keyof typeof cubics.timetable.timetable)[]) {
+            for (const period of Object.keys(
+                cubics.timetable.timetable[day]
+            ) as (keyof (typeof cubics.timetable.timetable)[typeof day])[]) {
+                const cubicsEntry = cubics.timetable.timetable[day][period];
+                const manaboEntry = mergedTimetable[day][period];
+
+                if (cubicsEntry && cubicsEntry.type === "course") {
+                    const cubicsCourse = cubics.courses[cubicsEntry.courseId];
+                    if (!cubicsCourse) continue;
+
+                    if (manaboEntry && manaboEntry.type === "course") {
+                        const manaboCourse = mergedCourses[manaboEntry.courseId];
+                        if (manaboCourse) {
+                            manaboCourse.cubicsClassId = cubicsCourse.cubicsClassId;
+                            manaboCourse.room = cubicsCourse.room || manaboCourse.room;
+                        }
+                    } else if (!manaboEntry) {
+                        mergedCourses[cubicsEntry.courseId] = cubicsCourse;
+                        mergedTimetable[day][period] = cubicsEntry;
+                    }
                 }
             }
         }
 
         return {
-            semester: manabo.semester,
-            timetable: mergedTimetable,
+            timetable: {
+                semester: manabo.timetable.semester,
+                timetable: mergedTimetable,
+            },
+            courses: mergedCourses,
         };
     }
 }

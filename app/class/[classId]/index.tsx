@@ -10,17 +10,14 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
-import { ClassInfo } from "@/src/domain/models/class";
 import classUsecaseInstance, { AttendanceStatsSummary } from "@/src/domain/usecase/classUsecase";
 import { Button } from "@/src/presentation/components/Button";
 import { Card } from "@/src/presentation/components/Card";
 import Header from "@/src/presentation/components/Header";
 import { Icon } from "@/src/presentation/components/Icon";
 import { Input } from "@/src/presentation/components/Input";
-import { LoadingScreen } from "@/src/presentation/components/LoadingScreen";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
-import useClass from "@/src/presentation/hooks/useClass";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 
 type EditableClassFields = {
@@ -33,59 +30,30 @@ export default function ClassDetail() {
     const { theme } = useTheme();
     const router = useRouter();
     const { classId } = useLocalSearchParams<{ classId: string }>();
-    const { timetableData } = useTimetable();
-    const { refetchClassInfo } = useClass();
+    const { courses, updateCourse } = useTimetable();
 
-    const [classInfo, setClassInfo] = React.useState<ClassInfo | null>(null);
-    const [isLoading, setIsLoading] = React.useState(true);
+    const course = courses[classId];
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     const [editFields, setEditFields] = React.useState<EditableClassFields>({ name: "", room: "", teacher: "" });
 
-    // useClassから授業データを取得
     useEffect(() => {
-        let isMounted = true;
-
-        const loadClassData = async () => {
-            if (!classId || !timetableData) {
-                return;
-            }
-
-            if (isMounted) {
-                setIsLoading(true);
-                setClassInfo(null);
-            }
-
-            try {
-                const fetchedClass = await refetchClassInfo(timetableData, classId);
-                if (isMounted) {
-                    setClassInfo(fetchedClass);
-                }
-            } finally {
-                if (isMounted) {
-                    setIsLoading(false);
-                }
-            }
-        };
-
-        loadClassData();
-
-        return () => {
-            isMounted = false;
-        };
-    }, [classId, refetchClassInfo, timetableData]);
+        if (course) {
+            setEditFields({
+                name: course.name,
+                room: course.room,
+                teacher: course.teacher,
+            });
+        }
+    }, [course]);
 
     // 出席情報を集計
     const attendanceStats = useMemo<AttendanceStatsSummary>(
-        () => classUsecaseInstance.calculateAttendanceStats(classInfo?.attendanceLog ?? []),
-        [classInfo?.attendanceLog]
+        () => classUsecaseInstance.calculateAttendanceStats(course?.attendanceLog ?? []),
+        [course?.attendanceLog]
     );
 
-    if (isLoading) {
-        return <LoadingScreen message="授業データを読み込んでいます" helperText="しばらくお待ちください" />;
-    }
-
     // 授業が見つからない場合
-    if (!classInfo) {
+    if (!course) {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
                 <Header title="授業詳細" shownBackButton />
@@ -105,24 +73,23 @@ export default function ClassDetail() {
         );
     }
 
-    const { info, detail, news } = classInfo;
-    const schedule = classUsecaseInstance.buildScheduleLabel(classInfo);
+    const schedule = classUsecaseInstance.buildScheduleLabel(course);
 
     const finalClassData = {
-        title: info.name,
+        title: course.name,
         schedule: schedule,
-        room: info.room,
-        teacher: info.teacher,
+        room: course.room,
+        teacher: course.teacher,
         attendance: attendanceStats,
-        announcements: news || [],
-        grading: detail?.evaluationCriteria || [],
+        announcements: course.news || [],
+        grading: course.detail?.evaluationCriteria || [],
     };
 
     const handleOpenEditModal = () => {
         setEditFields({
-            name: info.name ?? "",
-            room: info.room ?? "",
-            teacher: info.teacher ?? "",
+            name: course.name ?? "",
+            room: course.room ?? "",
+            teacher: course.teacher ?? "",
         });
         setIsEditModalOpen(true);
     };
@@ -140,20 +107,12 @@ export default function ClassDetail() {
     };
 
     const handleSaveEditModal = () => {
-        setClassInfo((prev) => {
-            if (!prev) {
-                return prev;
-            }
+        if (!course) return;
 
-            return {
-                ...prev,
-                info: {
-                    ...prev.info,
-                    name: editFields.name.trim(),
-                    room: editFields.room.trim(),
-                    teacher: editFields.teacher.trim(),
-                },
-            };
+        updateCourse(course.id, {
+            name: editFields.name.trim(),
+            room: editFields.room.trim(),
+            teacher: editFields.teacher.trim(),
         });
 
         setIsEditModalOpen(false);

@@ -2,7 +2,8 @@ import * as parser from "@chukyo-passpal/web_parser";
 
 import { Period, PERIODS, PeriodSchema } from "@/src/domain/constants/period";
 import { Weekday, WEEKDAYS, WeekdaySchema } from "@/src/domain/constants/week";
-import { TimetableData } from "@/src/domain/models/timetable";
+import { Course } from "@/src/domain/models/course";
+import { TimetableFetchResult } from "@/src/domain/models/timetable";
 import { MapError } from "../errors/MapError";
 
 /**
@@ -41,22 +42,21 @@ function extractWeekday(label: string): string {
  * @returns ドメインモデルの時間割データ
  * @throws MapError 変換に必要な情報が欠けている場合
  */
-export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): TimetableData {
-    let tbl: Pick<TimetableData, "timetable"> = {
-        timetable: WEEKDAYS.reduce(
-            (acc, curr) => {
-                acc[curr] = PERIODS.reduce(
-                    (acc2, curr2) => {
-                        acc2[curr2] = null;
-                        return acc2;
-                    },
-                    {} as Record<Period, null>
-                );
-                return acc;
-            },
-            {} as Record<Weekday, Record<Period, null>>
-        ),
-    };
+export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): TimetableFetchResult {
+    const courses: Record<string, Course> = {};
+    const timetable: TimetableFetchResult["timetable"]["timetable"] = WEEKDAYS.reduce(
+        (acc, curr) => {
+            acc[curr] = PERIODS.reduce(
+                (acc2, curr2) => {
+                    acc2[curr2] = null;
+                    return acc2;
+                },
+                {} as Record<Period, null>
+            );
+            return acc;
+        },
+        {} as Record<Weekday, Record<Period, null>>
+    );
 
     data.periods.forEach((p) => {
         p.slots.forEach((s) => {
@@ -74,21 +74,30 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
                 throw new MapError();
             }
 
-            tbl.timetable[weekday.data][period.data] = {
-                manaboClassId: classId,
-                cubicsClassId: "",
-                isCustomSchedule: false,
-                name: s.className ?? "",
-                room: "",
-                teacher: s.teacher ?? "",
-                color: "blue",
-            };
+            if (!courses[classId]) {
+                courses[classId] = {
+                    id: classId,
+                    manaboClassId: classId,
+                    cubicsClassId: "",
+                    name: s.className ?? "",
+                    room: "",
+                    teacher: s.teacher ?? "",
+                    schedule: [],
+                    color: "blue",
+                };
+            }
+            courses[classId].schedule.push({ weekday: weekday.data, period: period.data });
+
+            timetable[weekday.data][period.data] = { type: "course", courseId: classId };
         });
     });
 
     return {
-        semester: data.title,
-        timetable: tbl.timetable,
+        timetable: {
+            semester: data.title,
+            timetable,
+        },
+        courses,
     };
 }
 
@@ -98,22 +107,21 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
  * @returns ドメインモデルの時間割データ
  * @throws MapError 変換に必要な情報が欠けている場合
  */
-export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): TimetableData {
-    let tbl: Pick<TimetableData, "timetable"> = {
-        timetable: WEEKDAYS.reduce(
-            (acc, curr) => {
-                acc[curr] = PERIODS.reduce(
-                    (acc2, curr2) => {
-                        acc2[curr2] = null;
-                        return acc2;
-                    },
-                    {} as Record<Period, null>
-                );
-                return acc;
-            },
-            {} as Record<Weekday, Record<Period, null>>
-        ),
-    };
+export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): TimetableFetchResult {
+    const courses: Record<string, Course> = {};
+    const timetable: TimetableFetchResult["timetable"]["timetable"] = WEEKDAYS.reduce(
+        (acc, curr) => {
+            acc[curr] = PERIODS.reduce(
+                (acc2, curr2) => {
+                    acc2[curr2] = null;
+                    return acc2;
+                },
+                {} as Record<Period, null>
+            );
+            return acc;
+        },
+        {} as Record<Weekday, Record<Period, null>>
+    );
 
     let days: Weekday[] = data.days.map((d) => {
         const weekday = WeekdaySchema.safeParse(extractWeekday(d.label));
@@ -138,20 +146,31 @@ export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): Time
                 throw new MapError();
             }
 
-            tbl.timetable[weekday][period.data] = {
-                manaboClassId: "",
-                cubicsClassId: s.lessonCode ?? "",
-                isCustomSchedule: false,
-                name: s.subject ?? "",
-                room: s.classroom ?? "",
-                teacher: "",
-                color: "blue",
-            };
+            const cubicsId = s.lessonCode ?? `cubics-${weekday}-${period.data}`;
+
+            if (!courses[cubicsId]) {
+                courses[cubicsId] = {
+                    id: cubicsId,
+                    manaboClassId: "",
+                    cubicsClassId: s.lessonCode ?? "",
+                    name: s.subject ?? "",
+                    room: s.classroom ?? "",
+                    teacher: "",
+                    schedule: [],
+                    color: "blue",
+                };
+            }
+            courses[cubicsId].schedule.push({ weekday, period: period.data });
+
+            timetable[weekday][period.data] = { type: "course", courseId: cubicsId };
         });
     });
 
     return {
-        semester: "",
-        timetable: tbl.timetable,
+        timetable: {
+            semester: "",
+            timetable,
+        },
+        courses,
     };
 }

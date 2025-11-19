@@ -10,16 +10,16 @@ import { LoadingScreen } from "@/src/presentation/components/LoadingScreen";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
-import useClass from "@/src/presentation/hooks/useClass";
+import useTimetable from "@/src/presentation/hooks/useTimetable";
 
 export default function ClassAssignments() {
     const { theme } = useTheme();
     const { classId } = useLocalSearchParams<{ classId: string }>();
-    const { classData } = useClass();
+    const { courses } = useTimetable();
     const { loading, assignmentData, fetchClassAssignments } = useAssignment();
 
     // 授業情報を取得
-    const classInfo = classData?.classes[classId || ""];
+    const course = courses[classId || ""];
 
     // この授業の課題のみを取得
     const classAssignmentInfo = assignmentData?.classes[classId || ""];
@@ -77,17 +77,17 @@ export default function ClassAssignments() {
                 {/* 授業情報ヘッダー */}
                 <Card variant="feature" style={{ gap: 12 }}>
                     <Typography variant="h2" color={theme.colors.primary.main}>
-                        {classInfo?.info.name ?? "授業情報を取得しています"}
+                        {course?.name ?? "授業情報を取得しています"}
                     </Typography>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                         <Icon name="user" size={16} color={theme.colors.text.secondary} />
                         <Typography variant="bodySmall" color={theme.colors.text.secondary}>
-                            {classInfo?.info.teacher ?? "教員情報を取得しています"}
+                            {course?.teacher ?? "教員情報を取得しています"}
                         </Typography>
                     </View>
                 </Card>
 
-                {!classInfo && (
+                {!course && (
                     <Card variant="default" style={{ gap: 8 }}>
                         <Typography variant="body" color={theme.colors.text.primary}>
                             授業情報の取得に失敗したため、課題情報のみ表示しています。

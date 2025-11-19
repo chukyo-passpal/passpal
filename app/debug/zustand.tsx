@@ -5,7 +5,6 @@ import Header from "@/src/presentation/components/Header";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
-import useClass from "@/src/presentation/hooks/useClass";
 import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
@@ -255,7 +254,6 @@ export default function ZustandDebugScreen() {
     // 全てのZustandストアを取得
     const authState = useAuth();
     const assignmentState = useAssignment();
-    const classState = useClass();
     const mailState = useMail();
     const newsState = useNews();
     const settingState = useSetting();
@@ -264,7 +262,6 @@ export default function ZustandDebugScreen() {
     // 各ストアの展開状態を管理
     const [authExpand, setAuthExpand] = useState<ExpandState>({});
     const [assignmentExpand, setAssignmentExpand] = useState<ExpandState>({});
-    const [classExpand, setClassExpand] = useState<ExpandState>({});
     const [mailExpand, setMailExpand] = useState<ExpandState>({});
     const [newsExpand, setNewsExpand] = useState<ExpandState>({});
     const [settingExpand, setSettingExpand] = useState<ExpandState>({});
@@ -282,12 +279,6 @@ export default function ZustandDebugScreen() {
             state: assignmentState,
             expandState: assignmentExpand,
             setExpandState: setAssignmentExpand,
-        },
-        {
-            name: "useClass",
-            state: classState,
-            expandState: classExpand,
-            setExpandState: setClassExpand,
         },
         {
             name: "useMail",

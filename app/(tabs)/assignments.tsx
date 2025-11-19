@@ -20,14 +20,13 @@ import { getManaboClassUrl } from "@/src/utils/urls";
 
 export default function Assignments() {
     const { theme } = useTheme();
-    const { timetableData } = useTimetable();
+    const { courses } = useTimetable();
     const { assignmentData, loading, fetchAllClassAssignments } = useAssignment();
     const [filter, setFilter] = React.useState<AssignmentFilter>("not-started");
 
     const handleRefresh = () => {
         if (loading) return;
-        if (!timetableData) return;
-        fetchAllClassAssignments(timetableData);
+        fetchAllClassAssignments(courses);
     };
 
     const handleTouch = (classId: string, directoryId: string, contentId: string) => {

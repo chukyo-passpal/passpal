@@ -1,20 +1,4 @@
 import { AttendanceStatus } from "@/src/domain/constants/class";
-import { Period } from "@/src/domain/constants/period";
-import { Weekday } from "@/src/domain/constants/week";
-
-/* 授業についての情報 */
-export interface ClassBasicInfo {
-    manaboClassId: string; // MaNaBo上の授業ID
-    cubicsClassId: string; // CUBICS上の授業ID
-    name: string;
-    room: string;
-    teacher: string;
-    timetableDate: {
-        // 時間割に登録されている曜日・時限
-        weekday: Weekday;
-        period: Period;
-    }[];
-}
 
 export interface ClassCriteria {
     item: string; // 評価項目
@@ -43,20 +27,6 @@ export interface PortalRecordedAttendance {
 }
 
 export type AttendanceInfo = UserRegisteredAttendance | PortalRecordedAttendance;
-
-export interface ClassInfo {
-    info: ClassBasicInfo;
-    attendanceLog: AttendanceInfo[];
-    news: ClassNewsInfo[];
-    detail?: ClassDetailInfo;
-}
-
-export type ClassData = {
-    semester: string;
-    classes: {
-        [manaboClassId: string]: ClassInfo;
-    };
-};
 
 /* Manaboの授業ディレクトリ */
 export interface ManaboDirectoryInfo {

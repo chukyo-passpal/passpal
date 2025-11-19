@@ -16,7 +16,6 @@ import authRepositoryInstance from "@/src/data/repositories/authRepository";
 import cacheRepositoryInstance from "@/src/data/repositories/cacheRepository";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
-import useClass from "@/src/presentation/hooks/useClass";
 import useMail from "@/src/presentation/hooks/useMail";
 import useNews from "@/src/presentation/hooks/useNews";
 import useSetting from "@/src/presentation/hooks/useSetting";
@@ -190,7 +189,6 @@ export class IntegratedAuthService implements AuthCoordinator {
         this.authRepository.clearAuthCookies();
         useMail.getState().clear();
         useNews.getState().clear();
-        useClass.getState().clear();
         useAssignment.getState().clear();
         this.cacheRepository.clearCache();
     }
@@ -199,7 +197,6 @@ export class IntegratedAuthService implements AuthCoordinator {
         useTimetable.getState().clear();
         useMail.getState().clear();
         useNews.getState().clear();
-        useClass.getState().clear();
         useAssignment.getState().clear();
         useSetting.getState().reset();
     }

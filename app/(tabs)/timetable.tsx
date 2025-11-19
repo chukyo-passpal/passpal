@@ -27,7 +27,7 @@ export default function TimetableScreen() {
     const [selectedDay, setSelectedDay] = useState(0); // 月曜日 = 0
     const { campus, initTimetableViewMode } = useSetting();
     const [timetableViewMode, setTimetableViewMode] = useState<TimetableViewMode>(initTimetableViewMode);
-    const { timetableData, loading, lastFetch, refetch } = useTimetable();
+    const { timetableData, courses, loading, lastFetch, refetch } = useTimetable();
 
     const tService = timetableServiceInstance;
     const periodData = tService.periodData[campus];
@@ -121,9 +121,31 @@ export default function TimetableScreen() {
                 {/* 授業一覧 */}
                 <ScrollView style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
                     {displayPeriods.map((period) => {
-                        const classInfo = daySchedule?.[period];
+                        const entry = daySchedule?.[period];
                         const periodInfo = periodData[period];
                         const periodText = periodInfo ? `${dt(periodInfo.startTime)}~${dt(periodInfo.endTime)}` : "-";
+
+                        let classInfo = null;
+                        if (entry) {
+                            if (entry.type === "course") {
+                                const course = courses[entry.courseId];
+                                if (course) {
+                                    classInfo = {
+                                        id: course.manaboClassId,
+                                        name: course.name,
+                                        room: course.room,
+                                        teacher: course.teacher,
+                                    };
+                                }
+                            } else {
+                                classInfo = {
+                                    id: entry.event.id,
+                                    name: entry.event.name,
+                                    room: entry.event.room || "",
+                                    teacher: entry.event.memo || "",
+                                };
+                            }
+                        }
 
                         return (
                             <View
@@ -148,7 +170,7 @@ export default function TimetableScreen() {
                                 {/* 授業カード */}
                                 {classInfo ? (
                                     <TouchableOpacity
-                                        onPress={() => handleTouchClass(classInfo.manaboClassId)}
+                                        onPress={() => handleTouchClass(classInfo.id)}
                                         activeOpacity={0.8}
                                         style={{
                                             flex: 1,
@@ -319,7 +341,27 @@ export default function TimetableScreen() {
                                     {/* 各曜日のセル */}
                                     {displayWeekdays.map((day, dayIndex) => {
                                         const daySchedule = timetableData!.timetable[day];
-                                        const classInfo = daySchedule?.[period];
+                                        const entry = daySchedule?.[period];
+
+                                        let classInfo = null;
+                                        if (entry) {
+                                            if (entry.type === "course") {
+                                                const course = courses[entry.courseId];
+                                                if (course) {
+                                                    classInfo = {
+                                                        id: course.manaboClassId,
+                                                        name: course.name,
+                                                        room: course.room,
+                                                    };
+                                                }
+                                            } else {
+                                                classInfo = {
+                                                    id: entry.event.id,
+                                                    name: entry.event.name,
+                                                    room: entry.event.room || "",
+                                                };
+                                            }
+                                        }
 
                                         return (
                                             <View
@@ -343,7 +385,7 @@ export default function TimetableScreen() {
                                                             backgroundColor: theme.colors.ui.classCard,
                                                         }}
                                                         activeOpacity={0.8}
-                                                        onPress={() => handleTouchClass(classInfo.manaboClassId)}
+                                                        onPress={() => handleTouchClass(classInfo.id)}
                                                     >
                                                         <View
                                                             style={{

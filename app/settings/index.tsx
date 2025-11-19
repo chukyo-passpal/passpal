@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, Linking, Modal, Platform, ScrollView, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import {
+    KeyboardAvoidingView,
+    Linking,
+    Modal,
+    Platform,
+    ScrollView,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+} from "react-native";
 import { router } from "expo-router";
-
-
 
 import { TRAIN_INFO_SERVICE, TrainInfoService, TrainInfoServiceName } from "@/src/domain/constants/bus";
 import { Campus, CAMPUSES, campusNames } from "@/src/domain/constants/chukyo-univ";
@@ -17,12 +24,10 @@ import { Select } from "@/src/presentation/components/Select";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import useAuth from "@/src/presentation/hooks/useAuth";
-import useClass from "@/src/presentation/hooks/useClass";
 import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import { useToast } from "@/src/presentation/hooks/useToast";
 import { PASSPAL_URLS } from "@/src/utils/urls";
-
 
 export default function Settings() {
     const { theme } = useTheme();
@@ -39,7 +44,6 @@ export default function Settings() {
         setInitTimetableViewMode,
     } = useSetting();
     const { refetch: refetchTimetable } = useTimetable();
-    const { setFromTimetable } = useClass();
 
     const [isStationModalOpen, setIsStationModalOpen] = useState(false);
     const [tempStationName, setTempStationName] = useState("");
@@ -72,9 +76,8 @@ export default function Settings() {
     };
 
     const handleRefetchTimetable = async () => {
-        toast.info("時間割の更新を開始しました")
-        const timetable = await refetchTimetable();
-        setFromTimetable(timetable);
+        toast.info("時間割の更新を開始しました");
+        await refetchTimetable();
         toast.success("時間割を更新しました");
     };
 

@@ -4,7 +4,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 import { AssignmentClassData, AssignmentInfo } from "@/src/domain/models/assignment";
-import { TimetableData } from "@/src/domain/models/timetable";
+import { Course } from "@/src/domain/models/course";
 import assignmentServiceInstance from "@/src/domain/services/assignmentService";
 
 /**
@@ -28,7 +28,7 @@ export interface AssignmentState {
     /**
      * 複数授業の課題を取得
      */
-    fetchAllClassAssignments: (timetable: TimetableData) => Promise<AssignmentInfo>;
+    fetchAllClassAssignments: (courses: Record<string, Course>) => Promise<AssignmentInfo>;
 }
 
 /**
@@ -86,16 +86,16 @@ const useAssignment = create<AssignmentState>()(
 
             /**
              * 時間割に含まれる全授業の課題を一括取得します。
-             * @param timetable 時間割データ
+             * @param courses 授業データ
              * @returns 授業IDをキーとした課題情報
              */
-            fetchAllClassAssignments: async (timetable: TimetableData) => {
+            fetchAllClassAssignments: async (courses: Record<string, Course>) => {
                 set((state) => {
                     state.loading = true;
                 });
 
                 try {
-                    const data = await assignmentServiceInstance.getAllAssignments(timetable);
+                    const data = await assignmentServiceInstance.getAllAssignments(courses);
 
                     set((state) => {
                         state.assignmentData = data;

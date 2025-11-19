@@ -1,7 +1,7 @@
 import classRepositoryInstance, { ClassRepository } from "@/src/data/repositories/classRepository";
 import { AssignmentClassData, AssignmentDirectoryData, AssignmentInfo } from "../models/assignment";
 import { ManaboDirectoryInfo } from "../models/class";
-import { TimetableData } from "../models/timetable";
+import { Course } from "../models/course";
 import authServiceInstance, { AuthService } from "./authService";
 
 export interface AssignmentService {
@@ -21,10 +21,10 @@ export interface AssignmentService {
 
     /**
      * 時間割に含まれる全授業の課題情報をまとめて取得します。
-     * @param timetable 時間割データ
+     * @param courses 授業データ
      * @returns 授業IDをキーとした課題情報
      */
-    getAllAssignments(timetable: TimetableData): Promise<AssignmentInfo>;
+    getAllAssignments(courses: Record<string, Course>): Promise<AssignmentInfo>;
 }
 
 export class IntegratedAssignmentService implements AssignmentService {
@@ -76,18 +76,8 @@ export class IntegratedAssignmentService implements AssignmentService {
         };
     }
 
-    public async getAllAssignments(timetable: TimetableData): Promise<AssignmentInfo> {
-        let classIds: string[] = [];
-        for (const days of Object.keys(timetable.timetable) as (keyof typeof timetable.timetable)[]) {
-            for (const periodKey of Object.keys(timetable.timetable[days])) {
-                const period = periodKey as keyof (typeof timetable.timetable)[typeof days];
-                const classes = timetable.timetable[days][period];
-                classIds.push(classes?.manaboClassId ?? "");
-            }
-        }
-
-        // 重複を排除
-        classIds = Array.from(new Set(classIds)).filter((id) => id !== "");
+    public async getAllAssignments(courses: Record<string, Course>): Promise<AssignmentInfo> {
+        const classIds = Object.keys(courses);
 
         const assignmentData: AssignmentClassData[] = [];
 
