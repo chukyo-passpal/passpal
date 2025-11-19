@@ -51,7 +51,7 @@ export class IntegratedEventService implements EventService {
      * アプリバージョンの更新とデータマイグレーションを処理します。
      */
     private async handleVersionUpdate(): Promise<void> {
-        const { appVersion: storedVersion, setAppVersion, setIsInitialized } = useAppInfo.getState();
+        const { appVersion: storedVersion, setAppVersion } = useAppInfo.getState();
         const currentVersion = appServiceInstance.currentVersion;
 
         // 初回起動時
@@ -60,7 +60,6 @@ export class IntegratedEventService implements EventService {
             // 初回起動時に認証情報をクリア(iOSはアプリを削除してもSecureStoreのデータが残るため)
             await SecureStore.deleteItemAsync("auth-storage");
             setAppVersion(currentVersion);
-            setIsInitialized(true);
             return;
         }
 

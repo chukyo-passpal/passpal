@@ -4,11 +4,13 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
 export interface appInfoState {
+    /**
+     * アプリのバージョン(マイグレーション用)
+     * 空文字の場合、初回起動とみなします。
+     */
     appVersion: string;
-    isInitialized: boolean;
 
     setAppVersion: (version: string) => void;
-    setIsInitialized: (initialized: boolean) => void;
 }
 
 /**
@@ -18,7 +20,6 @@ const useAppInfo = create<appInfoState>()(
     persist(
         immer((set) => ({
             appVersion: "",
-            isInitialized: false,
 
             /**
              * アプリのバージョンを更新します。
@@ -27,14 +28,6 @@ const useAppInfo = create<appInfoState>()(
             setAppVersion: (version: string) =>
                 set((state) => {
                     state.appVersion = version;
-                }),
-            /**
-             * アプリの初期化状態を更新します。
-             * @param initialized 初期化済みかどうか
-             */
-            setIsInitialized: (initialized: boolean) =>
-                set((state) => {
-                    state.isInitialized = initialized;
                 }),
         })),
         {
