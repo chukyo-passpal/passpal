@@ -3,6 +3,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import remoteConfigProviderInstance from "@/src/data/providers/firebase/remoteConfigProvider";
 import useAppInfo from "@/src/presentation/hooks/useAppInfo";
+import useAssignment from "@/src/presentation/hooks/useAssignment";
+import useAuth from "@/src/presentation/hooks/useAuth";
+import useMail from "@/src/presentation/hooks/useMail";
+import useNews from "@/src/presentation/hooks/useNews";
+import useSetting from "@/src/presentation/hooks/useSetting";
+import useTimetable from "@/src/presentation/hooks/useTimetable";
 import appServiceInstance from "./appService";
 import authCoordinatorInstance from "./authCoordinator";
 
@@ -15,6 +21,9 @@ export interface EventService {
 
 export class IntegratedEventService implements EventService {
     public async appInit(): Promise<void> {
+        // ストレージからの読み込み完了を待つ
+        await this.waitForHydration();
+
         // バージョン管理とデータマイグレーション
         await this.handleVersionUpdate();
 
@@ -22,6 +31,21 @@ export class IntegratedEventService implements EventService {
         await remoteConfigProviderInstance.fetchRemoteConfig();
         authCoordinatorInstance.configure();
     }
+
+    /**
+     * Zustandのストレージ復元が完了するのを待ちます。
+     */
+    private waitForHydration = (): Promise<void> => {
+        return new Promise((resolve) => {
+            if (useAppInfo.persist.hasHydrated()) {
+                resolve();
+            } else {
+                useAppInfo.persist.onFinishHydration(() => {
+                    resolve();
+                });
+            }
+        });
+    };
 
     /**
      * アプリバージョンの更新とデータマイグレーションを処理します。
@@ -33,6 +57,7 @@ export class IntegratedEventService implements EventService {
         // 初回起動時
         if (!storedVersion) {
             console.log(`First launch with version ${currentVersion}`);
+            await SecureStore.deleteItemAsync("auth-storage");
             setAppVersion(currentVersion);
             setIsInitialized(true);
             return;
@@ -45,6 +70,10 @@ export class IntegratedEventService implements EventService {
             // データマイグレーション処理を実行
             try {
                 await this.migrateData(storedVersion, currentVersion);
+
+                // マイグレーション後にデータを再読み込み
+                await this.rehydrateAllStores();
+
                 setAppVersion(currentVersion);
                 console.log("Version update completed successfully");
             } catch (error) {
@@ -54,6 +83,21 @@ export class IntegratedEventService implements EventService {
             }
         }
     }
+
+    /**
+     * 全てのZustandストアを再ハイドレーション（ストレージから再読み込み）します。
+     */
+    private rehydrateAllStores = async (): Promise<void> => {
+        await Promise.all([
+            useAppInfo.persist.rehydrate(),
+            useAuth.persist.rehydrate(),
+            useMail.persist.rehydrate(),
+            useTimetable.persist.rehydrate(),
+            useSetting.persist.rehydrate(),
+            useNews.persist.rehydrate(),
+            useAssignment.persist.rehydrate(),
+        ]);
+    };
 
     /**
      * 指定されたバージョンへのアップデートが行われたかどうかをチェックします。
