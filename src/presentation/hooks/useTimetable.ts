@@ -5,19 +5,19 @@ import { immer } from "zustand/middleware/immer";
 
 import { Period } from "@/src/domain/constants/period";
 import { Weekday } from "@/src/domain/constants/week";
-import { Course } from "@/src/domain/models/course";
+import { Class } from "@/src/domain/models/class";
 import { TimetableData, TimetableEntry, TimetableFetchResult } from "@/src/domain/models/timetable";
 import timetableServiceInstance from "@/src/domain/services/timetableService";
 
 export interface TimetableState {
     lastFetch: Date | null;
     timetableData: TimetableData | null;
-    courses: Record<string, Course>;
+    classes: Record<string, Class>;
     loading: boolean;
 
     clear: () => void;
     setClass: (day: Weekday, period: Period, entry: TimetableEntry | null) => void;
-    updateCourse: (courseId: string, updates: Partial<Course>) => void;
+    updateClass: (classId: string, updates: Partial<Class>) => void;
     refetch: () => Promise<TimetableFetchResult>;
 }
 
@@ -29,7 +29,7 @@ const useTimetable = create<TimetableState>()(
         immer((set) => ({
             lastFetch: null,
             timetableData: null,
-            courses: {},
+            classes: {},
             loading: false,
 
             /**
@@ -38,7 +38,7 @@ const useTimetable = create<TimetableState>()(
             clear: () =>
                 set((state) => {
                     state.timetableData = null;
-                    state.courses = {};
+                    state.classes = {};
                     state.lastFetch = null;
                 }),
 
@@ -54,10 +54,10 @@ const useTimetable = create<TimetableState>()(
                     state.timetableData.timetable[day][period] = entry;
                 }),
 
-            updateCourse: (courseId, updates) =>
+            updateClass: (classId, updates) =>
                 set((state) => {
-                    if (state.courses[courseId]) {
-                        Object.assign(state.courses[courseId], updates);
+                    if (state.classes[classId]) {
+                        Object.assign(state.classes[classId], updates);
                     }
                 }),
 
@@ -75,7 +75,7 @@ const useTimetable = create<TimetableState>()(
 
                     set((state) => {
                         state.timetableData = result.timetable;
-                        state.courses = result.courses;
+                        state.classes = result.classes;
                         state.loading = false;
                         state.lastFetch = new Date();
                     });
@@ -96,7 +96,7 @@ const useTimetable = create<TimetableState>()(
             partialize: (state) => ({
                 lastFetch: state.lastFetch,
                 timetableData: state.timetableData,
-                courses: state.courses,
+                classes: state.classes,
             }),
             storage: createJSONStorage(() => AsyncStorage, {
                 replacer: (key, value) => {

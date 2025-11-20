@@ -27,7 +27,7 @@ export default function TimetableScreen() {
     const [selectedDay, setSelectedDay] = useState(0); // 月曜日 = 0
     const { campus, initTimetableViewMode } = useSetting();
     const [timetableViewMode, setTimetableViewMode] = useState<TimetableViewMode>(initTimetableViewMode);
-    const { timetableData, courses, loading, lastFetch, refetch } = useTimetable();
+    const { timetableData, classes, loading, lastFetch, refetch } = useTimetable();
 
     const tService = timetableServiceInstance;
     const periodData = tService.periodData[campus];
@@ -127,14 +127,14 @@ export default function TimetableScreen() {
 
                         let classInfo = null;
                         if (entry) {
-                            if (entry.type === "course") {
-                                const course = courses[entry.courseId];
-                                if (course) {
+                            if (entry.type === "class") {
+                                const classData = classes[entry.classId];
+                                if (classData) {
                                     classInfo = {
-                                        id: course.manaboClassId,
-                                        name: course.name,
-                                        room: course.room,
-                                        teacher: course.teacher,
+                                        id: classData.manaboClassId,
+                                        name: classData.name,
+                                        room: classData.room,
+                                        teacher: classData.teacher,
                                     };
                                 }
                             } else {
@@ -345,13 +345,13 @@ export default function TimetableScreen() {
 
                                         let classInfo = null;
                                         if (entry) {
-                                            if (entry.type === "course") {
-                                                const course = courses[entry.courseId];
-                                                if (course) {
+                                            if (entry.type === "class") {
+                                                const classData = classes[entry.classId];
+                                                if (classData) {
                                                     classInfo = {
-                                                        id: course.manaboClassId,
-                                                        name: course.name,
-                                                        room: course.room,
+                                                        id: classData.manaboClassId,
+                                                        name: classData.name,
+                                                        room: classData.room,
                                                     };
                                                 }
                                             } else {

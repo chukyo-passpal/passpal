@@ -84,7 +84,7 @@ export class IntegratedTimetableService implements TimetableService {
      * @returns 部室情報などを統合した時間割データ
      */
     private mergeTimetables(manabo: TimetableFetchResult, cubics: TimetableFetchResult): TimetableFetchResult {
-        const mergedCourses = { ...manabo.courses };
+        const mergedClasses = { ...manabo.classes };
         const mergedTimetable = { ...manabo.timetable.timetable };
 
         for (const day of Object.keys(cubics.timetable.timetable) as (keyof typeof cubics.timetable.timetable)[]) {
@@ -94,18 +94,18 @@ export class IntegratedTimetableService implements TimetableService {
                 const cubicsEntry = cubics.timetable.timetable[day][period];
                 const manaboEntry = mergedTimetable[day][period];
 
-                if (cubicsEntry && cubicsEntry.type === "course") {
-                    const cubicsCourse = cubics.courses[cubicsEntry.courseId];
-                    if (!cubicsCourse) continue;
+                if (cubicsEntry && cubicsEntry.type === "class") {
+                    const cubicsClass = cubics.classes[cubicsEntry.classId];
+                    if (!cubicsClass) continue;
 
-                    if (manaboEntry && manaboEntry.type === "course") {
-                        const manaboCourse = mergedCourses[manaboEntry.courseId];
-                        if (manaboCourse) {
-                            manaboCourse.cubicsClassId = cubicsCourse.cubicsClassId;
-                            manaboCourse.room = cubicsCourse.room || manaboCourse.room;
+                    if (manaboEntry && manaboEntry.type === "class") {
+                        const manaboClass = mergedClasses[manaboEntry.classId];
+                        if (manaboClass) {
+                            manaboClass.cubicsClassId = cubicsClass.cubicsClassId;
+                            manaboClass.room = cubicsClass.room || manaboClass.room;
                         }
                     } else if (!manaboEntry) {
-                        mergedCourses[cubicsEntry.courseId] = cubicsCourse;
+                        mergedClasses[cubicsEntry.classId] = cubicsClass;
                         mergedTimetable[day][period] = cubicsEntry;
                     }
                 }
@@ -117,7 +117,7 @@ export class IntegratedTimetableService implements TimetableService {
                 semester: manabo.timetable.semester,
                 timetable: mergedTimetable,
             },
-            courses: mergedCourses,
+            classes: mergedClasses,
         };
     }
 }

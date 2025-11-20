@@ -2,7 +2,7 @@ import { Campus } from "@/src/domain/constants/chukyo-univ";
 import { ColorOption } from "@/src/domain/constants/color";
 import { Period } from "@/src/domain/constants/period";
 import { Weekday } from "@/src/domain/constants/week";
-import { Course } from "./course";
+import { Class } from "./class";
 
 /* 各時限についての情報 */
 export interface PeriodInfo {
@@ -12,7 +12,7 @@ export interface PeriodInfo {
 
 /**
  * ユーザーが作成したカスタムイベント（アルバイトやサークル等）を表します。
- * これらは時間割にのみ存在し、`Course` 定義を持ちません。
+ * これらは時間割にのみ存在し、`Class` 定義を持ちません。
  */
 export interface CustomEvent {
     id: string; // UUID
@@ -23,10 +23,10 @@ export interface CustomEvent {
 }
 
 /**
- * 時間割のスロットは、`Course` への参照か、直接の `CustomEvent` のいずれかになります。
+ * 時間割のスロットは、`Class` への参照か、直接の `CustomEvent` のいずれかになります。
  */
 export type TimetableEntry =
-    | { type: "course"; courseId: string } // `state.courses[courseId]` への参照
+    | { type: "class"; classId: string } // `state.classes[classId]` への参照
     | { type: "custom"; event: CustomEvent }; // インラインのイベント情報
 
 /* 時間割 */
@@ -37,7 +37,7 @@ export type TimetableData = {
 
 export interface TimetableFetchResult {
     timetable: TimetableData;
-    courses: Record<string, Course>;
+    classes: Record<string, Class>;
 }
 
 /* 時限情報 */

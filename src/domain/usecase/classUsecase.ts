@@ -1,5 +1,4 @@
-import { AttendanceInfo } from "../models/class";
-import { Course } from "../models/course";
+import { AttendanceInfo, Class } from "../models/class";
 
 export interface AttendanceStatsSummary {
     present: number;
@@ -18,7 +17,7 @@ export interface ClassUsecase {
     /**
      * 授業の時間割表示用文字列を生成します。
      */
-    buildScheduleLabel(course: Course): string;
+    buildScheduleLabel(classData: Class): string;
 }
 
 export class IntegratedClassUsecase implements ClassUsecase {
@@ -49,8 +48,8 @@ export class IntegratedClassUsecase implements ClassUsecase {
         return { present, absent, late, rate, status };
     }
 
-    public buildScheduleLabel(course: Course): string {
-        const schedule = course.schedule.map((td) => `${td.weekday} ${td.period}限`);
+    public buildScheduleLabel(classData: Class): string {
+        const schedule = classData.schedule.map((td) => `${td.weekday} ${td.period}限`);
         return schedule.join(", ");
     }
 }

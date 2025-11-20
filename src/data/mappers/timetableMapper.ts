@@ -2,7 +2,7 @@ import * as parser from "@chukyo-passpal/web_parser";
 
 import { Period, PERIODS, PeriodSchema } from "@/src/domain/constants/period";
 import { Weekday, WEEKDAYS, WeekdaySchema } from "@/src/domain/constants/week";
-import { Course } from "@/src/domain/models/course";
+import { Class } from "@/src/domain/models/class";
 import { TimetableFetchResult } from "@/src/domain/models/timetable";
 import { MapError } from "../errors/MapError";
 
@@ -43,7 +43,7 @@ function extractWeekday(label: string): string {
  * @throws MapError 変換に必要な情報が欠けている場合
  */
 export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): TimetableFetchResult {
-    const courses: Record<string, Course> = {};
+    const classes: Record<string, Class> = {};
     const timetable: TimetableFetchResult["timetable"]["timetable"] = WEEKDAYS.reduce(
         (acc, curr) => {
             acc[curr] = PERIODS.reduce(
@@ -74,8 +74,8 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
                 throw new MapError();
             }
 
-            if (!courses[classId]) {
-                courses[classId] = {
+            if (!classes[classId]) {
+                classes[classId] = {
                     id: classId,
                     manaboClassId: classId,
                     cubicsClassId: "",
@@ -86,9 +86,9 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
                     color: "blue",
                 };
             }
-            courses[classId].schedule.push({ weekday: weekday.data, period: period.data });
+            classes[classId].schedule.push({ weekday: weekday.data, period: period.data });
 
-            timetable[weekday.data][period.data] = { type: "course", courseId: classId };
+            timetable[weekday.data][period.data] = { type: "class", classId: classId };
         });
     });
 
@@ -97,7 +97,7 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
             semester: data.title,
             timetable,
         },
-        courses,
+        classes,
     };
 }
 
@@ -108,7 +108,7 @@ export function manaboTimetableToDomain(data: parser.ManaboTimetableDTO): Timeta
  * @throws MapError 変換に必要な情報が欠けている場合
  */
 export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): TimetableFetchResult {
-    const courses: Record<string, Course> = {};
+    const classes: Record<string, Class> = {};
     const timetable: TimetableFetchResult["timetable"]["timetable"] = WEEKDAYS.reduce(
         (acc, curr) => {
             acc[curr] = PERIODS.reduce(
@@ -148,8 +148,8 @@ export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): Time
 
             const cubicsId = s.lessonCode ?? `cubics-${weekday}-${period.data}`;
 
-            if (!courses[cubicsId]) {
-                courses[cubicsId] = {
+            if (!classes[cubicsId]) {
+                classes[cubicsId] = {
                     id: cubicsId,
                     manaboClassId: "",
                     cubicsClassId: s.lessonCode ?? "",
@@ -160,9 +160,9 @@ export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): Time
                     color: "blue",
                 };
             }
-            courses[cubicsId].schedule.push({ weekday, period: period.data });
+            classes[cubicsId].schedule.push({ weekday, period: period.data });
 
-            timetable[weekday][period.data] = { type: "course", courseId: cubicsId };
+            timetable[weekday][period.data] = { type: "class", classId: cubicsId };
         });
     });
 
@@ -171,6 +171,6 @@ export function cubicsTimetableToDomain(data: parser.CubicsAsTimetableDTO): Time
             semester: "",
             timetable,
         },
-        courses,
+        classes,
     };
 }

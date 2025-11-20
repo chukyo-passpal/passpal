@@ -1,7 +1,6 @@
 import classRepositoryInstance, { ClassRepository } from "@/src/data/repositories/classRepository";
 import { AssignmentClassData, AssignmentDirectoryData, AssignmentInfo } from "../models/assignment";
-import { ManaboDirectoryInfo } from "../models/class";
-import { Course } from "../models/course";
+import { Class, ManaboDirectoryInfo } from "../models/class";
 import authServiceInstance, { AuthService } from "./authService";
 
 export interface AssignmentService {
@@ -21,10 +20,10 @@ export interface AssignmentService {
 
     /**
      * 時間割に含まれる全授業の課題情報をまとめて取得します。
-     * @param courses 授業データ
+     * @param classes 授業データ
      * @returns 授業IDをキーとした課題情報
      */
-    getAllAssignments(courses: Record<string, Course>): Promise<AssignmentInfo>;
+    getAllAssignments(classes: Record<string, Class>): Promise<AssignmentInfo>;
 }
 
 export class IntegratedAssignmentService implements AssignmentService {
@@ -76,8 +75,8 @@ export class IntegratedAssignmentService implements AssignmentService {
         };
     }
 
-    public async getAllAssignments(courses: Record<string, Course>): Promise<AssignmentInfo> {
-        const classIds = Object.keys(courses);
+    public async getAllAssignments(classes: Record<string, Class>): Promise<AssignmentInfo> {
+        const classIds = Object.keys(classes);
 
         const assignmentData: AssignmentClassData[] = [];
 

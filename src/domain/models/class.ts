@@ -1,4 +1,7 @@
 import { AttendanceStatus } from "@/src/domain/constants/class";
+import { ColorOption } from "../constants/color";
+import { Period } from "../constants/period";
+import { Weekday } from "../constants/week";
 
 export interface ClassCriteria {
     item: string; // 評価項目
@@ -81,3 +84,34 @@ export interface ManaboReportContentData extends ManaboBaseContentData {
 }
 
 export type ManaboContentData = ManaboFileContentData | ManaboReportContentData;
+export interface ClassSchedule {
+    weekday: Weekday;
+    period: Period;
+}
+/**
+ * 大学の授業（コース）を表します。
+ * 授業の詳細に関する単一の信頼できる情報源です。
+ */
+
+export interface Class {
+    // 識別子
+    id: string; // 主キー（通常 manaboClassId）
+    manaboClassId: string;
+    cubicsClassId: string;
+
+    // 基本メタデータ（共有）
+    name: string;
+    room: string;
+    teacher: string;
+
+    // スケジュール（時間割ソースから派生。クラス一覧で簡単に参照できるようにここに保持）
+    schedule: ClassSchedule[];
+
+    // ユーザー設定
+    color: ColorOption;
+
+    // 詳細情報（遅延読み込み／別途取得）
+    attendanceLog?: AttendanceInfo[];
+    news?: ClassNewsInfo[];
+    detail?: ClassDetailInfo;
+}

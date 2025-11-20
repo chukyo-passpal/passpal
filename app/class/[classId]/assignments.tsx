@@ -15,11 +15,11 @@ import useTimetable from "@/src/presentation/hooks/useTimetable";
 export default function ClassAssignments() {
     const { theme } = useTheme();
     const { classId } = useLocalSearchParams<{ classId: string }>();
-    const { courses } = useTimetable();
+    const { classes } = useTimetable();
     const { loading, assignmentData, fetchClassAssignments } = useAssignment();
 
     // 授業情報を取得
-    const course = courses[classId || ""];
+    const classData = classes[classId || ""];
 
     // この授業の課題のみを取得
     const classAssignmentInfo = assignmentData?.classes[classId || ""];
@@ -77,17 +77,17 @@ export default function ClassAssignments() {
                 {/* 授業情報ヘッダー */}
                 <Card variant="feature" style={{ gap: 12 }}>
                     <Typography variant="h2" color={theme.colors.primary.main}>
-                        {course?.name ?? "授業情報を取得しています"}
+                        {classData?.name ?? "授業情報を取得しています"}
                     </Typography>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
                         <Icon name="user" size={16} color={theme.colors.text.secondary} />
                         <Typography variant="bodySmall" color={theme.colors.text.secondary}>
-                            {course?.teacher ?? "教員情報を取得しています"}
+                            {classData?.teacher ?? "教員情報を取得しています"}
                         </Typography>
                     </View>
                 </Card>
 
-                {!course && (
+                {!classData && (
                     <Card variant="default" style={{ gap: 8 }}>
                         <Typography variant="body" color={theme.colors.text.primary}>
                             授業情報の取得に失敗したため、課題情報のみ表示しています。

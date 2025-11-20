@@ -30,30 +30,30 @@ export default function ClassDetail() {
     const { theme } = useTheme();
     const router = useRouter();
     const { classId } = useLocalSearchParams<{ classId: string }>();
-    const { courses, updateCourse } = useTimetable();
+    const { classes, updateClass } = useTimetable();
 
-    const course = courses[classId];
+    const classData = classes[classId];
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     const [editFields, setEditFields] = React.useState<EditableClassFields>({ name: "", room: "", teacher: "" });
 
     useEffect(() => {
-        if (course) {
+        if (classData) {
             setEditFields({
-                name: course.name,
-                room: course.room,
-                teacher: course.teacher,
+                name: classData.name,
+                room: classData.room,
+                teacher: classData.teacher,
             });
         }
-    }, [course]);
+    }, [classData]);
 
     // 出席情報を集計
     const attendanceStats = useMemo<AttendanceStatsSummary>(
-        () => classUsecaseInstance.calculateAttendanceStats(course?.attendanceLog ?? []),
-        [course?.attendanceLog]
+        () => classUsecaseInstance.calculateAttendanceStats(classData?.attendanceLog ?? []),
+        [classData?.attendanceLog]
     );
 
     // 授業が見つからない場合
-    if (!course) {
+    if (!classData) {
         return (
             <View style={{ flex: 1, backgroundColor: theme.colors.background.primary }}>
                 <Header title="授業詳細" shownBackButton />
@@ -73,23 +73,23 @@ export default function ClassDetail() {
         );
     }
 
-    const schedule = classUsecaseInstance.buildScheduleLabel(course);
+    const schedule = classUsecaseInstance.buildScheduleLabel(classData);
 
     const finalClassData = {
-        title: course.name,
+        title: classData.name,
         schedule: schedule,
-        room: course.room,
-        teacher: course.teacher,
+        room: classData.room,
+        teacher: classData.teacher,
         attendance: attendanceStats,
-        announcements: course.news || [],
-        grading: course.detail?.evaluationCriteria || [],
+        announcements: classData.news || [],
+        grading: classData.detail?.evaluationCriteria || [],
     };
 
     const handleOpenEditModal = () => {
         setEditFields({
-            name: course.name ?? "",
-            room: course.room ?? "",
-            teacher: course.teacher ?? "",
+            name: classData.name ?? "",
+            room: classData.room ?? "",
+            teacher: classData.teacher ?? "",
         });
         setIsEditModalOpen(true);
     };
@@ -107,9 +107,9 @@ export default function ClassDetail() {
     };
 
     const handleSaveEditModal = () => {
-        if (!course) return;
+        if (!classData) return;
 
-        updateCourse(course.id, {
+        updateClass(classData.id, {
             name: editFields.name.trim(),
             room: editFields.room.trim(),
             teacher: editFields.teacher.trim(),

@@ -1,17 +1,16 @@
 import classRepositoryInstance, { ClassRepository } from "@/src/data/repositories/classRepository";
 import { DataBuildError } from "../errors/serviceError";
-import { AttendanceInfo } from "../models/class";
-import { Course } from "../models/course";
+import { AttendanceInfo, Class } from "../models/class";
 import classUsecaseInstance, { ClassUsecase } from "../usecase/classUsecase";
 import authServiceInstance, { AuthService } from "./authService";
 
 export interface ClassService {
     /**
      * 授業の詳細情報を取得し、最新の授業情報へ更新します。
-     * @param course 更新対象の授業情報
+     * @param classData 更新対象の授業情報
      * @returns 取得した詳細を含む授業情報
      */
-    updateCourseDetails(course: Course): Promise<Course>;
+    updateClassDetails(classData: Class): Promise<Class>;
 }
 
 export class IntegratedClassService implements ClassService {
@@ -35,25 +34,28 @@ export class IntegratedClassService implements ClassService {
         this.classUsecase = classUsecase;
     }
 
-    public async updateCourseDetails(course: Course): Promise<Course> {
+    public async updateClassDetails(classData: Class): Promise<Class> {
         try {
             // 出席情報の取得
-            const attendanceLog = await this.getAttendance(course.manaboClassId);
+            const attendanceLog = await this.getAttendance(classData.manaboClassId);
 
             // ニュースの取得
-            const news = await this.classRepository.getClassNews(this.authService.shibAuth, course.manaboClassId);
+            const news = await this.classRepository.getClassNews(this.authService.shibAuth, classData.manaboClassId);
 
             // シラバスの取得
-            const detail = await this.classRepository.getClassSyllabus(this.authService.shibAuth, course.manaboClassId);
+            const detail = await this.classRepository.getClassSyllabus(
+                this.authService.shibAuth,
+                classData.manaboClassId
+            );
 
             return {
-                ...course,
+                ...classData,
                 attendanceLog,
                 news,
                 detail,
             };
         } catch (error) {
-            console.error("Failed to update course details:", error);
+            console.error("Failed to update class details:", error);
             throw new DataBuildError({ cause: error });
         }
     }
