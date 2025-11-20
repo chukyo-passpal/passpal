@@ -2,8 +2,6 @@ import { useEffect } from "react";
 import messaging from "@react-native-firebase/messaging";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
-
-
 import { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
 import alboProviderInstance from "@/src/data/providers/chukyo-univ/alboProvider";
 import cubicsProviderInstance from "@/src/data/providers/chukyo-univ/cubicsProvider";
@@ -12,7 +10,6 @@ import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
 import authServiceInstance from "@/src/domain/services/authService";
 import notificationServiceInstance from "@/src/domain/services/notificationService";
 import useAuth from "./useAuth";
-
 
 export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef | null>) {
     /* フックでしか行えない初期化処理があればここに記述する */
@@ -44,5 +41,7 @@ export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef
 
         return unsubscribe;
     }, []);
-    notificationServiceInstance.registerFcmToken();
+    if (hasUser) {
+        notificationServiceInstance.registerFcmToken();
+    }
 }

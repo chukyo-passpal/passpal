@@ -35,17 +35,15 @@ export default function RootLayout() {
 
         prepare();
     }, []);
-
-    if (!appIsReady) {
-        return null;
-    }
-
+    
     return (
         <ThemeProvider>
             <ShibbolethWebView ref={shibRef} />
-            <TamaguiProviderWrapper>
-                <RootLayoutNav />
-            </TamaguiProviderWrapper>
+            {appIsReady && (
+                <TamaguiProviderWrapper>
+                    <RootLayoutNav />
+                </TamaguiProviderWrapper>
+            )}
         </ThemeProvider>
     );
 }
