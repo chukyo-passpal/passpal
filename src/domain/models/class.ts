@@ -84,6 +84,7 @@ export interface ManaboReportContentData extends ManaboBaseContentData {
 }
 
 export type ManaboContentData = ManaboFileContentData | ManaboReportContentData;
+
 export interface ClassSchedule {
     weekday: Weekday;
     period: Period;
