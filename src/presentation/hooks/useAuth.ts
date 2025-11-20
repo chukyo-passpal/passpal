@@ -66,11 +66,6 @@ const useAuth = create<authState>()(
             name: "auth-storage",
             skipHydration: true,
             version: 0,
-            partialize: (state) => ({
-                user: state.user,
-                firebaseUser: state.firebaseUser,
-                isTermsAccepted: state.isTermsAccepted,
-            }),
             storage: createJSONStorage(() => SecureStorage),
             migrate: (persistedState: any, version: number) => {
                 // 将来的なマイグレーション処理
