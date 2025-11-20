@@ -6,29 +6,28 @@ import { Course } from "./course";
 
 /* 各時限についての情報 */
 export interface PeriodInfo {
-    startTime: Date; //　授業の開始時間 例: 1970/1/1 09:30
+    startTime: Date; // 授業の開始時間 例: 1970/1/1 09:30
     endTime: Date; // 授業の終了時間 例: 1920/1/1 11:00
 }
 
 /**
- * Represents a user-created custom event (Job, Circle, etc.)
- * These exist only in the timetable and do not have a 'Course' definition.
+ * ユーザーが作成したカスタムイベント（アルバイトやサークル等）を表します。
+ * これらは時間割にのみ存在し、`Course` 定義を持ちません。
  */
 export interface CustomEvent {
     id: string; // UUID
     name: string;
     room?: string;
-    memo?: string; // Replaces 'teacher' for custom events
+    memo?: string; // カスタムイベントでは 'teacher' の代わりに使用されます
     color: ColorOption;
 }
 
 /**
- * A slot in the timetable can either be a reference to a Course
- * or a direct Custom Event.
+ * 時間割のスロットは、`Course` への参照か、直接の `CustomEvent` のいずれかになります。
  */
 export type TimetableEntry =
-    | { type: "course"; courseId: string } // Reference to state.courses[courseId]
-    | { type: "custom"; event: CustomEvent }; // Inline data
+    | { type: "course"; courseId: string } // `state.courses[courseId]` への参照
+    | { type: "custom"; event: CustomEvent }; // インラインのイベント情報
 
 /* 時間割 */
 export type TimetableData = {
