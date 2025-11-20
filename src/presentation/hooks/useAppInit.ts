@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import messaging from "@react-native-firebase/messaging";
+import { getMessaging, onTokenRefresh } from "@react-native-firebase/messaging";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 import { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
@@ -35,7 +35,8 @@ export default function useAppInit(shibRef: React.RefObject<shibbolethWebViewRef
 
     // FirebaseのMessaging設定
     useEffect(() => {
-        const unsubscribe = messaging().onTokenRefresh((token) => {
+        const messaging = getMessaging();
+        const unsubscribe = onTokenRefresh(messaging, (token) => {
             notificationServiceInstance.registerFcmToken(token);
         });
 

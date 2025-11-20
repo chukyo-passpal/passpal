@@ -1,5 +1,5 @@
 import * as Notifications from "expo-notifications";
-import messaging from "@react-native-firebase/messaging";
+import { getMessaging, getToken } from "@react-native-firebase/messaging";
 
 import notificationRepositoryInstance from "@/src/data/repositories/notificationRepository";
 import authCoordinatorInstance from "./authCoordinator";
@@ -70,7 +70,8 @@ export class IntegratedNotificationService implements NotificationService {
 
     public async getFcmToken(): Promise<string | null> {
         try {
-            const token = await messaging().getToken();
+            const messaging = getMessaging();
+            const token = await getToken(messaging);
             return token;
         } catch (error) {
             console.error("FCMトークンの取得に失敗しました:", error);
