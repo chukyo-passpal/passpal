@@ -1,10 +1,14 @@
 import { ErrorFactory } from "@praha/error-factory";
 
-export class MaintenanceError extends ErrorFactory({
-    name: "MaintenanceError",
+export class ChukyoMaintenanceError extends ErrorFactory({
+    name: "ChukyoMaintenanceError",
     message: "ポータルサイトがメンテナンス中です。",
 }) {}
 
+export class PalAPIMaintenanceError extends ErrorFactory({
+    name: "PalAPIMaintenanceError",
+    message: "PassPalがメンテナンス中です。",
+}) {}
 export class TimeoutError extends ErrorFactory({
     name: "TimeoutError",
     message: "リクエストがタイムアウトしました。",

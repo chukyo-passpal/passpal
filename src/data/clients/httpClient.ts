@@ -2,7 +2,7 @@ import { Platform } from "react-native";
 import * as Application from "expo-application";
 import { fetch } from "expo/fetch";
 
-import { MaintenanceError, NetworkError, TimeoutError } from "../errors/NetworkError";
+import { ChukyoMaintenanceError, NetworkError, PalAPIMaintenanceError, TimeoutError } from "../errors/NetworkError";
 
 const DEFAULT_TIMEOUT_MS = 10000;
 
@@ -103,7 +103,11 @@ export const httpClient = async (input: string | URL, options: HttpClientOptions
 
         if (!response.ok) {
             if (httpClientMode === "portal" && response.status === 503) {
-                throw new MaintenanceError();
+                throw new ChukyoMaintenanceError();
+            }
+
+            if (httpClientMode === "palapi" && response.status === 503) {
+                throw new PalAPIMaintenanceError();
             }
 
             if (__DEV__) console.error(`HTTP error: ${response.status} ${response.statusText} URL: ${url}`);
@@ -115,7 +119,12 @@ export const httpClient = async (input: string | URL, options: HttpClientOptions
 
         return response;
     } catch (error) {
-        if (error instanceof MaintenanceError || error instanceof NetworkError || error instanceof TimeoutError) {
+        if (
+            error instanceof ChukyoMaintenanceError ||
+            error instanceof NetworkError ||
+            error instanceof TimeoutError ||
+            error instanceof PalAPIMaintenanceError
+        ) {
             throw error;
         }
 
