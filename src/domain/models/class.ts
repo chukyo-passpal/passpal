@@ -3,34 +3,6 @@ import { ColorOption } from "../constants/color";
 import { Period } from "../constants/period";
 import { Weekday } from "../constants/week";
 
-export interface ClassCriteria {
-    item: string; // 評価項目
-    weight: string; // 配点
-}
-
-export interface ClassDetailInfo {
-    evaluationCriteria: ClassCriteria[]; // 評価基準
-}
-
-export interface ClassNewsInfo {
-    title: string;
-    body: string;
-}
-
-export interface UserRegisteredAttendance {
-    regType: "user";
-    date: Date;
-    status: AttendanceStatus;
-}
-
-export interface PortalRecordedAttendance {
-    regType: "portal";
-    lecture: string;
-    status: AttendanceStatus;
-}
-
-export type AttendanceInfo = UserRegisteredAttendance | PortalRecordedAttendance;
-
 /* Manaboの授業ディレクトリ */
 export interface ManaboDirectoryInfo {
     classId: string;
@@ -85,12 +57,42 @@ export interface ManaboReportContentData extends ManaboBaseContentData {
 
 export type ManaboContentData = ManaboFileContentData | ManaboReportContentData;
 
+/* 授業情報 */
+
 export interface ClassSchedule {
     weekday: Weekday;
     period: Period;
 }
+
+export interface ClassCriteria {
+    item: string; // 評価項目
+    weight: string; // 配点
+}
+
+export interface ClassDetailInfo {
+    evaluationCriteria: ClassCriteria[]; // 評価基準
+}
+
+export interface ClassNewsInfo {
+    title: string;
+    body: string;
+}
+export interface UserRegisteredAttendance {
+    regType: "user";
+    date: Date;
+    status: AttendanceStatus;
+}
+
+export interface PortalRecordedAttendance {
+    regType: "portal";
+    lecture: string;
+    status: AttendanceStatus;
+}
+
+export type AttendanceInfo = UserRegisteredAttendance | PortalRecordedAttendance;
+
 /**
- * 大学の授業（コース）を表します。
+ * 大学の授業を表します。
  * 授業の詳細に関する単一の信頼できる情報源です。
  */
 

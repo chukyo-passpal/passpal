@@ -10,6 +10,9 @@ export interface PeriodInfo {
     endTime: Date; // 授業の終了時間 例: 1920/1/1 11:00
 }
 
+/* 時限情報 */
+export type PeriodData = Record<Campus, Record<Period, PeriodInfo | null>>;
+
 /**
  * ユーザーが作成したカスタムイベント（アルバイトやサークル等）を表します。
  * これらは時間割にのみ存在し、`Class` 定義を持ちません。
@@ -39,6 +42,3 @@ export interface TimetableFetchResult {
     timetable: TimetableData;
     classes: Record<string, Class>;
 }
-
-/* 時限情報 */
-export type PeriodData = Record<Campus, Record<Period, PeriodInfo | null>>;
