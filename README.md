@@ -37,6 +37,22 @@ bun run storybook-generate
 bun run start
 ```
 
+### クリーンビルド
+
+```bash
+# node_modulesとキャッシュの削除
+git clean -fdx
+
+# 依存関係の再インストール
+bun install
+bun run storybook-generate
+bun run start
+
+# build
+bun run build:ios
+bun run build:android
+```
+
 ## 🚀 技術スタック
 
 ### コアテクノロジー
