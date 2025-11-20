@@ -1,5 +1,6 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Stack, useRouter } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { TamaguiProvider } from "tamagui";
 
 import ShibbolethWebView, { shibbolethWebViewRef } from "@/src/data/clients/chukyoShibboleth";
@@ -11,12 +12,34 @@ import useAppInit from "@/src/presentation/hooks/useAppInit";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import { tamaguiConfig } from "@/tamagui.config";
 
-eventServiceInstance.appInit();
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+    const [appIsReady, setAppIsReady] = useState(false);
+
     // App初期化処理
     const shibRef = useRef<shibbolethWebViewRef>(null);
     useAppInit(shibRef);
+
+    useEffect(() => {
+        async function prepare() {
+            try {
+                await eventServiceInstance.appInit();
+            } catch (e) {
+                console.warn(e);
+            } finally {
+                setAppIsReady(true);
+                await SplashScreen.hideAsync();
+            }
+        }
+
+        prepare();
+    }, []);
+
+    if (!appIsReady) {
+        return null;
+    }
+
     return (
         <ThemeProvider>
             <ShibbolethWebView ref={shibRef} />
