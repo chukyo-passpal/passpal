@@ -24,6 +24,7 @@ export class IntegratedEventService implements EventService {
         await this.handleVersionUpdate();
         // 全データ読み込み
         await this.rehydrateAllStores();
+        console.log("All stores rehydrated");
 
         // 初期化処理があればここに追加
         await remoteConfigProviderInstance.fetchRemoteConfig();
