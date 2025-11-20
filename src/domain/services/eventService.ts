@@ -2,7 +2,6 @@ import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import remoteConfigProviderInstance from "@/src/data/providers/firebase/remoteConfigProvider";
-import useAppInfo from "@/src/presentation/hooks/useAppInfo";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
 import useAuth from "@/src/presentation/hooks/useAuth";
 import useMail from "@/src/presentation/hooks/useMail";
@@ -21,8 +20,6 @@ export interface EventService {
 
 export class IntegratedEventService implements EventService {
     public async appInit(): Promise<void> {
-        // ストレージからの読み込み完了を待つ
-        await useAppInfo.persist.rehydrate();
         // バージョン管理とデータマイグレーション
         await this.handleVersionUpdate();
         // 全データ読み込み
@@ -37,11 +34,13 @@ export class IntegratedEventService implements EventService {
      * アプリバージョンの更新とデータマイグレーションを処理します。
      */
     private async handleVersionUpdate(): Promise<void> {
-        const { appVersion: storedVersion, setAppVersion } = useAppInfo.getState();
+        const versionStorageKey = "passpal:app_version";
+        const setAppVersion = (v: string) => AsyncStorage.setItem(versionStorageKey, v);
+        const beforeVersion = await AsyncStorage.getItem(versionStorageKey);
         const currentVersion = appServiceInstance.currentVersion;
 
         // 初回起動時
-        if (!storedVersion) {
+        if (!beforeVersion) {
             console.log(`First launch with version ${currentVersion}`);
             // 全データ削除
             const AllItems = await AsyncStorage.getAllKeys();
@@ -51,23 +50,23 @@ export class IntegratedEventService implements EventService {
             // 初回起動時に認証情報をクリア(iOSはアプリを削除してもSecureStoreのデータが残るため)
             await SecureStore.deleteItemAsync("auth-storage");
 
-            setAppVersion(currentVersion);
+            await setAppVersion(currentVersion);
             return;
         }
 
         // バージョンが変更された場合
-        if (storedVersion !== currentVersion) {
-            console.log(`Version updated from ${storedVersion} to ${currentVersion}`);
+        if (beforeVersion !== currentVersion) {
+            console.log(`Version updated from ${beforeVersion} to ${currentVersion}`);
 
             // データマイグレーション処理を実行
             try {
-                await this.migrateData(storedVersion, currentVersion);
+                await this.migrateData(beforeVersion, currentVersion);
                 console.log("Version update completed successfully");
             } catch (error) {
                 console.error("Failed to migrate data:", error);
             } finally {
                 // エラーが発生してもバージョンは更新する
-                setAppVersion(currentVersion);
+                await setAppVersion(currentVersion);
             }
         }
     }
@@ -80,24 +79,9 @@ export class IntegratedEventService implements EventService {
     private migrateData = async (fromVersion: string, toVersion: string): Promise<void> => {
         console.log(`Migrating data from ${fromVersion} to ${toVersion}`);
 
-        // 0.0.3以前から0.0.4以降へのアップデート時の処理
-        if (this.isUpdatedTo(fromVersion, toVersion, "0.0.4")) {
-            console.log("Migrate from version 0.0.4");
-            try {
-                // 全データ削除
-                const AllItems = await AsyncStorage.getAllKeys();
-                for (const key of AllItems) {
-                    await AsyncStorage.removeItem(key);
-                }
-                await SecureStore.deleteItemAsync("auth-storage");
-                console.log("Successfully remove");
-            } catch (error) {
-                console.error("Failed to remove:", error);
-            }
-        }
-
         // 他のバージョン間のマイグレーション処理をここに追加
         // 例:
+        // 0.9.9以前から1.0.0以降へのアップデート時の処理
         // if (isUpdatedTo(fromVersion, toVersion, "1.0.0")) {
         //     // 1.0.0へのマイグレーション処理
         // }
@@ -108,13 +92,12 @@ export class IntegratedEventService implements EventService {
      */
     private rehydrateAllStores = async (): Promise<void> => {
         await Promise.all([
-            useAppInfo.persist.rehydrate(),
+            useAssignment.persist.rehydrate(),
             useAuth.persist.rehydrate(),
             useMail.persist.rehydrate(),
-            useTimetable.persist.rehydrate(),
-            useSetting.persist.rehydrate(),
             useNews.persist.rehydrate(),
-            useAssignment.persist.rehydrate(),
+            useSetting.persist.rehydrate(),
+            useTimetable.persist.rehydrate(),
         ]);
     };
 
