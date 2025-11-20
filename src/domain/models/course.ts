@@ -9,27 +9,27 @@ export interface CourseSchedule {
 }
 
 /**
- * Represents a unique University Course.
- * This is the single source of truth for class details.
+ * 大学の授業（コース）を表します。
+ * 授業の詳細に関する単一の信頼できる情報源です。
  */
 export interface Course {
-    // Identifiers
-    id: string; // Primary Key (usually manaboClassId)
+    // 識別子
+    id: string; // 主キー（通常 manaboClassId）
     manaboClassId: string;
     cubicsClassId: string;
 
-    // Basic Metadata (Shared)
+    // 基本メタデータ（共有）
     name: string;
     room: string;
     teacher: string;
 
-    // Schedule (Derived from timetable source, kept here for easy access in Class List)
+    // スケジュール（時間割ソースから派生。クラス一覧で簡単に参照できるようにここに保持）
     schedule: CourseSchedule[];
 
-    // User Settings
+    // ユーザー設定
     color: ColorOption;
 
-    // Detailed Info (Fetched lazily/separately)
+    // 詳細情報（遅延読み込み／別途取得）
     attendanceLog?: AttendanceInfo[];
     news?: ClassNewsInfo[];
     detail?: ClassDetailInfo;
