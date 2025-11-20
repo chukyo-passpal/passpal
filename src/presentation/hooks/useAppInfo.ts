@@ -32,6 +32,7 @@ const useAppInfo = create<appInfoState>()(
         })),
         {
             name: "app-info-storage",
+            skipHydration: true,
             version: 0,
             storage: createJSONStorage(() => AsyncStorage),
             migrate: (persistedState: any, version: number) => {

@@ -76,6 +76,7 @@ const useSetting = create<settingState>()(
         })),
         {
             name: "setting-storage",
+            skipHydration: true,
             version: 0,
             storage: createJSONStorage(() => AsyncStorage, {
                 replacer: (key, value) => {

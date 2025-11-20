@@ -113,6 +113,7 @@ const useAssignment = create<AssignmentState>()(
         })),
         {
             name: "assignment-storage",
+            skipHydration: true,
             version: 0,
             /**
              * 永続化に含める状態のサブセットを選択します。

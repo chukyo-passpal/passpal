@@ -22,30 +22,16 @@ export interface EventService {
 export class IntegratedEventService implements EventService {
     public async appInit(): Promise<void> {
         // ストレージからの読み込み完了を待つ
-        await this.waitForHydration();
-
+        await useAppInfo.persist.rehydrate();
         // バージョン管理とデータマイグレーション
         await this.handleVersionUpdate();
+        // 全データ読み込み
+        await this.rehydrateAllStores();
 
         // 初期化処理があればここに追加
         await remoteConfigProviderInstance.fetchRemoteConfig();
         authCoordinatorInstance.configure();
     }
-
-    /**
-     * Zustandのストレージ復元が完了するのを待ちます。
-     */
-    private waitForHydration = (): Promise<void> => {
-        return new Promise((resolve) => {
-            if (useAppInfo.persist.hasHydrated()) {
-                resolve();
-            } else {
-                useAppInfo.persist.onFinishHydration(() => {
-                    resolve();
-                });
-            }
-        });
-    };
 
     /**
      * アプリバージョンの更新とデータマイグレーションを処理します。
@@ -64,8 +50,6 @@ export class IntegratedEventService implements EventService {
             }
             // 初回起動時に認証情報をクリア(iOSはアプリを削除してもSecureStoreのデータが残るため)
             await SecureStore.deleteItemAsync("auth-storage");
-            // データを再読み込み
-            await this.rehydrateAllStores();
 
             setAppVersion(currentVersion);
             return;
@@ -78,48 +62,15 @@ export class IntegratedEventService implements EventService {
             // データマイグレーション処理を実行
             try {
                 await this.migrateData(storedVersion, currentVersion);
-
-                // マイグレーション後にデータを再読み込み
-                await this.rehydrateAllStores();
-
-                setAppVersion(currentVersion);
                 console.log("Version update completed successfully");
             } catch (error) {
                 console.error("Failed to migrate data:", error);
+            } finally {
                 // エラーが発生してもバージョンは更新する
                 setAppVersion(currentVersion);
             }
         }
     }
-
-    /**
-     * 全てのZustandストアを再ハイドレーション（ストレージから再読み込み）します。
-     */
-    private rehydrateAllStores = async (): Promise<void> => {
-        await Promise.all([
-            useAppInfo.persist.rehydrate(),
-            useAuth.persist.rehydrate(),
-            useMail.persist.rehydrate(),
-            useTimetable.persist.rehydrate(),
-            useSetting.persist.rehydrate(),
-            useNews.persist.rehydrate(),
-            useAssignment.persist.rehydrate(),
-        ]);
-    };
-
-    /**
-     * 指定されたバージョンへのアップデートが行われたかどうかをチェックします。
-     * @param fromVersion 以前のバージョン
-     * @param toVersion 新しいバージョン
-     * @param targetVersion 対象のバージョン（このバージョン以降にアップデートされた場合にtrueを返す）
-     * @returns targetVersion以前からtargetVersion以降へのアップデートの場合はtrue
-     */
-    private isUpdatedTo = (fromVersion: string, toVersion: string, targetVersion: string): boolean => {
-        return (
-            appServiceInstance.compareVersions(fromVersion, targetVersion) < 0 &&
-            appServiceInstance.compareVersions(toVersion, targetVersion) >= 0
-        );
-    };
 
     /**
      * バージョン間のデータマイグレーション処理を実行します。
@@ -150,6 +101,35 @@ export class IntegratedEventService implements EventService {
         // if (isUpdatedTo(fromVersion, toVersion, "1.0.0")) {
         //     // 1.0.0へのマイグレーション処理
         // }
+    };
+
+    /**
+     * 全てのZustandストアを再ハイドレーション（ストレージから再読み込み）します。
+     */
+    private rehydrateAllStores = async (): Promise<void> => {
+        await Promise.all([
+            useAppInfo.persist.rehydrate(),
+            useAuth.persist.rehydrate(),
+            useMail.persist.rehydrate(),
+            useTimetable.persist.rehydrate(),
+            useSetting.persist.rehydrate(),
+            useNews.persist.rehydrate(),
+            useAssignment.persist.rehydrate(),
+        ]);
+    };
+
+    /**
+     * 指定されたバージョンへのアップデートが行われたかどうかをチェックします。
+     * @param fromVersion 以前のバージョン
+     * @param toVersion 新しいバージョン
+     * @param targetVersion 対象のバージョン（このバージョン以降にアップデートされた場合にtrueを返す）
+     * @returns targetVersion以前からtargetVersion以降へのアップデートの場合はtrue
+     */
+    private isUpdatedTo = (fromVersion: string, toVersion: string, targetVersion: string): boolean => {
+        return (
+            appServiceInstance.compareVersions(fromVersion, targetVersion) < 0 &&
+            appServiceInstance.compareVersions(toVersion, targetVersion) >= 0
+        );
     };
 }
 

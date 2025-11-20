@@ -63,6 +63,7 @@ const useNews = create<NewsState>()(
         })),
         {
             name: "news-storage",
+            skipHydration: true,
             version: 0,
             partialize: (state) => ({
                 lastFetch: state.lastFetch,

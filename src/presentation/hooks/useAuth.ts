@@ -64,6 +64,7 @@ const useAuth = create<authState>()(
         })),
         {
             name: "auth-storage",
+            skipHydration: true,
             version: 0,
             partialize: (state) => ({
                 user: state.user,

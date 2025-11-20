@@ -91,6 +91,7 @@ const useTimetable = create<TimetableState>()(
         })),
         {
             name: "timetable-storage",
+            skipHydration: true,
             version: 0,
             partialize: (state) => ({
                 lastFetch: state.lastFetch,
