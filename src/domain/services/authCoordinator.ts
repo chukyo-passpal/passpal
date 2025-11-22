@@ -170,6 +170,7 @@ export class IntegratedAuthService implements AuthCoordinator {
             if (!firebaseIdToken) throw new Error("FirebaseのIDトークンが取得できません");
             return firebaseIdToken;
         } catch (e) {
+            console.error("Firebase IDトークンの取得に失敗しました:", e);
             throw new AuthProcessError({ cause: e });
         }
     }

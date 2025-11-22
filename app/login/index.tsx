@@ -3,6 +3,7 @@ import { useRouter } from "expo-router";
 
 import appServiceInstance from "@/src/domain/services/appService";
 import authCoordinatorInstance from "@/src/domain/services/authCoordinator";
+import { Button } from "@/src/presentation/components/Button";
 import { Typography } from "@/src/presentation/components/Typography";
 import { useTheme } from "@/src/presentation/hooks/ThemeProvider";
 import { useToast } from "@/src/presentation/hooks/useToast";
@@ -110,6 +111,13 @@ export default function Login() {
                         />
                     </TouchableOpacity>
                 </View>
+                {__DEV__ && (
+                    <>
+                        <Button variant="text" onPress={() => router.push("/debug")}>
+                            Go to Debug
+                        </Button>
+                    </>
+                )}
             </ScrollView>
             {/* Footer */}
             <View style={{ alignItems: "center" }}></View>

@@ -1,5 +1,6 @@
 import * as SecureStore from "expo-secure-store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 
 import remoteConfigProviderInstance from "@/src/data/providers/firebase/remoteConfigProvider";
 import useAssignment from "@/src/presentation/hooks/useAssignment";
@@ -10,6 +11,7 @@ import useSetting from "@/src/presentation/hooks/useSetting";
 import useTimetable from "@/src/presentation/hooks/useTimetable";
 import appServiceInstance from "./appService";
 import authCoordinatorInstance from "./authCoordinator";
+import notificationServiceInstance from "./notificationService";
 
 export interface EventService {
     /**
@@ -29,6 +31,17 @@ export class IntegratedEventService implements EventService {
         // 初期化処理があればここに追加
         await remoteConfigProviderInstance.fetchRemoteConfig();
         authCoordinatorInstance.configure();
+
+        // 自動でGoogleにサインインする
+        const signInResponse = await GoogleSignin.signInSilently();
+        if (signInResponse.type === "noSavedCredentialFound") {
+            console.log("Google sign-inに保存された資格情報が見つかりません");
+            authCoordinatorInstance.signOut();
+            alert("前回のGoogleサインイン情報が見つかりません。再度ログインしてください。");
+        } else if (signInResponse.type === "success") {
+            // FCMトークンの登録
+            notificationServiceInstance.registerFcmToken();
+        }
     }
 
     /**
