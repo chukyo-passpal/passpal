@@ -49,6 +49,27 @@ export class IntegratedAssignmentService implements AssignmentService {
 
         const assignment: AssignmentDirectoryData[] = [];
 
+        // 親フォルダを取得
+        try {
+            const rootContents = await this.classRepository.getClassContent(
+                this.authService.shibAuth,
+                manaboClassId,
+                "0" // (親フォルダのID 0じゃないかも)
+            );
+
+            if (rootContents && rootContents.length > 0) {
+                assignment.push({
+                    directoryId: "0",
+                    directoryName: "クラストップ",
+                    contents: rootContents,
+                });
+            }
+        } catch (error) {
+            console.warn(`Failed to fetch root content for class ${manaboClassId}`, error);
+        }
+
+        //子フォルダを取得
+
         for (const directory of directories.directories) {
             const contents = await this.classRepository.getClassContent(
                 this.authService.shibAuth,
